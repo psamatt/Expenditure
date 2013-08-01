@@ -6,7 +6,9 @@ A small accounting application that allows you to keep track of your monthly out
 
 This is only currently avaialble if you self host the application.
 
-1. Configure your vhost
+1. Download the repository and copy it to an appropriate public_html directory
+
+2. Configure your vhost
 
     In your vhost write the following
 
@@ -17,7 +19,7 @@ This is only currently avaialble if you self host the application.
     </VirtualHost>
     ```
 
-2. Configure your hosts file
+3. Configure your hosts file
 
     In your hosts file
     
@@ -25,14 +27,18 @@ This is only currently avaialble if you self host the application.
     127.0.0.1 expenditure
     ```
 
-3. Create database and table structure
+4. Create database and table structure
 
     Create a database called `expenditure` and run the install.sql against the database, this should create all the table structures required to run this application. 
 
-4. Configure parameters
+5. Configure parameters
 
     Copy `app/config/dev.json.dist` to `app/config/dev.json` and configure the appropriate parameters.
 
-5. Finished
+6. Install third party bundles
+
+    This application relies on [Composer](http://getcomposer.org/download/) to install the dependencies required. Once you have composer installed, at the root of the application, run `/path/to/php composer install`
+    
+7. Finished
 
     Go to [expenditure](http://expenditure) in your browser and you should be ready to go. Now go ahead and keep a track of your bills and know exactly how much money you have every month!
