@@ -1,0 +1,26 @@
+{
+    "name": "psamatt/Expenditure",
+    "description": "A small expenditure app for money minded people",
+    "keywords": ["silex"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matt Goodwin",
+            "email": "matt.goodwin491@gmail.com"
+        }
+    ],
+	"autoload": {
+		"psr-0": {
+			"": "src"
+		}
+	},
+    "require": {
+        "silex/silex": "1.*",
+        "igorw/config-service-provider": "1.2.*@dev",
+        "doctrine/dbal": "2.3.x-dev",
+        "twig/twig": ">=1.8,<2.0-dev",
+        "nesbot/Carbon": "*",
+        "psamatt/spot-service-provider": "*"
+    },
+    "minimum-stability": "dev"
+}

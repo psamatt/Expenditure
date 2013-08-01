@@ -1,0 +1,12 @@
+{
+    "debug": false,
+    "currency": "£",
+    "db.options": 
+    {
+        "driver": "pdo_mysql",
+        "host": "",
+        "name": "",
+        "username": "",
+        "password": ""
+    }
+}

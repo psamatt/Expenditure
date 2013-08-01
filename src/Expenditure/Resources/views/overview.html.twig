@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+	<div class="hero-unit">
+
+		<h1>{{ monthYear.format('F Y') }}</h1>
+		{% if notFound is defined %}
+			<p class="text-error">{{ monthYear.format('F') }} has not yet been created, therefore an overview is not able to be calculated</p>
+			<form method="post" action="/import/{{ monthYear.format('Y')}}/{{ monthYear.format('n') }}" class="form-inline">
+				<div class="input-prepend">
+					<span class="add-on">{{ CURRENCY }}</span>
+					<input type="text" name="salary" placeholder="Monthly Salary" required />
+				</div>
+				<button type="submit" class="btn">Create now</button>
+			</form>
+		{% else %}
+
+            {% if monthYear.format('FY') == NOW | date('FY') %}
+    			<ul class="pager pull-right">
+    				<li class="next">
+    					<a href="/?newMonth=1">Create next month &rarr;</a>
+    				</li>
+    			</ul>
+			{% endif %}
+			<p>
+				<span class="text-success" id="amountSalary">{{ CURRENCY ~ monthHeader.month_income  | number_format(2, '.', ',') }} -
+				<span class="text-error" id="totalExpenditure">{{ CURRENCY ~ totalExpenditure | number_format(2, '.', ',') }}</span>
+				<span class="text-info" id="amountLeft">({{ CURRENCY ~ (totalExpenditure - totalPaid) | number_format(2, '.', ',') }} still to pay)</span>
+
+				=
+				<span class="text-info" id="amountLeft">{{ CURRENCY ~ (monthHeader.month_income - totalExpenditure) | number_format(2, '.', ',') }}</span>
+			</p>
+		{% endif %}
+	</div>
+
+	{% if notFound is not defined %}
+
+		{% include 'historic/monthly_expenditure.html.twig' with {'showActions': true} %}
+
+		<p class="text-info">Fill out fields below to save an expenditure</h2>
+		<form method="post" action="/month/{{ monthHeader.id }}/expenditure/save" name="expenditureForm" class="form-horizontal">
+
+            <input type="hidden" name="expenditureID" value="0" />
+
+			<div class="control-group">
+				<label class="control-label" for="inputTitle">Title</label>
+				<div class="controls">
+					<input type="text" id="inputTitle" name="title" placeholder="Title goes here.." />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputPrice">Price</label>
+				<div class="controls">
+					<div class="input-prepend">
+						<span class="add-on">{{ CURRENCY }}</span>
+						<input type="number" id="inputPrice" name="price" placeholder="Price.." />
+					</div>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<button type="submit" class="btn">Save</button>
+					<button type="reset" class="btn">Reset</button>
+				</div>
+			</div>
+		</form>
+
+	{% endif %}
+
+	<script type="text/javascript">
+
+		function deleteExpenditure(headerID, expenditureID)
+		{
+			if (confirm('Are you sure you want to delete this record?')) {
+				$('tr[data-id='+expenditureID+']').remove();
+
+				$.ajax({
+					type: 'POST',
+					url: '/month/'+ headerID +'/expenditure/' + expenditureID + '/delete',
+				});
+			}
+
+			return false;
+		}
+
+		function registerPaid(headerID, expenditureID)
+		{
+			$.ajax({
+				type: 'POST',
+				url: '/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
+				data: { 'amount': 'all' },
+				success: function(){
+					$('tr[data-id='+expenditureID+']').addClass('expenditure-paid');
+
+					document.location.reload();
+				},
+			});
+
+			return false;
+		}
+
+		function registerPartPaid(headerID, expenditureID)
+		{
+			var totalPaid = prompt("How much?","1");
+
+			if (totalPaid != null && totalPaid != "") {
+				$.ajax({
+					type: 'POST',
+					url: '/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
+					data: { 'amount': totalPaid },
+					success: function(){
+						$('tr[data-id='+expenditureID+']').addClass('expenditure-partial-paid');
+						document.location.reload();
+					},
+				});
+			}
+
+			return false;
+		}
+	</script>
+
+{% endblock %}
