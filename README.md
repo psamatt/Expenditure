@@ -1,10 +1,15 @@
 Expenditure
 ============
-A small accounting application that allows you to keep track of your monthly outgoings and know exactly how much money you have left in your account after bills
+A small accounting application written using [Silex](http://silex.sensiolabs.org/) that allows you to keep track of your monthly outgoings and know exactly how much money you have left in your account after bills
 
 ### Installation
 
-This is only currently avaialble if you self host the application.
+This is only currently avaialble if you self host the application. 
+
+###### Prerequisites
+
+- PHP 5.3
+- MySQL 5
 
 1. Download the repository and copy it to an appropriate public_html directory
 
