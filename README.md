@@ -11,6 +11,8 @@ This is only currently avaialble if you self host the application.
 - PHP 5.3
 - MySQL 5
 
+###### Steps
+
 1. Download the repository and copy it to an appropriate public_html directory
 
 2. Configure your vhost
