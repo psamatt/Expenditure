@@ -8,18 +8,8 @@ $app = new Application();
 
 $app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../app/config/dev.json"));
 $app->register(new Silex\Provider\TwigServiceProvider(), array('twig.path' => '../src/Expenditure/Resources/views'));
-$app->register(new Psamatt\Silex\SpotServiceProvider('mysql://root:@localhost/expenditure'));
+$app->register(new Psamatt\Silex\SpotServiceProvider($app['db']['dsn']));
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
-
-$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
-    'db.options' => array(
-        'driver'   => $app['db.options']['driver'],
-        'host'     => $app['db.options']['host'],
-        'dbname'   => $app['db.options']['name'],
-        'username' => $app['db.options']['username'],
-        'password' => $app['db.options']['password'],
-    ),
-));
 
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
 
