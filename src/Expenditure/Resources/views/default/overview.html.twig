@@ -3,7 +3,7 @@
 {% block content %}
 
 	<p class="text-info">Fill out fields below to {{ defaultObj is defined? 'update':'add'}} a reoccuring monthly payment</p>
-	<form method="post" action="/month/default/add" class="form-horizontal" name="expenditureForm">
+	<form method="post" action="/month/default/save" class="form-horizontal" name="expenditureForm">
 		{% if defaultObj is defined %}
 			<input type="hidden" name="defaultID" value="{{ defaultObj.id }}" />
 		{% endif %}
