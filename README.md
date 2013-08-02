@@ -10,6 +10,7 @@ This is only currently avaialble if you self host the application.
 
 - PHP 5.3
 - MySQL 5
+- Mod Rewrite enabled
 
 ###### Steps
 
