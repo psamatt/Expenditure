@@ -24,7 +24,7 @@ $app['home.controller'] = $app->share(function() use ($app) {
     $defaultController = new Expenditure\Controller\DefaultController;
     $defaultController->setDB($app['spot']);
     $defaultController->setTwigRenderer($app['twig']);
-    
+
     return $defaultController;
 });
 
@@ -33,7 +33,7 @@ $app['import.controller'] = $app->share(function() use ($app) {
     $importController = new Expenditure\Controller\ImportController;
     $importController->setDB($app['spot']);
     $importController->setTwigRenderer($app['twig']);
-    
+
     return $importController;
 });
 
@@ -42,7 +42,7 @@ $app['month.expenditure.controller'] = $app->share(function() use ($app) {
     $expenditureController = new Expenditure\Controller\MonthExpenditureController;
     $expenditureController->setDB($app['spot']);
     $expenditureController->setTwigRenderer($app['twig']);
-    
+
     return $expenditureController;
 });
 
@@ -51,7 +51,7 @@ $app['month.historic.controller'] = $app->share(function() use ($app) {
     $historicController = new Expenditure\Controller\MonthHistoricController;
     $historicController->setDB($app['spot']);
     $historicController->setTwigRenderer($app['twig']);
-    
+
     return $historicController;
 });
 
@@ -60,7 +60,7 @@ $app['default.payments.controller'] = $app->share(function() use ($app) {
     $defaultPaymentController = new Expenditure\Controller\DefaultPaymentController;
     $defaultPaymentController->setDB($app['spot']);
     $defaultPaymentController->setTwigRenderer($app['twig']);
-    
+
     return $defaultPaymentController;
 });
 

@@ -17,24 +17,24 @@ class DefaultController extends BaseController
 
         $currentFormat = (int)$this->getCarbon()->startOfMonth()->format('Ym');
         $month = $this->getCarbon();
-        
+
         if ($request->get('newMonth') !== null) {
             $monthHeader = false;
             $month = $this->getCarbon()->addMonth();
         } elseif ($monthHeader !== false) {
-        
+
              $month = $this->getCarbon($monthHeader->calendar_date->format('c'));
-        
+
             if ($currentFormat > (int)$monthHeader->calendar_date->format('Ym')) {
                 $monthHeader = false;
-                $month = $this->getCarbon();   
+                $month = $this->getCarbon();
             }
         }
 
         $returnArray = array('monthYear' => $month->startOfMonth());
 
         if ($monthHeader !== false) {
-        
+
             $monthlyExpenditure = $this->db->all('Expenditure\Model\MonthExpenditure')->where(array('header_id' => $monthHeader->id))->order(array('price' => 'DESC'));
 
             list($totalPaid, $totalExpenditure) = $this->findMonthlyTotals($monthlyExpenditure->toArray());
@@ -42,7 +42,7 @@ class DefaultController extends BaseController
             $returnArray['totalPaid'] = $totalPaid;
             $returnArray['totalExpenditure'] = $totalExpenditure;
             $returnArray['monthlyExpenditure'] = $monthlyExpenditure;
-            
+
             $returnArray['monthHeader'] = $monthHeader;
         } else {
             $returnArray['notFound'] = true;
@@ -50,7 +50,7 @@ class DefaultController extends BaseController
 
         return $this->twig->render('overview.html.twig', $returnArray);
     }
-    
+
     /**
      * Find monthly totals for a specific array set of expenditure
      *
@@ -60,14 +60,14 @@ class DefaultController extends BaseController
     protected function findMonthlyTotals($expenditure)
     {
         $totalPaid = $totalExpenditure = 0;
-        
+
         for ($i=0, $j = count($expenditure); $i < $j; $i++) {
-        
+
             $item = $expenditure[$i];
             $totalPaid += $item['amount_paid'];
             $totalExpenditure += $item['price'];
         }
-        
+
         return array($totalPaid, $totalExpenditure);
     }
 }
