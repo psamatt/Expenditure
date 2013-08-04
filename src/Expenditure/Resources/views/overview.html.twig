@@ -10,7 +10,7 @@
 			<form method="post" action="/import/{{ monthYear.format('Y')}}/{{ monthYear.format('n') }}" class="form-inline">
 				<div class="input-prepend">
 					<span class="add-on">{{ CURRENCY }}</span>
-					<input type="text" name="salary" placeholder="Monthly Salary" required />
+					<input type="number" name="salary" placeholder="Monthly Salary" required />
 				</div>
 				<button type="submit" class="btn">Create now</button>
 			</form>
