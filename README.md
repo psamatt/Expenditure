@@ -50,3 +50,16 @@ This is only currently avaialble if you self host the application.
 7. Finished
 
     Go to [expenditure](http://expenditure) in your browser and you should be ready to go. Now go ahead and keep a track of your bills and know exactly how much money you have every month!
+
+### Contributing
+
+If you would like to contribute towards Expenditure, then please follow the steps below
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Make your changes
+4. Add tests (if applicable) (`phpunit`)
+5. Commit your changes (`git commit -am 'Added some feature'`)
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create new Pull Request
+8. Sit back and smile whilst knowing that you're making the world a better place

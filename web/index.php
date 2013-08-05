@@ -73,7 +73,7 @@ $app->post('/month/{headerID}/expenditure/save', 'month.expenditure.controller:s
 
 $app->get('/month/default/{defaultID}', 'default.payments.controller:viewAction')->value('defaultID', 0);
 $app->get('/month/default/{defaultID}/delete', 'default.payments.controller:deleteAction');
-$app->post('/month/default/add', 'default.payments.controller:saveAction');
+$app->post('/month/default/save', 'default.payments.controller:saveAction');
 
 $app->get('/month/historic', 'month.historic.controller:indexAction');
 $app->get('/month/historic/{year}/{month}', 'month.historic.controller:viewAction');
