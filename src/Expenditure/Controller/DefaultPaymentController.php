@@ -19,21 +19,21 @@ class DefaultPaymentController extends BaseController
 
         if ($defaultID > 0) {
             $default = $this->db->first('Expenditure\Model\MonthExpenditureTemplate', array('id' => $defaultID));
-    
+
             if ($default !== false) {
                 $returnArray['defaultObj'] = $default;
             }
         }
-        
+
         $monthlyTemplates = $this->db->all('Expenditure\Model\MonthExpenditureTemplate')->order(array('price' => 'DESC'));
 
         if ($monthlyTemplates !== false) {
             $returnArray['monthlyTemplates'] = $monthlyTemplates;
         }
-    
+
         return $this->twig->render('default/overview.html.twig', $returnArray);
     }
-    
+
     /**
      * Save a default payment
      *
@@ -44,19 +44,19 @@ class DefaultPaymentController extends BaseController
     {
         if (null !== $defaultID = $request->get('defaultID')) {
             $monthExpenditureTemplate = $this->db->first('Expenditure\Model\MonthExpenditureTemplate', array('id' => $defaultID));
-        
+
         } else {
             $monthExpenditureTemplate = new \Expenditure\Model\MonthExpenditureTemplate;
         }
-        
+
         $monthExpenditureTemplate->title = $request->get('inputTitle');
         $monthExpenditureTemplate->price = $request->get('inputPrice');
-        
+
         $this->db->save($monthExpenditureTemplate);
-        
+
         return new RedirectResponse('/month/default', 302);
     }
-    
+
     /**
      * Delete a default payment
      *
@@ -67,7 +67,7 @@ class DefaultPaymentController extends BaseController
     public function deleteAction($defaultID, Request $request)
     {
         $monthExpenditureTemplate = $this->db->first('Expenditure\Model\MonthExpenditureTemplate', array('id' => $defaultID));
-        
+
         $this->db->delete($monthExpenditureTemplate);
 
         return new RedirectResponse('/month/default', 302);

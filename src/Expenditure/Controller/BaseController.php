@@ -13,7 +13,7 @@ class BaseController
      * @var \Spot\Mapper
      */
     protected $db;
-    
+
     /**
      * Twig
      *
@@ -26,7 +26,7 @@ class BaseController
     {
         $this->db = $db;
     }
-    
+
     /**
      * Set the twig renderer
      *
@@ -36,10 +36,10 @@ class BaseController
     {
         $this->twig = $twig;
     }
-    
+
     /**
      * Get the carbon object
-     * 
+     *
      * @return Carbon
      */
     public function getCarbon($date = null)
