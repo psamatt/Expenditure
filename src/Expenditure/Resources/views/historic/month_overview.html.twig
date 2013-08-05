@@ -2,9 +2,9 @@
 
 {% block content %}
 <span class="pull-left"><a href="/month/historic" class="btn btn-info"><i class="icon-arrow-left"></i> Back to overview</a></span>
-    
+
 <div class="hero-unit">
-    
+
 
 	{% set calendarDate = monthHeader.__get('calendar_date') %}
 	<h1>{{ calendarDate.format('F Y') }}</h1>
