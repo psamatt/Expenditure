@@ -22,3 +22,14 @@ CREATE TABLE `month_expenditure` (
   KEY `header_relation` (`header_id`),
   CONSTRAINT `header_relation` FOREIGN KEY (`header_id`) REFERENCES `month_header` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ -- 1.1 feature
+
+CREATE TABLE `savings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `target_date` date DEFAULT NULL,
+  `target_amount` float NOT NULL,
+  `saved_amount` float DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

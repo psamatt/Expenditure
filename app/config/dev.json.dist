@@ -1,6 +1,10 @@
 {
     "debug": false,
     "currency": "£",
+    "savings":
+    {
+        "includeCurrentMonth": false
+    },
     "db":
     {
         "dsn": "mysql://username:password@localhost/expenditure"

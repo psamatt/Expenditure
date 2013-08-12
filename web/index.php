@@ -64,6 +64,15 @@ $app['default.payments.controller'] = $app->share(function() use ($app) {
     return $defaultPaymentController;
 });
 
+$app['savings.controller'] = $app->share(function() use ($app) {
+
+    $defaultPaymentController = new Expenditure\Controller\SavingsController;
+    $defaultPaymentController->setDB($app['spot']);
+    $defaultPaymentController->setTwigRenderer($app['twig']);
+
+    return $defaultPaymentController;
+});
+
 $app->get('/', 'home.controller:indexAction');
 $app->post('/import/{year}/{month}', 'import.controller:saveAction');
 
@@ -77,5 +86,10 @@ $app->post('/month/default/save', 'default.payments.controller:saveAction');
 
 $app->get('/month/historic', 'month.historic.controller:indexAction');
 $app->get('/month/historic/{year}/{month}', 'month.historic.controller:viewAction');
+
+$app->get('/savings', 'savings.controller:indexAction');
+$app->post('/savings/save', 'savings.controller:saveAction');
+$app->post('/savings/{savingID}/money/add', 'savings.controller:addMoneyAction');
+$app->post('/savings/{savingID}/delete', 'savings.controller:deleteAction');
 
 $app->run();

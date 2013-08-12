@@ -7,6 +7,7 @@
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet" />
+    <link href="/assets/css/datepicker.css" rel="stylesheet" />
     <style type="text/css">
         body { padding-top: 60px; padding-bottom: 40px; }
         .navbar-inverse .brand a { color: #777; }
@@ -14,6 +15,10 @@
         .table-centered tr td.center { text-align: center; }
         table tbody tr.expenditure-partial-paid { background-color: #FFF79A }
         table tbody tr.expenditure-paid { background-color: #BDECB6 }
+        
+        .progress { position: relative; }
+        .bar { z-index: 1; position: absolute; }
+        .progress span { position: absolute; top: 0; z-index: 2; color: #666; text-align: center; width: 100%; }
 
     </style>
 
@@ -40,6 +45,7 @@
 						<li {{ app.request.pathInfo == '/'? 'class="active"' : '' }}><a href="/">Overview</a></li>
 						<li {{ app.request.pathInfo == '/month/historic'? 'class="active"' : '' }}><a href="/month/historic">Historic months</a></li>
 						<li {{ app.request.pathInfo == '/month/default'? 'class="active"' : '' }}><a href="/month/default">Default payments</a></li>
+				        <li {{ app.request.pathInfo == '/savings'? 'class="active"' : '' }}><a href="/savings">Savings</a></li>
 					</ul>
 				</div>
 			</div>
@@ -57,7 +63,9 @@
 		</footer>
 	</div>
 
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/site.js"></script>
+    {% block javascript %}
+        <script src="/assets/js/jquery.min.js"></script>
+        <script src="/assets/js/site.js"></script>    
+    {% endblock %}
   </body>
 </html>
