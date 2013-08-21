@@ -17,7 +17,6 @@
     "require": {
         "silex/silex": "1.*",
         "igorw/config-service-provider": "1.2.*@dev",
-        "doctrine/dbal": "2.3.x-dev",
         "twig/twig": ">=1.8,<2.0-dev",
         "nesbot/Carbon": "*",
         "psamatt/spot-service-provider": "*"
