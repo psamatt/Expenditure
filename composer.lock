@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e208f3cd0837e103f78d054c67d11dfe",
+    "hash": "7d906dcc7e46ce0dff1e836651c36ce1",
     "packages": [
         {
             "name": "igorw/config-service-provider",
@@ -64,16 +64,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "dev-master",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "e5309d1b4ea5cc2bb9b28bdcd3cfb45c5e2d2aaa"
+                "reference": "24c4262e994f7f2a258db5ccb5b2f34073f162ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e5309d1b4ea5cc2bb9b28bdcd3cfb45c5e2d2aaa",
-                "reference": "e5309d1b4ea5cc2bb9b28bdcd3cfb45c5e2d2aaa",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/24c4262e994f7f2a258db5ccb5b2f34073f162ca",
+                "reference": "24c4262e994f7f2a258db5ccb5b2f34073f162ca",
                 "shasum": ""
             },
             "require": {
@@ -103,7 +103,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2013-08-29 02:51:33"
+            "time": "2013-08-21 04:36:40"
         },
         {
             "name": "pimple/pimple",
@@ -153,16 +153,16 @@
         },
         {
             "name": "psamatt/spot-service-provider",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psamatt/SpotServiceProvider.git",
-                "reference": "d2ecd82107a44d2665add833a19eb9f2ed9afffb"
+                "reference": "46e30aee2c9649e4846eeec2b6b4e34c9021a787"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psamatt/SpotServiceProvider/zipball/d2ecd82107a44d2665add833a19eb9f2ed9afffb",
-                "reference": "d2ecd82107a44d2665add833a19eb9f2ed9afffb",
+                "url": "https://api.github.com/repos/psamatt/SpotServiceProvider/zipball/46e30aee2c9649e4846eeec2b6b4e34c9021a787",
+                "reference": "46e30aee2c9649e4846eeec2b6b4e34c9021a787",
                 "shasum": ""
             },
             "require": {
@@ -173,7 +173,7 @@
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "Psamatt\\Silex": "src"
+                    "Psamatt\\Silex\\Provider": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -190,7 +190,7 @@
             "keywords": [
                 "silex"
             ],
-            "time": "2013-08-21 12:23:15"
+            "time": "2013-09-08 17:19:40"
         },
         {
             "name": "psr/log",
@@ -236,12 +236,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Silex.git",
-                "reference": "e7d4a2fdedee2f55d1581659865ebb764f5cadad"
+                "reference": "466beac0e4e05392a1a26e62649347a848a23d08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Silex/zipball/e7d4a2fdedee2f55d1581659865ebb764f5cadad",
-                "reference": "e7d4a2fdedee2f55d1581659865ebb764f5cadad",
+                "url": "https://api.github.com/repos/fabpot/Silex/zipball/466beac0e4e05392a1a26e62649347a848a23d08",
+                "reference": "466beac0e4e05392a1a26e62649347a848a23d08",
                 "shasum": ""
             },
             "require": {
@@ -311,7 +311,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2013-08-29 05:11:19"
+            "time": "2013-09-04 08:28:12"
         },
         {
             "name": "symfony/debug",
@@ -429,12 +429,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "08c9abaead1d87c26287919ebf7bf38b08d2567d"
+                "reference": "34d2f1350a31caea0dacb0104ce0d9b952d27963"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/08c9abaead1d87c26287919ebf7bf38b08d2567d",
-                "reference": "08c9abaead1d87c26287919ebf7bf38b08d2567d",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/34d2f1350a31caea0dacb0104ce0d9b952d27963",
+                "reference": "34d2f1350a31caea0dacb0104ce0d9b952d27963",
                 "shasum": ""
             },
             "require": {
@@ -470,7 +470,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-30 13:15:50"
+            "time": "2013-09-07 16:33:13"
         },
         {
             "name": "symfony/http-kernel",
@@ -479,12 +479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpKernel.git",
-                "reference": "1c5fc4eb53a0f44d4b38e7829562f4ef5f124914"
+                "reference": "e9ad22176d50e47b6c8d5f254d4df4c766140056"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/1c5fc4eb53a0f44d4b38e7829562f4ef5f124914",
-                "reference": "1c5fc4eb53a0f44d4b38e7829562f4ef5f124914",
+                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/e9ad22176d50e47b6c8d5f254d4df4c766140056",
+                "reference": "e9ad22176d50e47b6c8d5f254d4df4c766140056",
                 "shasum": ""
             },
             "require": {
@@ -541,7 +541,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-30 13:15:50"
+            "time": "2013-09-06 18:21:06"
         },
         {
             "name": "symfony/routing",
@@ -550,12 +550,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "85b42c8ac86b7eeba56a9bf95643fe5627ce364d"
+                "reference": "bec9a3cfe1f30d60b9fc81a124b635e5d679e081"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/85b42c8ac86b7eeba56a9bf95643fe5627ce364d",
-                "reference": "85b42c8ac86b7eeba56a9bf95643fe5627ce364d",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/bec9a3cfe1f30d60b9fc81a124b635e5d679e081",
+                "reference": "bec9a3cfe1f30d60b9fc81a124b635e5d679e081",
                 "shasum": ""
             },
             "require": {
@@ -599,7 +599,7 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-24 06:54:37"
+            "time": "2013-09-06 18:21:06"
         },
         {
             "name": "symfony/security",
@@ -608,12 +608,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Security.git",
-                "reference": "66940a64ab627badd5df3816d6613d2e21753850"
+                "reference": "73e267b8033bc9da70dc4cd0e51f9e77278aecff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Security/zipball/66940a64ab627badd5df3816d6613d2e21753850",
-                "reference": "66940a64ab627badd5df3816d6613d2e21753850",
+                "url": "https://api.github.com/repos/symfony/Security/zipball/73e267b8033bc9da70dc4cd0e51f9e77278aecff",
+                "reference": "73e267b8033bc9da70dc4cd0e51f9e77278aecff",
                 "shasum": ""
             },
             "require": {
@@ -667,7 +667,7 @@
             ],
             "description": "Symfony Security Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-30 13:10:46"
+            "time": "2013-09-06 18:20:34"
         },
         {
             "name": "symfony/twig-bridge",
@@ -741,12 +741,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "3db6b6aeb9442abf85d2a9f6d5c3ae3e07398597"
+                "reference": "4001f81a179e3971377ce1ac51b4ff9ea851b8ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/3db6b6aeb9442abf85d2a9f6d5c3ae3e07398597",
-                "reference": "3db6b6aeb9442abf85d2a9f6d5c3ae3e07398597",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/4001f81a179e3971377ce1ac51b4ff9ea851b8ce",
+                "reference": "4001f81a179e3971377ce1ac51b4ff9ea851b8ce",
                 "shasum": ""
             },
             "require": {
@@ -782,7 +782,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-08-28 06:01:53"
+            "time": "2013-09-08 15:21:02"
         },
         {
             "name": "vlucas/spot",

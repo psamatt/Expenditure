@@ -9,7 +9,7 @@ $app = new Application();
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array('twig.path' => '../src/Expenditure/Resources/views'));
 $app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../app/config/dev.json"));
-$app->register(new Psamatt\Silex\SpotServiceProvider($app['db']['dsn']));
+$app->register(new Psamatt\Silex\Provider\SpotServiceProvider($app['db']['dsn']));
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());

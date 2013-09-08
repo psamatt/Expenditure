@@ -21,8 +21,8 @@
         "symfony/twig-bridge": "2.3.*" ,
         "igorw/config-service-provider": "1.2.*@dev",
         "twig/twig": ">=1.8,<2.0-dev",
-        "nesbot/Carbon": "*",
-        "psamatt/spot-service-provider": "*"
+        "nesbot/Carbon": "1.*",
+        "psamatt/spot-service-provider": "1.*"
     },
     "minimum-stability": "dev"
 }
