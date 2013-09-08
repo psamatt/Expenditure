@@ -16,25 +16,17 @@ class Saving extends \Spot\Entity
             'target_date' => array('type' => 'datetime', 'required' => true),
             'target_amount' => array('type' => 'float', 'required' => true),
             'saved_amount' => array('type' => 'float', 'required' => false),
+            'user_id' => array('type' => 'integer', 'required' => true),
         );
     }
     
     /**
-     * Get the target date
+     * The number of pay days remaining
      *
-     * @param $endOfMonth Whether to get the target date at the end of the month or not. Default false
-     * return DateTime
+     * @var integer
+     * @access private
      */
-    public function getTargetDate($endOfMonth = false)
-    {
-        if (!$endOfMonth) {
-            return $this->target_date;
-        }
-    
-        $targetDate = CarbonDateTime::instance($this->target_date);
-        
-        return $targetDate->endOfMonth();
-    }
+    private $numPayDaysRemaining = null;
     
     /**
      * Add money
@@ -44,6 +36,16 @@ class Saving extends \Spot\Entity
     public function addMoney($money)
     {
         $this->saved_amount += $money;
+    }
+    
+    /**
+     * Has the user reached their goal
+     *
+     * @return boolean
+     */
+    public function isGoalReached()
+    {
+        return $this->saved_amount >= $this->target_amount;
     }
     
     /**
@@ -67,36 +69,49 @@ class Saving extends \Spot\Entity
     }
     
     /**
-     * Get th number of months remaining
+     * Get the number of pay days remaining
      *
-     * @param boolean $includeCurrentMonth
+     * @param integer $payDayOfMonth
+     * @param boolean $fresh Get a fresh value
      * @return integer
      */
-    public function getNumMonthsRemaining($includeCurrentMonth = true)
+    public function getNumberOfPayDaysRemaining($payDayOfMonth = null, $fresh = false)
     {
+        if ($this->numPayDaysRemaining !== null && !$fresh) {
+            return $this->numPayDaysRemaining;
+        }
+    
+        $payDaysRemaining = 0;
         $today = new \DateTime();
         
         if ($this->target_date < $today) {
-            return 0;
+            return $payDaysRemaining;
         }
         
-        $targetDate = $this->getTargetDate(true);
+        $payDaysRemaining = CarbonDateTime::now()->addMonth()->startOfMonth()->diffInMonths(CarbonDateTime::instance($this->target_date)->startOfMonth());
         
-        $dateDifference = $today->diff($targetDate);
-        return ($dateDifference->y > 0? $dateDifference->y * 12: 0) + $dateDifference->m + ($includeCurrentMonth === true? 1:0);
+        if ($today->format('j') < $payDayOfMonth) {
+            $payDaysRemaining++;
+        }
+
+        if ($this->target_date->format('j') >= $payDayOfMonth) {
+            $payDaysRemaining++;
+        }
+
+        return $this->numPayDaysRemaining = $payDaysRemaining;
     }
     
     /**
-     * Get the amount of money to save per month to reach the target
+     * Get the amount of money to save per pay day to reach the target
      *
-     * @param boolean $includeCurrentMonth
+     * @param boolean $payDayOfMonth
      * @return integer
      */
-    public function getAmountPerMonth($includeCurrentMonth)
+    public function getAmountPerMonth($payDayOfMonth)
     {
-        $numMonthsRemaining = $this->getNumMonthsRemaining($includeCurrentMonth);
+        $numPayDaysRemaining = $this->getNumberOfPayDaysRemaining($payDayOfMonth);
         $amountRemaining = $this->getAmountRemaining();
         
-        return $numMonthsRemaining == 0? $amountRemaining: $amountRemaining / $numMonthsRemaining;
+        return $numPayDaysRemaining == 0? $amountRemaining: $amountRemaining / $numPayDaysRemaining;
     }
 }

@@ -20,10 +20,11 @@ class ImportController extends BaseController
         $monthHeader = new \Expenditure\Model\MonthHeader;
         $monthHeader->calendar_date = $this->getCarbon()->createFromDate($year, $month, 1)->toDateString();
         $monthHeader->month_income = $request->get('salary');
+        $monthHeader->user_id = $this->getUser()->id;
 
         $this->db->save($monthHeader);
 
-        $monthlyTemplates = $this->db->all('Expenditure\Model\MonthExpenditureTemplate');
+        $monthlyTemplates = $this->getUser()->monthExpenditureTemplates;
 
         if (count($monthlyTemplates) > 0) {
 
@@ -39,6 +40,6 @@ class ImportController extends BaseController
             }
         }
 
-        return new RedirectResponse('/', 302);
+        return new RedirectResponse($this->urlGenerator->generate('admin_homepage'), 302);
     }
 }

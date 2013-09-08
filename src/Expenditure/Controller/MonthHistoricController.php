@@ -14,7 +14,7 @@ class MonthHistoricController extends DefaultController
      */
     public function indexAction()
     {
-        $monthHeaders = $this->db->all('Expenditure\Model\MonthHeader')->order(array('calendar_date' =>  'DESC'));
+        $monthHeaders = $this->getUser()->monthHeaders;
 
         return $this->twig->render('historic/overview.html.twig', array('monthHeaders' => $monthHeaders));
     }
@@ -30,7 +30,11 @@ class MonthHistoricController extends DefaultController
     {
         $returnArray = array();
 
-        $monthHeader = $this->db->first('Expenditure\Model\MonthHeader', array('calendar_date' => $this->getCarbon()->createFromDate($year, $month, 1)->toDateString()));
+        $monthHeader = $this->db->first('Expenditure\Model\MonthHeader', array('calendar_date' => $this->getCarbon()->createFromDate($year, $month, 1)->toDateString(), 'user_id' => $this->getUser()->id));
+        
+        if (!$monthHeader) {
+            return new RedirectResponse($this->urlGenerator->generate('admin_homepage'), 302);
+        }
 
         $monthlyExpenditure = $this->db->all('Expenditure\Model\MonthExpenditure')->where(array('header_id' => $monthHeader->id));
 

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'skeleton/base.html.twig' %}
 
 {% block content %}
 
@@ -18,7 +18,7 @@
 				    {% set totalIncome = totalIncome + monthHeader.__get('month_income') %}
 					<tr data-id="{{ monthHeader.id }}">
 						{% set calendarDate = monthHeader.__get('calendar_date') %}
-						<td><a href="/month/historic/{{ calendarDate | date('Y') }}/{{ calendarDate | date('n') }}">{{ calendarDate | date('F Y') }}</a></td>
+						<td><a href="{{ path('admin_historic_view', {'year': calendarDate | date('Y'), 'month': calendarDate | date('n') }) }}">{{ calendarDate | date('F Y') }}</a></td>
 						<td class="price">{{ CURRENCY ~ monthHeader.__get('month_income') | number_format(2, '.', ',') }}</td>
 					</tr>
 				{% endfor %}

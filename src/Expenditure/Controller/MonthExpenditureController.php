@@ -17,6 +17,8 @@ class MonthExpenditureController extends BaseController
     public function paidAction($expenditureID, Request $request)
     {
         $expenditure = $this->db->first('Expenditure\Model\MonthExpenditure', array('id' => $expenditureID));
+        
+        $this->isOwnedByAdmin($expenditure->header);
 
         $amount = $request->get('amount');
 
@@ -41,6 +43,9 @@ class MonthExpenditureController extends BaseController
         $price = $request->get('price');
 
         if (strlen($title) > 0 && strlen($price) > 0) {
+        
+            $monthHeader = $this->db->first('Expenditure\Model\MonthHeader', array('id' => $headerID));
+            $this->isOwnedByAdmin($monthHeader);
 
             if ($expenditureID > 0) {
                 $expenditure = $this->db->first('Expenditure\Model\MonthExpenditure', array('id' => $expenditureID));
@@ -55,7 +60,7 @@ class MonthExpenditureController extends BaseController
             $this->db->save($expenditure);
         }
 
-        return new RedirectResponse('/', 302);
+        return new RedirectResponse($this->urlGenerator->generate('admin_homepage'), 302);
     }
 
     /**
@@ -67,6 +72,8 @@ class MonthExpenditureController extends BaseController
     public function deleteAction($expenditureID)
     {
         $expenditure = $this->db->first('Expenditure\Model\MonthExpenditure', array('id' => $expenditureID));
+        
+        $this->isOwnedByAdmin($expenditure->header);
 
         $this->db->delete($expenditure);
 

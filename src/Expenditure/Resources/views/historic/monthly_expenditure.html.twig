@@ -13,6 +13,7 @@
 		</thead>
 		<tbody>
 			{% for expenditure in monthlyExpenditure %}
+			
 				{% set totalPrice = totalPrice + expenditure.price %}
 				{% set totalPaid = totalPaid + expenditure.__get('amount_paid') %}
 

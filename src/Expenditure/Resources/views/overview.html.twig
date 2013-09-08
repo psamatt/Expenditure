@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'skeleton/base.html.twig' %}
 
 {% block content %}
 
@@ -7,7 +7,7 @@
 		<h1>{{ monthYear.format('F Y') }}</h1>
 		{% if notFound is defined %}
 			<p class="text-error">{{ monthYear.format('F') }} has not yet been created, therefore an overview is not able to be calculated</p>
-			<form method="post" action="/import/{{ monthYear.format('Y')}}/{{ monthYear.format('n') }}" class="form-inline">
+			<form method="post" action="{{ path('admin_import', {'year': monthYear.format('Y'), 'month': monthYear.format('n') }) }}" class="form-inline">
 				<div class="input-prepend">
 					<span class="add-on">{{ CURRENCY }}</span>
 					<input type="number" pattern="[0-9]+([,\.][0-9]+)?" step="0.01" min="0" name="salary" placeholder="Monthly Salary" required />
@@ -19,7 +19,7 @@
             {% if monthYear.format('FY') == NOW | date('FY') %}
     			<ul class="pager pull-right">
     				<li class="next">
-    					<a href="/?newMonth=1">Create next month &rarr;</a>
+    					<a href="{{ path('admin_homepage', {'newMonth': 1})}}">Create next month &rarr;</a>
     				</li>
     			</ul>
 			{% endif %}
@@ -39,7 +39,7 @@
 		{% include 'historic/monthly_expenditure.html.twig' with {'showActions': true} %}
 
 		<p class="text-info">Fill out fields below to save an expenditure</h2>
-		<form method="post" action="/month/{{ monthHeader.id }}/expenditure/save" name="expenditureForm" class="form-horizontal">
+		<form method="post" action="{{ path('admin_expenditure_save', {'headerID': monthHeader.id}) }}" name="expenditureForm" class="form-horizontal">
 
             <input type="hidden" name="expenditureID" value="0" />
 
@@ -77,7 +77,7 @@
 
 				$.ajax({
 					type: 'POST',
-					url: '/month/'+ headerID +'/expenditure/' + expenditureID + '/delete',
+					url: '/admin/month/'+ headerID +'/expenditure/' + expenditureID + '/delete',
 				});
 			}
 
@@ -88,7 +88,7 @@
 		{
 			$.ajax({
 				type: 'POST',
-				url: '/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
+				url: '/admin/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
 				data: { 'amount': 'all' },
 				success: function(){
 					$('tr[data-id='+expenditureID+']').addClass('expenditure-paid');
@@ -107,7 +107,7 @@
 			if (totalPaid != null && totalPaid != "") {
 				$.ajax({
 					type: 'POST',
-					url: '/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
+					url: '/admin/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
 					data: { 'amount': totalPaid },
 					success: function(){
 						$('tr[data-id='+expenditureID+']').addClass('expenditure-partial-paid');

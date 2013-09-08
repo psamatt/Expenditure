@@ -1,6 +1,15 @@
-{% extends 'base.html.twig' %}
+{% extends 'skeleton/base.html.twig' %}
 
 {% block content %}
+
+    {% set paidDay = app.security.token.user.__get('paid_day') %}
+
+    {% if paidDay is empty %}
+        <div class="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Warning!</strong> To get correct calculations as to how much to save per month, remember to fill out the paid day on the <a href="{{ path('profile_edit') }}">account settings</a>.
+        </div>
+    {% endif %}
 
     <h3>Saving Targets</h3>
     
@@ -27,7 +36,7 @@
                     <td width="25%">{{ saving.title }}</td>
                     <td>{{ saving.__get('target_date').format('d-m-Y') }}</td>
                     <td width="30%">
-                        <div class="progress progress-info">
+                        <div class="progress progress-{{ saving.isGoalReached? 'success':'info'}}">
                             <div class="bar" style="width: {{ saving.percentProgress }}%"></div>
                             <span>{{ CURRENCY ~ saving.__get('saved_amount') | default(0) ~ ' / ' ~ CURRENCY ~ saving.__get('target_amount') }}</span>
                         </div>
@@ -45,19 +54,28 @@
                         </a>
 				    </td>
                 </tr>
-                <tr>
-                    <td colspan="5">
-                        <div class="alert alert-info">
-                            {% set numMonthsRemaining = saving.numMonthsRemaining(app.savings.includeCurrentMonth) %}
-                            <strong>{{ numMonthsRemaining }}</strong> month{{ numMonthsRemaining != 1? 's':''}} remaining, to reach target, save <strong>{{ CURRENCY ~ saving.amountPerMonth(app.savings.includeCurrentMonth)  | number_format(2) }}</strong>{{ numMonthsRemaining > 1? ' per month':''}}
-                        </div>
-                    </td>
-                </tr>
-                
-                {% set totalAmountOfSavingsPerMonth = totalAmountOfSavingsPerMonth + saving.amountPerMonth(app.savings.includeCurrentMonth) %}
+                {% if paidDay is not empty %}
+                    <tr>
+                        <td colspan="5">
+                            <div class="alert alert-info">
+                                {% if saving.isGoalReached %}
+                                    Target Goal reached!!
+                                {% else %}
+                                    {% set numMonthsRemaining = saving.numberOfPayDaysRemaining(paidDay) %}
+    
+                                    <strong>{{ numMonthsRemaining }}</strong> pay day{{ numMonthsRemaining != 1? 's':''}} remaining, to reach target, save <strong>{{ CURRENCY ~ saving.amountPerMonth(paidDay)  | number_format(2) }}</strong>{{ numMonthsRemaining > 1? ' per month':''}}
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    
+                     {% set totalAmountOfSavingsPerMonth = totalAmountOfSavingsPerMonth + saving.amountPerMonth(paidDay) %}
+                     
+                {% endif %}
+               
     		{% endfor %}
     		</tbody>
-    		{% if savings | length > 1 %}
+    		{% if savings | length > 1 and paidDay is not empty %}
         		<tfoot>
                     <tr>
                         <td colspan="5">To reach all your targets, you need to save <strong>{{ CURRENCY ~ totalAmountOfSavingsPerMonth | number_format(2) }}</strong> in total per month</td>
@@ -71,7 +89,7 @@
     <div class="well">
         <p class="text-info">Fill out fields below to save a saving target</p>  
     	
-        <form method="post" action="/savings/save" class="form-horizontal" name="expenditureForm">
+        <form method="post" action="{{ path('admin_savings_save') }}" class="form-horizontal" name="expenditureForm">
             <input type="hidden" name="savingID" value="{{ saving is defined? saving.id: '' }}" />
     		
     		<div class="control-group">
@@ -139,7 +157,7 @@
             if (confirmDelete()) {
                 $.ajax({
 					type: 'POST',
-					url: '/savings/' + savingID + '/delete',
+					url: '/admin/savings/' + savingID + '/delete',
 					success: function(){
 						document.location.reload();
 					},
@@ -172,7 +190,7 @@
 			if (amountMoney != null && amountMoney != "") {
 				$.ajax({
 					type: 'POST',
-					url: '/savings/' + savingID + '/money/add',
+					url: '/admin/savings/' + savingID + '/money/add',
 					data: { 'amount': amountMoney },
 					success: function(){
 						document.location.reload();

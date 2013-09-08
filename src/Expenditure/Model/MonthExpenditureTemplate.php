@@ -12,6 +12,7 @@ class MonthExpenditureTemplate extends \Spot\Entity
             'id' => array('type' => 'int', 'primary' => true, 'serial' => true),
             'title' => array('type' => 'text', 'required' => true),
             'price' => array('type' => 'float', 'required' => true),
+            'user_id' => array('type' => 'integer', 'required' => true),
         );
     }
 }

@@ -13,7 +13,7 @@ class DefaultController extends BaseController
      */
     public function indexAction(Request $request)
     {
-        $monthHeader = $this->db->all('Expenditure\Model\MonthHeader')->order(array('calendar_date' => 'DESC'))->first();
+        $monthHeader = $this->db->all('Expenditure\Model\MonthHeader', array('user_id' => $this->getUser()->id))->order(array('calendar_date' => 'DESC'))->first();
 
         $currentFormat = (int)$this->getCarbon()->startOfMonth()->format('Ym');
         $month = $this->getCarbon();
@@ -29,7 +29,7 @@ class DefaultController extends BaseController
                 $monthHeader = false;
                 $month = $this->getCarbon();
             }
-        }
+        }        
 
         $returnArray = array('monthYear' => $month->startOfMonth());
 

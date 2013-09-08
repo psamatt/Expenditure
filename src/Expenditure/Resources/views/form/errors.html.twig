@@ -1,0 +1,11 @@
+<div class="alert">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Warning!</strong> There are errors with this form
+    <ul>
+        {% for fieldErrors in errors %}
+            {% for fieldError in fieldErrors %}
+                <li>{{ fieldError }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+</div>

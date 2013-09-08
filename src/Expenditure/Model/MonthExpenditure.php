@@ -16,4 +16,15 @@ class MonthExpenditure extends \Spot\Entity
             'header_id' => array('type' => 'int', 'required' => true),
         );
     }
+    
+    public static function relations()
+    {
+        return array(
+            'header' => array(
+                'type' => 'HasOne',
+                'entity' => 'Expenditure\Model\MonthHeader',
+                'where' => array('id' => ':entity.header_id'),
+            ),
+        );
+    }
 }

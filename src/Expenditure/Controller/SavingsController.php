@@ -14,9 +14,7 @@ class SavingsController extends BaseController
      */
     public function indexAction(Request $request)
     {
-        $savings = $this->db->all('Expenditure\Model\Saving')->order(array('target_date' => 'DESC'));
-        
-        $returnArray['savings'] = $savings;
+        $returnArray['savings'] = $this->getUser()->savings;;
 
         return $this->twig->render('savings/overview.html.twig', $returnArray);
     }
@@ -33,16 +31,23 @@ class SavingsController extends BaseController
         
         if ('' !== $savingID = $request->get('savingID', '')) {
             $saving = $this->db->first('Expenditure\Model\Saving', array('id' => $savingID));
+            
+            $this->isOwnedByAdmin($saving);
         }
 
         $saving->title = $request->get('inputTitle');
         $saving->target_date = $request->get('targetDate');
         $saving->target_amount = $request->get('targetAmount');
         $saving->saved_amount = $request->get('amountSaved');
+        
+        if ($saving->isGoalReached()) {
+            $saving->saved_amount = $saving->target_amount;
+        }
+        $saving->user_id = $this->getUser()->id;
 
         $this->db->save($saving);
 
-        return new RedirectResponse('/savings', 302);
+        return new RedirectResponse($this->urlGenerator->generate('admin_savings'), 302);
     }
     
     /**
@@ -55,9 +60,11 @@ class SavingsController extends BaseController
     {
         $saving = $this->db->first('Expenditure\Model\Saving', array('id' => $savingID));
         
+        $this->isOwnedByAdmin($saving);
+        
         $this->db->delete($saving);
         
-         return new RedirectResponse('/savings', 302);
+        return new RedirectResponse($this->urlGenerator->generate('admin_savings'), 302);
     }
     
     /**
@@ -70,6 +77,8 @@ class SavingsController extends BaseController
     public function addMoneyAction($savingID, Request $request)
     {
         $saving = $this->db->first('Expenditure\Model\Saving', array('id' => $savingID));
+        
+        $this->isOwnedByAdmin($saving);
         
         $saving->addMoney(floatval($request->get('amount', 0)));
         
