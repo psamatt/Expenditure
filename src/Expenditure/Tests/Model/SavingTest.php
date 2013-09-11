@@ -218,7 +218,6 @@ class SavingTest extends \PHPUnit_Framework_TestCase
         $saving->saved_amount = 200;
         $saving->target_date = new \DateTime('2015-01-01');
         
-        
         $this->assertEquals(100, $saving->getAmountPerMonth(10, new \DateTime('2014-05-01')));
     }
     
@@ -232,7 +231,6 @@ class SavingTest extends \PHPUnit_Framework_TestCase
         $saving->target_amount = 1121;
         $saving->saved_amount = 200;
         $saving->target_date = new \DateTime('2015-01-01');
-        
         
         $this->assertEquals(115.13, $saving->getAmountPerMonth(10, new \DateTime('2014-05-01')));
     }
@@ -248,7 +246,6 @@ class SavingTest extends \PHPUnit_Framework_TestCase
         $saving->saved_amount = 200;
         $saving->target_date = new \DateTime('2015-01-01');
         
-        
         $this->assertEquals(115.125, $saving->getAmountPerMonth(10, new \DateTime('2014-05-01'), false));
     }
     
@@ -262,7 +259,6 @@ class SavingTest extends \PHPUnit_Framework_TestCase
         $saving->target_amount = 1121;
         $saving->saved_amount = 200;
         $saving->target_date = new \DateTime('2015-01-01');
-        
         
         $this->assertEquals(115.13, $saving->getAmountPerMonth(10, new \DateTime('2014-05-01'), true));
     }
