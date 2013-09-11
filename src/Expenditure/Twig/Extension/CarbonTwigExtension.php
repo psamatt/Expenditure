@@ -4,7 +4,7 @@ namespace Expenditure\Twig\Extension;
 
 use Carbon\Carbon as CarbonDateTime;
 
-class Carbon extends \Twig_Extension {
+class CarbonTwigExtension extends \Twig_Extension {
 
     public function getFilters()
     {

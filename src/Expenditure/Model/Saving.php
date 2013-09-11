@@ -72,29 +72,43 @@ class Saving extends \Spot\Entity
      * Get the number of pay days remaining
      *
      * @param integer $payDayOfMonth
+     * @param DateTime|null $fromDate The date to start from. If null, then todays date is used
      * @param boolean $fresh Get a fresh value
      * @return integer
      */
-    public function getNumberOfPayDaysRemaining($payDayOfMonth = null, $fresh = false)
+    public function getNumberOfPayDaysRemaining($payDayOfMonth = null, $fromDate = null, $fresh = false)
     {
         if ($this->numPayDaysRemaining !== null && !$fresh) {
             return $this->numPayDaysRemaining;
         }
     
+        $sameMonth = true;
         $payDaysRemaining = 0;
-        $today = new \DateTime();
+        $fromDate = $fromDate instanceof \DateTime? $fromDate: new \DateTime;
         
-        if ($this->target_date < $today) {
+        if ($this->target_date < $fromDate) {
             return $payDaysRemaining;
         }
         
-        $payDaysRemaining = CarbonDateTime::now()->addMonth()->startOfMonth()->diffInMonths(CarbonDateTime::instance($this->target_date)->startOfMonth());
+        $targetDateDay = $this->target_date->format('j');
         
-        if ($today->format('j') < $payDayOfMonth) {
-            $payDaysRemaining++;
-        }
+        // if the start and end date are not in the same month
+        if ($this->target_date->format('Y\-n') != $fromDate->format('Y\-n')) {
+        
+            $sameMonth = false;
 
-        if ($this->target_date->format('j') >= $payDayOfMonth) {
+            $payDaysRemaining += CarbonDateTime::instance($fromDate)->addMonth()->startOfMonth()->diffInMonths(CarbonDateTime::instance($this->target_date)->startOfMonth());
+            
+            // if the ending date is after the pay day of the month
+            if ($targetDateDay >= $payDayOfMonth) {
+                $payDaysRemaining++;
+            }
+            
+        }
+        
+        // if the from date is before the pay of the month and its not the same month, if same month, then the target date 
+        // has got to before the end date
+        if ($fromDate->format('j') <= $payDayOfMonth && (!$sameMonth || ($sameMonth && $payDayOfMonth < $targetDateDay))) {
             $payDaysRemaining++;
         }
 
@@ -105,13 +119,21 @@ class Saving extends \Spot\Entity
      * Get the amount of money to save per pay day to reach the target
      *
      * @param boolean $payDayOfMonth
+     * @param DateTime|null $fromDate The date to start from. If null, then todays date is used
+     * @param boolean $toTwoDecimals Whether to format the value with two decimal places
      * @return integer
      */
-    public function getAmountPerMonth($payDayOfMonth)
+    public function getAmountPerMonth($payDayOfMonth, $fromDate = null, $toTwoDecimals = true)
     {
-        $numPayDaysRemaining = $this->getNumberOfPayDaysRemaining($payDayOfMonth);
+        $numPayDaysRemaining = $this->getNumberOfPayDaysRemaining($payDayOfMonth, $fromDate);
         $amountRemaining = $this->getAmountRemaining();
         
-        return $numPayDaysRemaining == 0? $amountRemaining: $amountRemaining / $numPayDaysRemaining;
+        $amountPerMonth = $numPayDaysRemaining == 0? $amountRemaining: $amountRemaining / $numPayDaysRemaining;
+        
+        if ($toTwoDecimals) {
+            $amountPerMonth = number_format($amountPerMonth, 2);
+        }
+        
+        return $amountPerMonth;
     }
 }

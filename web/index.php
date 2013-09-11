@@ -40,7 +40,7 @@ array('^/login','IS_AUTHENTICATED_ANONYMOUSLY'),
 
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
 
-    $twig->addExtension(new Expenditure\Twig\Extension\Carbon);
+    $twig->addExtension(new Expenditure\Twig\Extension\CarbonTwigExtension);
     $twig->addGlobal('CURRENCY', $app['currency']);
     $twig->addGlobal('NOW', new \DateTime);
     return $twig;

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "7d906dcc7e46ce0dff1e836651c36ce1",
+    "hash": "621db44e78a8bb8598ba2f0c860bf9bd",
     "packages": [
         {
             "name": "igorw/config-service-provider",
@@ -876,15 +876,14 @@
             "time": "2013-08-30 15:34:54"
         }
     ],
-    "packages-dev": [
-
-    ],
+    "packages-dev": null,
     "aliases": [
 
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "igorw/config-service-provider": 20
+        "igorw/config-service-provider": 20,
+        "mockery/mockery": 20
     },
     "platform": [
 
