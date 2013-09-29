@@ -7,8 +7,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
-use Spot\Mapper;
-use Expenditure\Model\User;
+use Doctrine\ORM\EntityManager;
+use Expenditure\Entity\User;
 
 class UserProvider implements UserProviderInterface
 {
@@ -23,11 +23,11 @@ class UserProvider implements UserProviderInterface
     /**
      * Constructor
      *
-     * @param Mapper $mapper
+     * @param EntityManager $em
      */
-    public function __construct(Mapper $mapper)
+    public function __construct(EntityManager $em)
     {
-        $this->mapper = $mapper;
+        $this->em = $em;
     }
 
     /**
@@ -35,9 +35,9 @@ class UserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($emailAddress)
     {
-        $user = $this->mapper->first('Expenditure\Model\User', array('email_address' => strtolower($emailAddress)));
+        $user = $this->em->getRepository('Expenditure:User')->findOneBy(array('email_address' => strtolower($emailAddress)));
     
-        if ($user == false) {
+        if ($user === null) {
             throw new UsernameNotFoundException(sprintf('Email "%s" does not exist.', $emailAddress));
         }
 
@@ -61,6 +61,6 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'Expenditure\Model\User';
+        return $class === 'Expenditure\Entity\User';
     }
 }

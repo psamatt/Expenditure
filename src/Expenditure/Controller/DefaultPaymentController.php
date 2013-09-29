@@ -18,7 +18,7 @@ class DefaultPaymentController extends BaseController
        $returnArray = array();
 
         if ($defaultID > 0) {
-            $default = $this->db->first('Expenditure\Model\MonthExpenditureTemplate', array('id' => $defaultID));
+            $default = $this->em->getRepository('Expenditure:MonthExpenditureTemplate')->find($defaultID);
             
             $this->isOwnedByAdmin($default);
 
@@ -27,7 +27,7 @@ class DefaultPaymentController extends BaseController
             }
         }
 
-        $returnArray['monthlyTemplates'] = $this->getUser()->monthExpenditureTemplates;
+        $returnArray['monthlyTemplates'] = $this->getUser()->getExpenditureTemplates();
 
         return $this->twig->render('default/overview.html.twig', $returnArray);
     }
@@ -41,19 +41,20 @@ class DefaultPaymentController extends BaseController
     public function saveAction(Request $request)
     {
         if (null !== $defaultID = $request->get('defaultID')) {
-            $monthExpenditureTemplate = $this->db->first('Expenditure\Model\MonthExpenditureTemplate', array('id' => $defaultID));
+            $monthExpenditureTemplate = $this->em->getRepository('Expenditure:MonthExpenditureTemplate')->find($defaultID);
             
             $this->isOwnedByAdmin($monthExpenditureTemplate);
 
         } else {
-            $monthExpenditureTemplate = new \Expenditure\Model\MonthExpenditureTemplate;
+            $monthExpenditureTemplate = new \Expenditure\Entity\MonthExpenditureTemplate;
         }
 
-        $monthExpenditureTemplate->title = $request->get('inputTitle');
-        $monthExpenditureTemplate->price = $request->get('inputPrice');
-        $monthExpenditureTemplate->user_id = $this->getUser()->id;
+        $monthExpenditureTemplate->setTitle($request->get('inputTitle'));
+        $monthExpenditureTemplate->setPrice($request->get('inputPrice'));
+        $monthExpenditureTemplate->setUser($this->getUser());
 
-        $this->db->save($monthExpenditureTemplate);
+        $this->em->persist($monthExpenditureTemplate);
+        $this->em->flush();
 
         return new RedirectResponse($this->urlGenerator->generate('admin_payments'), 302);
     }
@@ -67,11 +68,12 @@ class DefaultPaymentController extends BaseController
      */
     public function deleteAction($defaultID, Request $request)
     {
-        $monthExpenditureTemplate = $this->db->first('Expenditure\Model\MonthExpenditureTemplate', array('id' => $defaultID));
+        $monthExpenditureTemplate = $this->em->getRepository('Expenditure:MonthExpenditureTemplate')->find($defaultID);
         
         $this->isOwnedByAdmin($monthExpenditureTemplate);
 
-        $this->db->delete($monthExpenditureTemplate);
+        $this->em->remove($monthExpenditureTemplate);
+        $this->em->flush();
 
         return new RedirectResponse($this->urlGenerator->generate('admin_payments'), 302);
     }

@@ -1,32 +1,209 @@
 <?php
 
-namespace Expenditure\Model;
+namespace Expenditure\Entity;
 
 use Carbon\Carbon as CarbonDateTime;
 
-class Saving extends \Spot\Entity
-{
-    protected static $_datasource = 'savings';
+use Doctrine\ORM\Mapping as ORM;
 
-    public static function fields()
-    {
-        return array(
-            'id' => array('type' => 'int', 'primary' => true, 'serial' => true),
-            'title' => array('type' => 'string', 'required' => true),
-            'target_date' => array('type' => 'datetime', 'required' => true),
-            'target_amount' => array('type' => 'float', 'required' => true),
-            'saved_amount' => array('type' => 'float', 'required' => false),
-            'user_id' => array('type' => 'integer', 'required' => true),
-        );
-    }
+/**
+ * Used to store all savings
+ *
+ * Expenditure\Entity\Saving
+ *
+ * @ORM\Table(name="savings")
+ * @ORM\Entity()
+ */
+class Saving
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * Title of what the saving is to achieve
+     *
+     * @var string $title
+     *
+     * @ORM\Column(name="title", type="string", nullable=true)
+     */
+    protected $title;
+
+    /**
+     * The target date to reach of the saving amount
+     *
+     * @var DateTime $target_date
+     *
+     * @ORM\Column(name="target_date", type="date", nullable=true)
+     */
+    protected $target_date;
     
     /**
+     * The target amount you want to save
+     *
+     * @var float $target_amount
+     *
+     * @ORM\Column(name="target_amount", type="float")
+     */
+    protected $target_amount;
+    
+    /**
+     * The amount currently saved
+     *
+     * @var float $saved_amount
+     *
+     * @ORM\Column(name="saved_amount", type="float")
+     */
+    protected $saved_amount;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="savings")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+	protected $user;
+	
+	/**
      * The number of pay days remaining
      *
      * @var integer
      * @access private
      */
     private $numPayDaysRemaining = null;
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return Saving
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set target_date
+     *
+     * @param \DateTime $targetDate
+     *
+     * @return Saving
+     */
+    public function setTargetDate($targetDate)
+    {
+        $this->target_date = $targetDate;
+
+        return $this;
+    }
+
+    /**
+     * Get target_date
+     *
+     * @return \DateTime 
+     */
+    public function getTargetDate()
+    {
+        return $this->target_date;
+    }
+
+    /**
+     * Set target_amount
+     *
+     * @param float $targetAmount
+     *
+     * @return Saving
+     */
+    public function setTargetAmount($targetAmount)
+    {
+        $this->target_amount = $targetAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get target_amount
+     *
+     * @return float 
+     */
+    public function getTargetAmount()
+    {
+        return $this->target_amount;
+    }
+
+    /**
+     * Set saved_amount
+     *
+     * @param float $savedAmount
+     *
+     * @return Saving
+     */
+    public function setSavedAmount($savedAmount)
+    {
+        $this->saved_amount = $savedAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get saved_amount
+     *
+     * @return float 
+     */
+    public function getSavedAmount()
+    {
+        return $this->saved_amount;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Expenditure\Entity\User $user
+     *
+     * @return Saving
+     */
+    public function setUser(\Expenditure\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Expenditure\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
     
     /**
      * Add money

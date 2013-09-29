@@ -16,15 +16,16 @@ class MonthExpenditureController extends BaseController
      */
     public function paidAction($expenditureID, Request $request)
     {
-        $expenditure = $this->db->first('Expenditure\Model\MonthExpenditure', array('id' => $expenditureID));
+        $expenditure = $this->em->getRepository('Expenditure:MonthExpenditure')->find($expenditureID);
         
-        $this->isOwnedByAdmin($expenditure->header);
+        $this->isOwnedByAdmin($expenditure->getHeader());
 
         $amount = $request->get('amount');
 
-        $expenditure->amount_paid = ($amount == 'all'? $expenditure->price: floatval($amount));
+        $expenditure->setAmountPaid($amount == 'all'? $expenditure->getPrice(): floatval($amount));
 
-        $this->db->save($expenditure);
+        $this->em->persist($expenditure);
+        $this->em->flush();
 
         return 1;
     }
@@ -44,20 +45,21 @@ class MonthExpenditureController extends BaseController
 
         if (strlen($title) > 0 && strlen($price) > 0) {
         
-            $monthHeader = $this->db->first('Expenditure\Model\MonthHeader', array('id' => $headerID));
+            $monthHeader = $this->em->getRepository('Expenditure:MonthHeader')->find($headerID);
             $this->isOwnedByAdmin($monthHeader);
 
             if ($expenditureID > 0) {
-                $expenditure = $this->db->first('Expenditure\Model\MonthExpenditure', array('id' => $expenditureID));
+                $expenditure = $this->em->getRepository('Expenditure:MonthExpenditure')->find($expenditureID);
             } else {
-                $expenditure = new \Expenditure\Model\MonthExpenditure;
+                $expenditure = new \Expenditure\Entity\MonthExpenditure;
             }
 
-            $expenditure->title = $title;
-            $expenditure->price = $price;
-            $expenditure->header_id = $headerID;
+            $expenditure->setTitle($title);
+            $expenditure->setPrice($price);
+            $expenditure->setHeader($monthHeader);
 
-            $this->db->save($expenditure);
+            $this->em->persist($expenditure);
+            $this->em->flush();
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_homepage'), 302);
@@ -71,11 +73,12 @@ class MonthExpenditureController extends BaseController
      */
     public function deleteAction($expenditureID)
     {
-        $expenditure = $this->db->first('Expenditure\Model\MonthExpenditure', array('id' => $expenditureID));
+        $expenditure = $this->em->getRepository('Expenditure:MonthExpenditure')->find($expenditureID);
         
-        $this->isOwnedByAdmin($expenditure->header);
+        $this->isOwnedByAdmin($expenditure->getHeader());
 
-        $this->db->delete($expenditure);
+        $this->em->remove($expenditure);
+        $this->em->flush();
 
         return 1;
     }

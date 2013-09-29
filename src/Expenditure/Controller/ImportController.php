@@ -17,28 +17,28 @@ class ImportController extends BaseController
      */
     public function saveAction($year, $month, Request $request)
     {
-        $monthHeader = new \Expenditure\Model\MonthHeader;
-        $monthHeader->calendar_date = $this->getCarbon()->createFromDate($year, $month, 1)->toDateString();
-        $monthHeader->month_income = $request->get('salary');
-        $monthHeader->user_id = $this->getUser()->id;
+        $monthHeader = new \Expenditure\Entity\MonthHeader;
+        $monthHeader->setCalendarDate($this->getCarbon()->createFromDate($year, $month, 1)->toDateString());
+        $monthHeader->setMonthIncome($request->get('salary'));
+        $monthHeader->setUser($this->getUser());
 
-        $this->db->save($monthHeader);
-
-        $monthlyTemplates = $this->getUser()->monthExpenditureTemplates;
+        $monthlyTemplates = $this->getUser()->getExpenditureTemplates();
 
         if (count($monthlyTemplates) > 0) {
 
             foreach ($monthlyTemplates as $monthlyTemplate) {
 
-                $monthExpenditure = new \Expenditure\Model\MonthExpenditure;
-                $monthExpenditure->title = $monthlyTemplate->title;
-                $monthExpenditure->price = $monthlyTemplate->price;
-                $monthExpenditure->amount_paid = 0;
-                $monthExpenditure->header_id = $monthHeader->id;
+                $monthExpenditure = new \Expenditure\Entity\MonthExpenditure;
+                $monthExpenditure->setTitle($monthlyTemplate->getTitle());
+                $monthExpenditure->setPrice($monthlyTemplate->getPrice());
+                $monthExpenditure->setAmountPaid(0);
 
-                $this->db->save($monthExpenditure);
+                $monthHeader->addExpenditure($monthExpenditure);
             }
         }
+        
+        $this->em->persist($monthHeader);
+        $this->em->flush();
 
         return new RedirectResponse($this->urlGenerator->generate('admin_homepage'), 302);
     }

@@ -13,7 +13,7 @@ class DefaultController extends BaseController
      */
     public function indexAction(Request $request)
     {
-        $monthHeader = $this->db->all('Expenditure\Model\MonthHeader', array('user_id' => $this->getUser()->id))->order(array('calendar_date' => 'DESC'))->first();
+        $monthHeader = $this->em->getRepository('Expenditure:MonthHeader')->findOneBy(array('user' => $this->getUser()), array('calendar_date' => 'DESC'));
 
         $currentFormat = (int)$this->getCarbon()->startOfMonth()->format('Ym');
         $month = $this->getCarbon();
@@ -23,9 +23,9 @@ class DefaultController extends BaseController
             $month = $this->getCarbon()->addMonth();
         } elseif ($monthHeader !== false) {
 
-             $month = $this->getCarbon($monthHeader->calendar_date->format('c'));
+             $month = $this->getCarbon($monthHeader->getCalendarDate()->format('c'));
 
-            if ($currentFormat > (int)$monthHeader->calendar_date->format('Ym')) {
+            if ($currentFormat > (int)$monthHeader->getCalendarDate()->format('Ym')) {
                 $monthHeader = false;
                 $month = $this->getCarbon();
             }
@@ -35,13 +35,13 @@ class DefaultController extends BaseController
 
         if ($monthHeader !== false) {
 
-            $monthlyExpenditure = $this->db->all('Expenditure\Model\MonthExpenditure')->where(array('header_id' => $monthHeader->id))->order(array('price' => 'DESC'));
+            $monthlyExpenditures = $this->em->getRepository('Expenditure:MonthExpenditure')->findBy(array('header' => $monthHeader), array('price' => 'DESC'));
 
-            list($totalPaid, $totalExpenditure) = $this->findMonthlyTotals($monthlyExpenditure->toArray());
+            list($totalPaid, $totalExpenditure) = $this->findMonthlyTotals($monthlyExpenditures);
 
             $returnArray['totalPaid'] = $totalPaid;
             $returnArray['totalExpenditure'] = $totalExpenditure;
-            $returnArray['monthlyExpenditure'] = $monthlyExpenditure;
+            $returnArray['monthlyExpenditures'] = $monthlyExpenditures;
 
             $returnArray['monthHeader'] = $monthHeader;
         } else {
@@ -64,8 +64,8 @@ class DefaultController extends BaseController
         for ($i=0, $j = count($expenditure); $i < $j; $i++) {
 
             $item = $expenditure[$i];
-            $totalPaid += $item['amount_paid'];
-            $totalExpenditure += $item['price'];
+            $totalPaid += $item->getAmountPaid();
+            $totalExpenditure += $item->getPrice();
         }
 
         return array($totalPaid, $totalExpenditure);

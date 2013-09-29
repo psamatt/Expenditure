@@ -14,7 +14,7 @@ class SavingsController extends BaseController
      */
     public function indexAction(Request $request)
     {
-        $returnArray['savings'] = $this->getUser()->savings;;
+        $returnArray['savings'] = $this->getUser()->getSavings();
 
         return $this->twig->render('savings/overview.html.twig', $returnArray);
     }
@@ -27,25 +27,34 @@ class SavingsController extends BaseController
      */
     public function saveAction(Request $request)
     {
-        $saving = new \Expenditure\Model\Saving;
+        $saving = new \Expenditure\Entity\Saving;
         
         if ('' !== $savingID = $request->get('savingID', '')) {
-            $saving = $this->db->first('Expenditure\Model\Saving', array('id' => $savingID));
+            $saving = $this->em->getRepository('Expenditure:Saving')->find($savingID);
             
             $this->isOwnedByAdmin($saving);
         }
+        
+        $targetDate = $request->get('targetDate', null);
 
-        $saving->title = $request->get('inputTitle');
-        $saving->target_date = $request->get('targetDate');
-        $saving->target_amount = $request->get('targetAmount');
-        $saving->saved_amount = $request->get('amountSaved');
+        if (preg_match('/([0-9]{2})-([0-9]{2})-([0-9]{4})/', $targetDate, $m)) {
+            $targetDate = $this->getCarbon()->createFromDate($m[3], $m[2], $m[1]);
+        } else {
+            $targetDate = null;
+        }
+
+        $saving->setTitle($request->get('inputTitle'));
+        $saving->setTargetDate($targetDate);
+        $saving->setTargetAmount($request->get('targetAmount'));
+        $saving->setSavedAmount($request->get('amountSaved'));
+        $saving->setUser($this->getUser());
         
         if ($saving->isGoalReached()) {
-            $saving->saved_amount = $saving->target_amount;
+            $saving->setSavedAmount($saving->getTargetAmount());
         }
-        $saving->user_id = $this->getUser()->id;
 
-        $this->db->save($saving);
+        $this->em->persist($saving);
+        $this->em->flush();
 
         return new RedirectResponse($this->urlGenerator->generate('admin_savings'), 302);
     }
@@ -58,11 +67,12 @@ class SavingsController extends BaseController
      */
     public function deleteAction($savingID)
     {
-        $saving = $this->db->first('Expenditure\Model\Saving', array('id' => $savingID));
+        $saving = $this->em->getRepository('Expenditure:Saving')->find($savingID);
         
         $this->isOwnedByAdmin($saving);
         
-        $this->db->delete($saving);
+        $this->em->remove($saving);
+        $this->em->flush();
         
         return new RedirectResponse($this->urlGenerator->generate('admin_savings'), 302);
     }
@@ -76,13 +86,14 @@ class SavingsController extends BaseController
      */
     public function addMoneyAction($savingID, Request $request)
     {
-        $saving = $this->db->first('Expenditure\Model\Saving', array('id' => $savingID));
+        $saving = $this->em->getRepository('Expenditure:Saving')->find($savingID);
         
         $this->isOwnedByAdmin($saving);
         
         $saving->addMoney(floatval($request->get('amount', 0)));
         
-        $this->db->save($saving);
+        $this->em->persist($saving);
+        $this->em->flush();
         
         return 1;
     }
