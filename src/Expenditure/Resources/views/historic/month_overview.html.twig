@@ -6,12 +6,12 @@
 <div class="hero-unit">
 
 
-	{% set calendarDate = monthHeader.__get('calendar_date') %}
+	{% set calendarDate = monthHeader.calendarDate %}
 	<h1>{{ calendarDate.format('F Y') }}</h1>
 	<p class="">
-		<span class="text-success" id="amountSalary">£{{ monthHeader.__get('month_income')  | number_format(2, '.', ',') }} -
+		<span class="text-success" id="amountSalary">£{{ monthHeader.monthIncome  | number_format(2, '.', ',') }} -
 		<span class="text-error" id="amountPaid">£{{ totalPaid | number_format(2, '.', ',') }}</span> =
-		<span class="text-info" id="amountLeft">£{{ (monthHeader.__get('month_income') - totalPaid) | number_format(2, '.', ',') }}</span>
+		<span class="text-info" id="amountLeft">£{{ (monthHeader.monthIncome - totalPaid) | number_format(2, '.', ',') }}</span>
 	</p>
 </div>
 

@@ -14,7 +14,7 @@ class MonthHistoricController extends DefaultController
      */
     public function indexAction()
     {
-        $monthHeaders = $this->getUser()->monthHeaders;
+        $monthHeaders = $this->getUser()->getMonthHeaders();
 
         return $this->twig->render('historic/overview.html.twig', array('monthHeaders' => $monthHeaders));
     }
@@ -29,19 +29,21 @@ class MonthHistoricController extends DefaultController
     public function viewAction($year, $month)
     {
         $returnArray = array();
+        
+        $monthDate = $this->getCarbon()->createFromDate($year, $month, 1)->setTime(0,0,0);
 
-        $monthHeader = $this->db->first('Expenditure\Model\MonthHeader', array('calendar_date' => $this->getCarbon()->createFromDate($year, $month, 1)->toDateString(), 'user_id' => $this->getUser()->id));
+        $monthHeader = $this->em->getRepository('Expenditure:MonthHeader')->findOneBy(array('calendar_date' => $monthDate, 'user' => $this->getUser()));
         
         if (!$monthHeader) {
             return new RedirectResponse($this->urlGenerator->generate('admin_homepage'), 302);
         }
 
-        $monthlyExpenditure = $this->db->all('Expenditure\Model\MonthExpenditure')->where(array('header_id' => $monthHeader->id));
+        $monthlyExpenditures = $this->em->getRepository('Expenditure:MonthExpenditure')->findBy(array('header' => $monthHeader));
 
-        list($totalPaid, $totalExpenditure) = $this->findMonthlyTotals($monthlyExpenditure->toArray());
+        list($totalPaid, $totalExpenditure) = $this->findMonthlyTotals($monthlyExpenditures);
 
         $returnArray['totalPaid'] = $totalPaid;
-        $returnArray['monthlyExpenditure'] = $monthlyExpenditure;
+        $returnArray['monthlyExpenditures'] = $monthlyExpenditures;
         $returnArray['monthHeader'] = $monthHeader;
 
         return $this->twig->render('historic/month_overview.html.twig', $returnArray);

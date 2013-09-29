@@ -20,13 +20,13 @@
 		<div class="control-group">
 			<label class="control-label" for="inputEmail">Email Address</label>
 			<div class="controls">
-				<input type="email" id="inputEmail" name="emailAddress" value="{{ user.email_address }}" />
+				<input type="email" id="inputEmail" name="emailAddress" value="{{ user.emailAddress }}" />
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="inputPaidDay">Paid Day</label>
 			<div class="controls">
-				<input type="number" id="inputPaidDay" name="paidDay" value="{{ user.__get('paid_day') }}" min="1" max="31" />
+				<input type="number" id="inputPaidDay" name="paidDay" value="{{ user.paidDay }}" min="1" max="31" />
 				<span class="help-block">The day of the month you get paid so Expenditure can work out how much to save per month.</span>
 			</div>
 		</div>
@@ -62,12 +62,4 @@
 			</div>
 		</div>
 	</form>
-	
-	
-	
-	
-	
-	
-
 {% endblock %}
-

@@ -24,12 +24,12 @@
     			</ul>
 			{% endif %}
 			<p>
-				<span class="text-success" id="amountSalary">{{ CURRENCY ~ monthHeader.month_income  | number_format(2, '.', ',') }} -
+				<span class="text-success" id="amountSalary">{{ CURRENCY ~ monthHeader.monthIncome  | number_format(2, '.', ',') }} -
 				<span class="text-error" id="totalExpenditure">{{ CURRENCY ~ totalExpenditure | number_format(2, '.', ',') }}</span>
 				<span class="text-info" id="amountLeft">({{ CURRENCY ~ (totalExpenditure - totalPaid) | number_format(2, '.', ',') }} still to pay)</span>
 
 				=
-				<span class="text-info" id="amountLeft">{{ CURRENCY ~ (monthHeader.month_income - totalExpenditure) | number_format(2, '.', ',') }}</span>
+				<span class="text-info" id="amountLeft">{{ CURRENCY ~ (monthHeader.monthIncome - totalExpenditure) | number_format(2, '.', ',') }}</span>
 			</p>
 		{% endif %}
 	</div>
