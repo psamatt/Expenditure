@@ -2,7 +2,7 @@
     "name": "psamatt/Expenditure",
     "description": "A small expenditure app for money minded people",
     "keywords": ["silex"],
-    "version": "1.2",
+    "version": "1.3",
     "license": "MIT",
     "authors": [
         {
