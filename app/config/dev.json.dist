@@ -4,6 +4,11 @@
     "secret": "my_unique_string",
     "db":
     {
-        "dsn": "mysql://username:password@localhost/expenditure"
+        "driver": "pdo_mysql",
+        "dbname": "expenditure",
+        "host": "localhost",
+        "user": "root",
+        "password": ~,
+        "port": ~, 
     }
 }

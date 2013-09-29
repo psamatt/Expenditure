@@ -5,8 +5,9 @@ namespace Expenditure\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Validator\Validator;
 
-use Expenditure\Model\User;
+use Expenditure\Entity\User;
 
 class UserController extends BaseController
 {
@@ -25,6 +26,14 @@ class UserController extends BaseController
      * @access private
      */
     private $lastError;
+    
+    /**
+     * The validator service
+     *
+     * @var Validator
+     * @access private
+     */
+    private $validator;
     
     /**
      * Login to the application
@@ -67,7 +76,7 @@ class UserController extends BaseController
             $errors = &$returnArray['errors'];
             
             if ($request->get('password1') != $request->get('password2')) {
-                $errors['password'][] = 'Password must match confirmation password';
+                $errors['password'] = 'Password must match confirmation password';
                 $hasErrors = true;
             }
             
@@ -76,18 +85,21 @@ class UserController extends BaseController
                 $user = $this->bindUser($request, true);
                 
                 if (!$user->isPasswordValid($request->get('password1'))) {
-                    $errors['password'][] = 'Password must be 6 characters or more long, contain at least one number and an upper case and lower case letter';
+                    $errors['password'] = 'Password must be 6 characters or more long, contain at least one number and an upper case and lower case letter';
                     $hasErrors = true;
                 }
                 
                 if (!$hasErrors) {
-                
-                    if (!$this->db->save($user)) {
-                        $errors += $user->errors();
-                    } else {
+
+                    $returnArray['errors'] = $this->validator->validate($user);
+                    
+                    if (count($returnArray['errors']) == 0) {
+                        $this->em->persist($user);
+                        $this->em->flush();
+    
                         $this->session->getFlashBag()->add('notice', 'Account created');
                         return new RedirectResponse($this->urlGenerator->generate('login'), 302);
-                    }
+                    }                    
                 }
             } 
         }
@@ -109,9 +121,12 @@ class UserController extends BaseController
 
             $user = $this->bindUser($request, false);
             
-            if (!$this->db->save($user)) {
-                $returnArray['errors'] = $user->errors();
-            } else {
+            $returnArray['errors'] = $this->validator->validate($user);
+            
+            if (count($returnArray['errors']) == 0) {
+                $this->em->persist($user);
+                $this->em->flush();
+                
                 $this->session->getFlashBag()->add('notice', 'Account updated');
             }
         }
@@ -133,21 +148,23 @@ class UserController extends BaseController
             $user = $this->getUser();
         
             if ($request->get('password1') != $request->get('password2')) {
-                $errors['password'][] = 'Password must match confirmation password';
+                $errors['password'] = 'Password must match confirmation password';
                 $hasErrors = true;
             }
             
             if (!$user->isPasswordValid($request->get('password1'))) {
-                $errors['password'][] = 'Password must be 6 characters or more long, contain at least one number and an upper case and lower case letter';
+                $errors['password'] = 'Password must be 6 characters or more long, contain at least one number and an upper case and lower case letter';
                 $hasErrors = true;
             }
             
             if (!$hasErrors) {
             
                 $encoder = $this->encoderFactory->getEncoder($user);
-                $user->password = $encoder->encodePassword($request->get('password1'), $user->salt);
-            
-                $this->db->save($user);
+                $user->setPassword($encoder->encodePassword($request->get('password1'), $user->getSalt()));
+                
+                $this->em->persist($user);
+                $this->em->flush();
+
                 $this->session->getFlashBag()->add('notice', 'Password updated');
             } else {
                 $this->session->getFlashBag()->add('passwordErrors', $errors);
@@ -178,6 +195,16 @@ class UserController extends BaseController
     }
     
     /**
+     * Validator
+     *
+     * @param Validator $validator
+     */
+    public function setValidator(Validator $validator)
+    {
+        $this->validator = $validator;
+    }
+    
+    /**
      * Bind a user from the request
      *
      * @param Request $request The request object
@@ -185,18 +212,18 @@ class UserController extends BaseController
      */
     private function bindUser(Request $request, $new = false)
     {
-        $user = $new? new \Expenditure\Model\User: $this->getUser();
+        $user = $new? new \Expenditure\Entity\User: $this->getUser();
         
-        $user->fullname = $request->get('fullname');
-        $user->email_address = $request->get('emailAddress');
-        $user->paid_day = $request->get('paidDay');
+        $user->setFullname($request->get('fullname'));
+        $user->setEmailAddress($request->get('emailAddress'));
+        $user->setPaidDay($request->get('paidDay'));
         
         if ($new) {
-            $user->salt = hash("sha256",time());
-            $user->status = 1;
+            $user->setSalt(hash("sha256",time()));
+            $user->setStatus(1);
             
             $encoder = $this->encoderFactory->getEncoder($user);
-            $user->password = $encoder->encodePassword($request->get('password1'), $user->salt);
+            $user->setPassword($encoder->encodePassword($request->get('password1'), $user->getSalt()));
         }
         
         return $user;

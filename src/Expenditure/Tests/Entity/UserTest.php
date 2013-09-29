@@ -2,15 +2,15 @@
 
 namespace Expenditure\Tests\Twig\Extension;
 
-use Expenditure\Model\User;
+use Expenditure\Entity\User;
 
 class UserTest extends \PHPUnit_Framework_TestCase
 {   
     public function testDisplayNameWithValidEmailAndFullname()
     {
         $user = new User;
-        $user->fullname = $username = 'John Doe';
-        $user->email_address = 'johndoe@gmail.com';
+        $user->setFullname($username = 'John Doe');
+        $user->setEmailAddress('johndoe@gmail.com');
         
         $this->assertEquals($username, $user->getDisplayName());
     }
@@ -18,7 +18,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
     public function testDisplayNameWithValidEmailAndNoFullname()
     {
         $user = new User;
-        $user->email_address = $emailAddress = 'johndoe@gmail.com';
+        $user->setEmailAddress($emailAddress = 'johndoe@gmail.com');
         
         $this->assertEquals($emailAddress, $user->getDisplayName());
     }
@@ -26,8 +26,8 @@ class UserTest extends \PHPUnit_Framework_TestCase
     public function testDisplayNameWithValidEmailAndEmptyFullname()
     {
         $user = new User;
-        $user->fullname = '';
-        $user->email_address = $emailAddress = 'johndoe@gmail.com';
+        $user->setFullname('');
+        $user->setEmailAddress($emailAddress = 'johndoe@gmail.com');
         
         $this->assertEquals($emailAddress, $user->getDisplayName());
     }

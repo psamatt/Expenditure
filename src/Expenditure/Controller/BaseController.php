@@ -7,16 +7,17 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Carbon\Carbon;
+use Doctrine\ORM\EntityManager;
 
 class BaseController
 {
     /**
-     * Instance of Spot
+     * Instance of EntityManager
      *
      * @access protected
-     * @var \Spot\Mapper
+     * @var EntityManager
      */
-    protected $db;
+    protected $em;
 
     /**
      * Twig
@@ -53,11 +54,11 @@ class BaseController
     /**
      * Set the database object
      *
-     * @param Mapper $db
+     * @param EntityManager $em
      */
-    public function setDB(\Spot\Mapper $db)
+    public function setEntityManager(EntityManager $em)
     {
-        $this->db = $db;
+        $this->em = $em;
     }
 
     /**
@@ -130,17 +131,17 @@ class BaseController
      * Is this entity owned by the administrator - relies on their being a user_id property on the object
      *
      * @param \Spot\Entity $entity The entity to check
-     * @param string|null The field name to get
+     * @param string|null $getter The getter method to get the user from
      * @return boolean|RedirectResponse
      */
-    public function isOwnedByAdmin($entity, $field = null)
+    public function isOwnedByAdmin($entity, $getter = null)
     {
-        $field = $field == null? 'user_id': $field;
+        $getter = $getter == null? 'getUser': $getter;
     
-        if (null !== $entity->{$field}) {
+        if (null !== $entity->{$getter}()) {
             
             if (null !== $user = $this->getUser()) {
-                if ($user->id === $entity->{$field}) {
+                if ($user == $entity->{$getter}()) {
                     return true;
                 }
             }

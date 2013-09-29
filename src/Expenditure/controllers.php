@@ -3,7 +3,7 @@
 $app['home.controller'] = $app->share(function() use ($app) {
 
     $defaultController = new Expenditure\Controller\DefaultController;
-    $defaultController->setDB($app['spot']);
+    $defaultController->setEntityManager($app['orm.em']);
     $defaultController->setTwigRenderer($app['twig']);
     $defaultController->setSecurity($app['security']);
     $defaultController->setURLGenerator($app['url_generator']);
@@ -14,7 +14,7 @@ $app['home.controller'] = $app->share(function() use ($app) {
 $app['import.controller'] = $app->share(function() use ($app) {
 
     $importController = new Expenditure\Controller\ImportController;
-    $importController->setDB($app['spot']);
+    $importController->setEntityManager($app['orm.em']);
     $importController->setTwigRenderer($app['twig']);
     $importController->setSecurity($app['security']);
     $importController->setURLGenerator($app['url_generator']);
@@ -25,7 +25,7 @@ $app['import.controller'] = $app->share(function() use ($app) {
 $app['month.expenditure.controller'] = $app->share(function() use ($app) {
 
     $expenditureController = new Expenditure\Controller\MonthExpenditureController;
-    $expenditureController->setDB($app['spot']);
+    $expenditureController->setEntityManager($app['orm.em']);
     $expenditureController->setTwigRenderer($app['twig']);
     $expenditureController->setSecurity($app['security']);
     $expenditureController->setURLGenerator($app['url_generator']);
@@ -36,7 +36,7 @@ $app['month.expenditure.controller'] = $app->share(function() use ($app) {
 $app['month.historic.controller'] = $app->share(function() use ($app) {
 
     $historicController = new Expenditure\Controller\MonthHistoricController;
-    $historicController->setDB($app['spot']);
+    $historicController->setEntityManager($app['orm.em']);
     $historicController->setTwigRenderer($app['twig']);
     $historicController->setSecurity($app['security']);
     $historicController->setURLGenerator($app['url_generator']);
@@ -47,7 +47,7 @@ $app['month.historic.controller'] = $app->share(function() use ($app) {
 $app['default.payments.controller'] = $app->share(function() use ($app) {
 
     $defaultPaymentController = new Expenditure\Controller\DefaultPaymentController;
-    $defaultPaymentController->setDB($app['spot']);
+    $defaultPaymentController->setEntityManager($app['orm.em']);
     $defaultPaymentController->setTwigRenderer($app['twig']);
     $defaultPaymentController->setSecurity($app['security']);
     $defaultPaymentController->setURLGenerator($app['url_generator']);
@@ -58,7 +58,7 @@ $app['default.payments.controller'] = $app->share(function() use ($app) {
 $app['savings.controller'] = $app->share(function() use ($app) {
 
     $savingsPaymentController = new Expenditure\Controller\SavingsController;
-    $savingsPaymentController->setDB($app['spot']);
+    $savingsPaymentController->setEntityManager($app['orm.em']);
     $savingsPaymentController->setTwigRenderer($app['twig']);
     $savingsPaymentController->setSecurity($app['security']);
     $savingsPaymentController->setURLGenerator($app['url_generator']);
@@ -69,11 +69,12 @@ $app['savings.controller'] = $app->share(function() use ($app) {
 $app['user.controller'] = $app->share(function() use ($app) {
 
     $userController = new Expenditure\Controller\UserController;
-    $userController->setDB($app['spot']);
+    $userController->setEntityManager($app['orm.em']);
     $userController->setTwigRenderer($app['twig']);
     $userController->setSecurity($app['security']);
     $userController->setURLGenerator($app['url_generator']);
     $userController->setSession($app['session']);
+    $userController->setValidator($app['validator']);
     $userController->setEncoderFactory($app['security.encoder_factory']);
     $userController->setSecurityLastError($app['security.last_error']);
 

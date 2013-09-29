@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    {% set paidDay = app.security.token.user.__get('paid_day') %}
+    {% set paidDay = app.security.token.user.paidDay %}
 
     {% if paidDay is empty %}
         <div class="alert">
@@ -34,11 +34,11 @@
             {% for saving in savings %}
                 <tr data-id="saving_{{ saving.id }}">
                     <td width="25%">{{ saving.title }}</td>
-                    <td>{{ saving.__get('target_date').format('d-m-Y') }}</td>
+                    <td>{{ saving.targetDate.format('d-m-Y') | default('N/A') }}</td>
                     <td width="30%">
                         <div class="progress progress-{{ saving.isGoalReached? 'success':'info'}}">
                             <div class="bar" style="width: {{ saving.percentProgress }}%"></div>
-                            <span>{{ CURRENCY ~ saving.__get('saved_amount') | default(0) ~ ' / ' ~ CURRENCY ~ saving.__get('target_amount') }}</span>
+                            <span>{{ CURRENCY ~ saving.savedAmount | default(0) ~ ' / ' ~ CURRENCY ~ saving.targetAmount }}</span>
                         </div>
                     </td>
                     <td class="center" width="10%">
@@ -49,7 +49,7 @@
                     <td class="center">
                         <a href="/savings/{{ saving.id }}/delete" onclick="return deleteSaving({{ saving.id }})"><i class="icon-trash"></i> Delete</a>
                         &nbsp;&nbsp;
-                        <a href="{{ app.request.uri }}#inputPrice" onclick="return editSaving(this)" data-id="{{ saving.id }}" data-title="{{ saving.title }}" data-target_date="{{ saving.__get('target_date').format('d-m-Y') }}" data-target_amount="{{ saving.__get('target_amount') }}" data-saved_amount="{{ saving.__get('saved_amount') }}">
+                        <a href="{{ app.request.uri }}#inputPrice" onclick="return editSaving(this)" data-id="{{ saving.id }}" data-title="{{ saving.title }}" data-target_date="{{ saving.targetDate.format('d-m-Y') }}" data-target_amount="{{ saving.targetAmount }}" data-saved_amount="{{ saving.savedAmount }}">
                             <i class="icon-pencil"></i>Edit
                         </a>
 				    </td>
