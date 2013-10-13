@@ -18,7 +18,7 @@ class ImportController extends BaseController
     public function saveAction($year, $month, Request $request)
     {
         $monthHeader = new \Expenditure\Entity\MonthHeader;
-        $monthHeader->setCalendarDate($this->getCarbon()->createFromDate($year, $month, 1)->toDateString());
+        $monthHeader->setCalendarDate($this->getCarbon()->createFromDate($year, $month, 1));
         $monthHeader->setMonthIncome($request->get('salary'));
         $monthHeader->setUser($this->getUser());
 

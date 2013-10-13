@@ -19,21 +19,21 @@ class DefaultController extends BaseController
         $month = $this->getCarbon();
 
         if ($request->get('newMonth') !== null) {
-            $monthHeader = false;
+            $monthHeader = null;
             $month = $this->getCarbon()->addMonth();
-        } elseif ($monthHeader !== false) {
+        } elseif ($monthHeader !== null) {
 
              $month = $this->getCarbon($monthHeader->getCalendarDate()->format('c'));
 
             if ($currentFormat > (int)$monthHeader->getCalendarDate()->format('Ym')) {
-                $monthHeader = false;
+                $monthHeader = null;
                 $month = $this->getCarbon();
             }
         }        
 
         $returnArray = array('monthYear' => $month->startOfMonth());
 
-        if ($monthHeader !== false) {
+        if ($monthHeader !== null) {
 
             $monthlyExpenditures = $this->em->getRepository('Expenditure:MonthExpenditure')->findBy(array('header' => $monthHeader), array('price' => 'DESC'));
 

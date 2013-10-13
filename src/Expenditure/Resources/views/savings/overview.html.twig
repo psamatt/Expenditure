@@ -17,7 +17,7 @@
 
     {% if savings is defined and savings | length > 0 %}
     
-        <table class="table table-centered">
+        <table class="table table-centered" id="savingsTbl">
     		<thead>
     			<tr>
     				<th>Title</th>
@@ -32,7 +32,7 @@
     		{% set totalAmountOfSavingsPerMonth = 0%}
     		
             {% for saving in savings %}
-                <tr data-id="saving_{{ saving.id }}">
+                <tr data-id="saving_{{ saving.id }}" class="saving_manage">
                     <td width="25%">{{ saving.title }}</td>
                     <td>{{ saving.targetDate.format('d-m-Y') | default('N/A') }}</td>
                     <td width="30%">
@@ -47,7 +47,7 @@
                         {% endif %}
                     </td>
                     <td class="center">
-                        <a href="/savings/{{ saving.id }}/delete" onclick="return deleteSaving({{ saving.id }})"><i class="icon-trash"></i> Delete</a>
+                        <a href="/admin/savings/{{ saving.id }}/delete" id="saving_delete_{{ saving.id }}" onclick="return deleteSaving({{ saving.id }})"><i class="icon-trash"></i> Delete</a>
                         &nbsp;&nbsp;
                         <a href="{{ app.request.uri }}#inputPrice" onclick="return editSaving(this)" data-id="{{ saving.id }}" data-title="{{ saving.title }}" data-target_date="{{ saving.targetDate.format('d-m-Y') }}" data-target_amount="{{ saving.targetAmount }}" data-saved_amount="{{ saving.savedAmount }}">
                             <i class="icon-pencil"></i>Edit
@@ -55,7 +55,7 @@
 				    </td>
                 </tr>
                 {% if paidDay is not empty %}
-                    <tr>
+                    <tr class="saving_progress">
                         <td colspan="5">
                             <div class="alert alert-info">
                                 {% if saving.isGoalReached %}
@@ -89,7 +89,7 @@
     <div class="well">
         <p class="text-info">Fill out fields below to save a saving target</p>  
     	
-        <form method="post" action="{{ path('admin_savings_save') }}" class="form-horizontal" name="expenditureForm">
+        <form method="post" action="{{ path('admin_savings_save') }}" class="form-horizontal" name="expenditureForm" id="expenditureForm">
             <input type="hidden" name="savingID" value="{{ saving is defined? saving.id: '' }}" />
     		
     		<div class="control-group">

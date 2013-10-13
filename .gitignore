@@ -1,4 +1,10 @@
+/bin/*
 /vendor/*
 /app/config/dev.json
 /app/logs
 /app/cache
+
+# OS generated files #
+######################
+.DS_Store
+*/.DS_Store

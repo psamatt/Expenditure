@@ -12,7 +12,9 @@
     ],
 	"autoload": {
 		"psr-0": {
-			"": "src"
+			"": "src",
+			"Context": "features/",
+			"Fixtures": "features/"
 		}
 	},
     "require": {
@@ -26,8 +28,21 @@
         "nesbot/Carbon": "1.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "~3",
-        "phpunit/dbunit": "1.2.*"
+        "phpunit/phpunit":             "~3",
+        "behat/behat":                 ">=2.4",
+        "behat/symfony2-extension":    "*",
+        "behat/common-contexts":       "1.*",
+        "behat/mink":                  ">=1.4",
+        "behat/mink-extension":        "*",
+        "behat/mink-goutte-driver":    "*",
+        "behat/mink-sahi-driver":      "*",
+        "behat/mink-selenium2-driver": "*",
+        "phabric/phabric":             "*",
+        "doctrine/doctrine-bundle":    "*",
+        "vipsoft/doctrine-data-fixtures-extension": "*"
+    },
+    "config": {
+        "bin-dir": "bin/"
     },
     "minimum-stability": "dev"
 }
