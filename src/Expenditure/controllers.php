@@ -51,6 +51,7 @@ $app['default.payments.controller'] = $app->share(function() use ($app) {
     $defaultPaymentController->setTwigRenderer($app['twig']);
     $defaultPaymentController->setSecurity($app['security']);
     $defaultPaymentController->setURLGenerator($app['url_generator']);
+    $defaultPaymentController->setSession($app['session']);
 
     return $defaultPaymentController;
 });
@@ -62,6 +63,7 @@ $app['savings.controller'] = $app->share(function() use ($app) {
     $savingsPaymentController->setTwigRenderer($app['twig']);
     $savingsPaymentController->setSecurity($app['security']);
     $savingsPaymentController->setURLGenerator($app['url_generator']);
+    $savingsPaymentController->setSession($app['session']);
 
     return $savingsPaymentController;
 });
@@ -84,10 +86,12 @@ $app['user.controller'] = $app->share(function() use ($app) {
 $app->get('/', 'user.controller:loginAction');
 $app->get('/login', 'user.controller:loginAction')->bind('login');
 $app->match('/profile/new', 'user.controller:newAction')->bind('register')->method('GET|POST');
+
+$app->get('/admin', 'home.controller:indexAction')->bind('admin_homepage');
 $app->match('/admin/profile/edit', 'user.controller:editAction')->bind('profile_edit')->method('GET|POST');
 $app->post('/admin/profile/password/change', 'user.controller:changePasswordAction')->bind('profile_change_password');
 
-$app->get('/admin/', 'home.controller:indexAction')->bind('admin_homepage');
+
 $app->post('/admin/import/{year}/{month}', 'import.controller:saveAction')->bind('admin_import');
 
 $app->post('/admin/month/{headerID}/expenditure/{expenditureID}/paid', 'month.expenditure.controller:paidAction')->bind('admin_expenditure_paid');

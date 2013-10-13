@@ -55,6 +55,8 @@ class SavingsController extends BaseController
 
         $this->em->persist($saving);
         $this->em->flush();
+        
+        $this->session->getFlashBag()->add('notice', 'Saving Saved');
 
         return new RedirectResponse($this->urlGenerator->generate('admin_savings'), 302);
     }
@@ -70,9 +72,11 @@ class SavingsController extends BaseController
         $saving = $this->em->getRepository('Expenditure:Saving')->find($savingID);
         
         $this->isOwnedByAdmin($saving);
-        
+
         $this->em->remove($saving);
         $this->em->flush();
+        
+        $this->session->getFlashBag()->add('notice', 'Saving Deleted');
         
         return new RedirectResponse($this->urlGenerator->generate('admin_savings'), 302);
     }

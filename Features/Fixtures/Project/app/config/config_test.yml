@@ -1,0 +1,25 @@
+framework:
+    secret:          a1b2c3d4
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+
+doctrine:
+    dbal:
+        driver:   pdo_mysql
+        host:     localhost
+        port:
+        dbname:   expenditure__behat
+        user:     root
+        password:
+        charset:  UTF8
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: false
+        mappings:
+            expenditure:
+                type: annotation
+                prefix: Expenditure\Entity
+                dir: %kernel.root_dir%/../../../../src/Expenditure/Entity
+                alias: Expenditure
+                is_bundle: false

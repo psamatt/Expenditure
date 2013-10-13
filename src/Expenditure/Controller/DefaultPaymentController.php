@@ -55,6 +55,8 @@ class DefaultPaymentController extends BaseController
 
         $this->em->persist($monthExpenditureTemplate);
         $this->em->flush();
+        
+        $this->session->getFlashBag()->add('notice', 'Default Payment Saved');
 
         return new RedirectResponse($this->urlGenerator->generate('admin_payments'), 302);
     }
@@ -74,6 +76,8 @@ class DefaultPaymentController extends BaseController
 
         $this->em->remove($monthExpenditureTemplate);
         $this->em->flush();
+        
+        $this->session->getFlashBag()->add('notice', 'Default Payment Deleted');
 
         return new RedirectResponse($this->urlGenerator->generate('admin_payments'), 302);
     }

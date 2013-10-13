@@ -1,0 +1,35 @@
+default:
+    context:
+        class: Context\FeatureContext
+        parameters:
+            database:
+                username: 'root'
+                password: ''
+                dbname:   'expenditure__behat'
+                host:     '127.0.0.1'
+                driver:   'pdo_mysql'
+    paths:
+        features: Features
+        bootstrap: %behat.paths.features%/Context
+    extensions:
+        Behat\Symfony2Extension\Extension:
+          mink_driver: true
+          kernel:
+            env: test
+            debug: true
+            path: Features/Fixtures/Project/app/AppKernel.php
+            bootstrap: Features/Fixtures/Project/app/autoload.php
+            
+        Behat\MinkExtension\Extension:
+            base_url: http://expenditure--dev
+            goutte: ~
+            selenium2:
+                wd_host: "http://localhost:8643/wd/hub"
+                
+        VIPSoft\DoctrineDataFixturesExtension\Extension:
+            lifetime:    scenario
+            autoload:    true
+            directories: ~
+            fixtures:    
+              - Fixtures\LoadUserData
+      

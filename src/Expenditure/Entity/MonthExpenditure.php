@@ -46,7 +46,7 @@ class MonthExpenditure
      *
      * @var float $amount_paid
      *
-     * @ORM\Column(name="amount_paid", type="float")
+     * @ORM\Column(name="amount_paid", type="float", nullable=true)
      */
     protected $amount_paid;
     
