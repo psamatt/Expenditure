@@ -107,8 +107,9 @@ class UserController extends BaseController
                     if (count($returnArray['errors']) == 0) {
                         $this->em->persist($user);
                         $this->em->flush();
-    
-                        $this->session->getFlashBag()->add('notice', 'Account created');
+                        
+                        $this->addNotice('Account created');
+
                         return new RedirectResponse($this->router->generate('login'), 302);
                     }                    
                 }
@@ -137,7 +138,7 @@ class UserController extends BaseController
                 $this->em->persist($user);
                 $this->em->flush();
                 
-                $this->session->getFlashBag()->add('notice', 'Account updated');
+                $this->addNotice('Account updated');
             }
         }
     
@@ -173,8 +174,8 @@ class UserController extends BaseController
                 
                 $this->em->persist($user);
                 $this->em->flush();
-
-                $this->session->getFlashBag()->add('notice', 'Password updated');
+                
+                $this->addNotice('Password Updated');
             } else {
                 $this->session->getFlashBag()->add('passwordErrors', $errors);
             }

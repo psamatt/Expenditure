@@ -67,7 +67,7 @@ class DefaultPaymentController extends BaseController
         $this->em->persist($monthExpenditureTemplate);
         $this->em->flush();
         
-        $this->session->getFlashBag()->add('notice', 'Default Payment Saved');
+        $this->addNotice('Default Payment Saved');
 
         return new RedirectResponse($this->router->generate('admin_payments'), 302);
     }
@@ -88,7 +88,7 @@ class DefaultPaymentController extends BaseController
         $this->em->remove($monthExpenditureTemplate);
         $this->em->flush();
         
-        $this->session->getFlashBag()->add('notice', 'Default Payment Deleted');
+        $this->addNotice('Default Payment Deleted');
 
         return new RedirectResponse($this->router->generate('admin_payments'), 302);
     }

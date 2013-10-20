@@ -64,7 +64,7 @@ class SavingController extends BaseController
         $this->em->persist($saving);
         $this->em->flush();
         
-        $this->session->getFlashBag()->add('notice', 'Saving Saved');
+        $this->addNotice('Saving Saved');
 
         return new RedirectResponse($this->router->generate('admin_savings'), 302);
     }
@@ -84,7 +84,7 @@ class SavingController extends BaseController
         $this->em->remove($saving);
         $this->em->flush();
         
-        $this->session->getFlashBag()->add('notice', 'Saving Deleted');
+        $this->addNotice('Saving Deleted');
         
         return new RedirectResponse($this->router->generate('admin_savings'), 302);
     }
