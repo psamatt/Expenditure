@@ -18,6 +18,7 @@ class DefaultController extends BaseController
     /**
      * Homepage showing an overview of this months expenditure
      *
+     * @return Response
      */
     public function indexAction()
     {
