@@ -5,8 +5,9 @@ namespace Psamatt\ExpenditureBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use JMS\DiExtraBundle\Annotation\Inject;
+
 use Psamatt\ExpenditureBundle\Entity\MonthHeader;
-use Psamatt\ExpenditureBundle\Entity\MonthExpenditure;
 
 class ImportController extends BaseController
 {
@@ -18,6 +19,14 @@ class ImportController extends BaseController
     protected $session;
     protected $request;
     /* End of Injected variables */
+    
+    /**
+     * Transformer Factory 
+     *
+     * @access private
+     * @Inject("templateToExpenditure.transformer", required=true)
+     */
+    private $templateToExpenditureTransformer;
     
     /**
      * Save an import
@@ -39,13 +48,7 @@ class ImportController extends BaseController
         if (count($monthlyTemplates) > 0) {
 
             foreach ($monthlyTemplates as $monthlyTemplate) {
-
-                $monthExpenditure = new MonthExpenditure;
-                $monthExpenditure->setTitle($monthlyTemplate->getTitle());
-                $monthExpenditure->setPrice($monthlyTemplate->getPrice());
-                $monthExpenditure->setAmountPaid(0);
-
-                $monthHeader->addExpenditure($monthExpenditure);
+                $monthHeader->addExpenditure($this->templateToExpenditureTransformer->transform($monthlyTemplate));
             }
         }
         

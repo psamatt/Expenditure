@@ -2,7 +2,12 @@ parameters:
 
     webservice_user_provider.class: Psamatt\ExpenditureBundle\Provider\UserProvider
     psamatt.expenditure.twig.extension.class: Psamatt\ExpenditureBundle\Twig\Extension\CarbonTwigExtension
+    templateToExpenditure.transformer.class: Psamatt\ExpenditureBundle\DataTransformer\TemplateToExpenditure
 services:
+
+    templateToExpenditure.transformer:
+        class: "%templateToExpenditure.transformer.class%"
+        arguments: ~
 
     psamatt.expenditure.webservice_user_provider:
         class: "%webservice_user_provider.class%"
