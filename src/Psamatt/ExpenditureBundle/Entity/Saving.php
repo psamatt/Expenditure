@@ -158,6 +158,17 @@ class Saving
     {
         return $this->target_amount;
     }
+    
+    /**
+     * Is the amount specified over the target amount
+     *
+     * @param integer $amount
+     * @param boolean result
+     */
+    public function isOverTargetAmount($amount)
+    {
+        return (float)$amount > $this->target_amount;
+    }
 
     /**
      * Set saved_amount
@@ -168,7 +179,7 @@ class Saving
      */
     public function setSavedAmount($savedAmount)
     {
-        $this->saved_amount = $savedAmount;
+        $this->saved_amount = $this->isOverTargetAmount($savedAmount)? $this->target_amount: $savedAmount;
 
         return $this;
     }

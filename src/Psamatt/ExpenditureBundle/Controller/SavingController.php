@@ -60,10 +60,6 @@ class SavingController extends BaseController
         $saving->setTargetAmount($request->get('targetAmount'));
         $saving->setSavedAmount($request->get('amountSaved'));
         $saving->setUser($this->getUser());
-        
-        if ($saving->isGoalReached()) {
-            $saving->setSavedAmount($saving->getTargetAmount());
-        }
 
         $this->em->persist($saving);
         $this->em->flush();

@@ -7,6 +7,58 @@ use Psamatt\ExpenditureBundle\Entity\Saving;
 class SavingTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * 
+     * @group isOverTargetAmount
+     */
+    public function testIsOverTargetAmountWithLessThanAmount()
+    {
+        $saving = new Saving;
+        $saving->setSavedAmount(0);
+        $saving->setTargetAmount(100);
+        
+        $this->assertFalse($saving->isOverTargetAmount(10));
+    }
+    
+    /**
+     * 
+     * @group isOverTargetAmount
+     */
+    public function testIsOverTargetAmountWithGreaterThanAmount()
+    {
+        $saving = new Saving;
+        $saving->setSavedAmount(0);
+        $saving->setTargetAmount(100);
+        
+        $this->assertTrue($saving->isOverTargetAmount(999));
+    }
+    
+    /**
+     * 
+     * @group isOverTargetAmount
+     */
+    public function testIsOverTargetAmountWithEqualAmount()
+    {
+        $saving = new Saving;
+        $saving->setSavedAmount(0);
+        $saving->setTargetAmount(100);
+        
+        $this->assertFalse($saving->isOverTargetAmount(100));
+    }
+    
+    /**
+     * 
+     * @group isOverTargetAmount
+     */
+    public function testIsOverTargetAmountWithFloatGreatherThanAmount()
+    {
+        $saving = new Saving;
+        $saving->setSavedAmount(0);
+        $saving->setTargetAmount(100);
+        
+        $this->assertTrue($saving->isOverTargetAmount(100.10));
+    }
+
+    /**
      *
      * @group addMoney
      */
