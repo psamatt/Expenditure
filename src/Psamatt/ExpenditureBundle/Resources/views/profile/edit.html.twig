@@ -1,0 +1,68 @@
+{% extends '::base.html.twig' %}
+
+{% block content %}
+
+    {% set user = app.security.token.user %}
+    
+    <p class="text-info">Fill in the fields below to amend the appropriate fields</p>
+    
+    {% if errors is defined and errors | length > 0 %} 
+        {{ include('PsamattExpenditureBundle:form:errors.html.twig') }}
+    {% endif %}
+    
+    <form method="post" action="{{ app.request.uri }}" name="userForm" class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="inputFullname">Full Name</label>
+			<div class="controls">
+				<input type="text" id="inputFullname" name="fullname" value="{{ user.fullname }}" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">Email Address</label>
+			<div class="controls">
+				<input type="email" id="inputEmail" name="emailAddress" value="{{ user.emailAddress }}" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputPaidDay">Paid Day</label>
+			<div class="controls">
+				<input type="number" id="inputPaidDay" name="paidDay" value="{{ user.paidDay }}" min="1" max="31" />
+				<span class="help-block">The day of the month you get paid so Expenditure can work out how much to save per month.</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<button type="submit" class="btn">Save</button>
+			</div>
+		</div>
+	</form>
+	
+	<p class="text-info">Fill in the fields below to change your password</p>
+	
+	{% if app.session.flashbag.has('passwordErrors') %}
+        {{ include(
+            'PsamattExpenditureBundle:form:errors.html.twig',
+            { 'errors': app.session.flashbag.get('passwordErrors')[0] }
+        ) }}
+    {% endif %}
+	
+	<form method="post" action="{{ path('profile_change_password') }}" name="passwordForm" class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="inputPassword1">New Password</label>
+			<div class="controls">
+				<input type="password" id="inputPassword1" name="password1" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputPassword2">Confirm Password</label>
+			<div class="controls">
+				<input type="password" id="inputPassword2" name="password2" />
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<button type="submit" class="btn">Update Password</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}

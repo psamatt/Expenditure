@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{ include('::header.html.twig') }}
+  </head>
+
+  <body class="in-app">
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+                <span class="brand">
+                    <img src="{{ asset('bundles/psamattexpenditure/img/piggybank.png') }}" alt="Expenditure" />&nbsp;
+				    <a href="{{ path('admin_homepage') }}">Expenditure</a>
+				</span>
+				<div class="nav-collapse collapse">
+					<ul class="nav">
+						<li {{ app.request.pathInfo == path('admin_homepage')? 'class="active"' : '' }}><a href="{{ path('admin_homepage') }}">Overview</a></li>
+						<li {{ app.request.pathInfo == path('admin_historic')? 'class="active"' : '' }}><a href="{{ path('admin_historic') }}">Historic months</a></li>
+						<li {{ app.request.pathInfo == path('admin_payments')? 'class="active"' : '' }}><a href="{{ path('admin_payments') }}">Default payments</a></li>
+				        <li {{ app.request.pathInfo == path('admin_savings')? 'class="active"' : '' }}><a href="{{ path('admin_savings') }}">Savings</a></li>
+					</ul>
+				</div>
+
+				{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    				<ul class="nav pull-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown-menu">{{ app.security.token.user.displayName }}<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ path('profile_edit') }}">My Account</a></li>
+                                <li class="divider"></li>
+                                <li><a href="{{ path('logout') }}">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% endif %}
+			</div>
+		</div>
+	</div>
+
+    <div class="container">
+
+        {% if app.session.flashbag.has('notice') %}
+            <div class="alert alert-info">
+                <ul class="nav nav-list">
+                    {% for notice in app.session.flashbag.get('notice') %}
+                        <li><i class="icon-asterisk"></i>{{ notice}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+    	{% block content %}
+    	{% endblock %}
+
+		<hr />
+		<footer>
+			<p>&copy; All rights reserved</p>
+		</footer>
+	</div>
+
+    {% block javascript %}
+    
+        {% javascripts 
+            '@PsamattExpenditureBundle/Resources/public/js/jquery.min.js' 
+            '@PsamattExpenditureBundle/Resources/public/js/bootstrap.min.js' 
+            '@PsamattExpenditureBundle/Resources/public/js/bootstrap-dropdown.min.js'
+            '@PsamattExpenditureBundle/Resources/public/js/*'
+         %}
+            <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+        <script type="text/javascript">
+            $('.dropdown-toggle').dropdown();
+        </script>
+        
+    {% endblock %}
+  </body>
+</html>

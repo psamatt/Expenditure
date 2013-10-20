@@ -1,0 +1,14 @@
+parameters:
+
+    webservice_user_provider.class: Psamatt\ExpenditureBundle\Provider\UserProvider
+    psamatt.expenditure.twig.extension.class: Psamatt\ExpenditureBundle\Twig\Extension\CarbonTwigExtension
+services:
+
+    psamatt.expenditure.webservice_user_provider:
+        class: "%webservice_user_provider.class%"
+        arguments: [@doctrine.orm.entity_manager]
+    
+    psamatt.expenditure.twig.extension:
+        class: "%psamatt.expenditure.twig.extension.class%"
+        tags:
+            - { name: twig.extension }
