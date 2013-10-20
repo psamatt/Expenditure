@@ -29,7 +29,7 @@ Feature: Overview
     Then the "span#amountToPay" element should contain "475"
     Then the "span#amountLeft" element should contain "1,525.00"
 
-  @javascript @abc
+  @javascript
   Scenario: Month with using edit, delete and paid actions
 
     Given the following month headers are expenditure month headers
