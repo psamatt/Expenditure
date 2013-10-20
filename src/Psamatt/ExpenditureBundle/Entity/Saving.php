@@ -4,6 +4,8 @@ namespace Psamatt\ExpenditureBundle\Entity;
 
 use Carbon\Carbon as CarbonDateTime;
 
+use Psamatt\Expenditure\Library\SavingMoney;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -210,9 +212,9 @@ class Saving
      * 
      * @param integer $money
      */
-    public function addMoney($money)
+    public function addMoney(SavingMoney $money)
     {
-        $this->saved_amount += $money;
+        $this->saved_amount += $money->getAmount();
     }
     
     /**

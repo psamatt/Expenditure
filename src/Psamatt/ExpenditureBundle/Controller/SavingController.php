@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Psamatt\ExpenditureBundle\Entity\Saving;
+use Psamatt\Expenditure\Library\SavingMoney;
 
 class SavingController extends BaseController
 {
@@ -105,7 +106,7 @@ class SavingController extends BaseController
         
         $this->isOwnedByAdmin($saving);
         
-        $saving->addMoney(floatval($request->get('amount', 0)));
+        $saving->addMoney(new SavingMoney($request->get('amount', 0)));
         
         $this->em->persist($saving);
         $this->em->flush();
