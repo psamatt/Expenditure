@@ -1,0 +1,4 @@
+psamatt_expenditure:
+    resource: "@PsamattExpenditureBundle/Resources/config/routing.yml"
+    prefix:   /
+

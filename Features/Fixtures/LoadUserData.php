@@ -5,7 +5,7 @@ namespace Fixtures;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 
-use Expenditure\Entity\User;
+use Psamatt\ExpenditureBundle\Entity\User;
 
 /**
  * Load user data for Behat features

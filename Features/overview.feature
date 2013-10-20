@@ -56,6 +56,7 @@ Feature: Overview
     Then the "span#totalExpenditure" element should contain "575"
     Then the "amountLeft" element should contain "425.00"
     When I follow css "table tr[data-id=\"2\"] a.paid--record"
+    When I reload the page
     Then the "span#amountToPay" element should contain "225"
     Then I should see 1 "table tbody tr.expenditure-paid" elements
     When I fill in "inputTitle" with "Fruit"

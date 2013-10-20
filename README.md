@@ -41,7 +41,7 @@ This is only currently avaialble if you self host the application.
 
 5. Configure parameters
 
-    Copy `app/config/dev.json.dist` to `app/config/dev.json` and configure the appropriate parameters.
+    Copy `app/config/parameters.yml.dist` to `app/config/parameters.yml` and configure the appropriate parameters.
 
 6. Install third party bundles
 

@@ -17,8 +17,8 @@ default:
           kernel:
             env: test
             debug: true
-            path: Features/Fixtures/Project/app/AppKernel.php
-            bootstrap: Features/Fixtures/Project/app/autoload.php
+            path: app/AppKernel.php
+            bootstrap: app/autoload.php
             
         Behat\MinkExtension\Extension:
             base_url: http://expenditure--dev

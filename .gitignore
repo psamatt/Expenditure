@@ -1,8 +1,17 @@
-/bin/*
-/vendor/*
-/app/config/dev.json
-/app/logs
-/app/cache
+/web/css
+/web/js
+/web/bundles/
+/app/bootstrap.php.cache
+/app/cache/*
+/app/config/parameters.yml
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+/build/
+/vendor/
+/bin/
+/composer.phar
+/chclear
 
 # OS generated files #
 ######################

@@ -1,0 +1,39 @@
+<html>
+    <head>
+        {% include '::header.html.twig' %}
+    </head>
+    <body class="login">
+        <div class="container">
+        
+            {% if app.session.flashbag.has('notice') %}
+                <div class="alert alert-info">
+                    <ul class="nav nav-list">
+                        {% for notice in app.session.flashbag.get('notice') %}
+                            <li><i class="icon-asterisk"></i>{{ notice}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        
+            <form action="{{ path('login_check') }}" method="post" class="form-signin">
+                <h2 class="form-signin-heading">Please sign in</h2>
+                {% if error %}
+                    <p class="alert">
+                        <strong>{{ error.message }}</strong>
+                    </p>
+                {% endif %}
+                
+                <input type="text" class="input-block-level" name="_username" value="{{ last_username }}" placeholder="Email Address" />
+                <input type="password" class="input-block-level" name="_password" placeholder="Password" />
+                <input type="hidden" name="_target_path" value="/admin" />
+                <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+                
+                <a href="{{ path('register') }}" class="btn btn-large pull-right">Register</a>
+            </form>
+        
+            
+        </div>
+    </body>
+</html>
+
+
