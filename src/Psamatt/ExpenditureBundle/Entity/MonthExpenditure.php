@@ -137,6 +137,16 @@ class MonthExpenditure
     {
         return $this->amount_paid;
     }
+    
+    /**
+     * Has this item been paid
+     *
+     * @return boolean
+     */
+    public function hasBeenPaid()
+    {
+        return $this->amount_paid >= $this->price;
+    }
 
     /**
      * Set header

@@ -38,6 +38,8 @@ class MonthExpenditureController extends BaseController
 
         $this->em->persist($expenditure);
         $this->em->flush();
+        
+        $this->addNotice('Expenditure set as ' . (!$expenditure->hasBeenPaid()? 'partially ':'') . 'paid');
 
         return new Response(1);
     }
@@ -49,11 +51,11 @@ class MonthExpenditureController extends BaseController
      * @param Request $request
      * @return RedirectResponse
      */
-    public function saveAction($headerID, Request $request)
+    public function saveAction($headerID)
     {
-        $expenditureID = $request->get('expenditureID');
-        $title = $request->get('title');
-        $price = $request->get('price');
+        $expenditureID = $this->request->get('expenditureID');
+        $title = $this->request->get('title');
+        $price = $this->request->get('price');
 
         if (strlen($title) > 0 && strlen($price) > 0) {
         
@@ -72,6 +74,8 @@ class MonthExpenditureController extends BaseController
 
             $this->em->persist($expenditure);
             $this->em->flush();
+            
+            $this->addNotice('Expenditure Saved');
         }
 
         return new RedirectResponse($this->router->generate('admin_homepage'), 302);
