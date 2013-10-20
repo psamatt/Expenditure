@@ -3,6 +3,7 @@
 namespace Psamatt\ExpenditureBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Psamatt\ExpenditureBundle\Entity\MonthExpenditure;
@@ -23,7 +24,7 @@ class MonthExpenditureController extends BaseController
      *
      * @param integer $expenditureID The expenditure to mark as paid
      * @param Request $request
-     * @return 1
+     * @return Response
      */
     public function paidAction($expenditureID, Request $request)
     {
@@ -38,7 +39,7 @@ class MonthExpenditureController extends BaseController
         $this->em->persist($expenditure);
         $this->em->flush();
 
-        return 1;
+        return new Response(1);
     }
 
     /**
@@ -80,7 +81,7 @@ class MonthExpenditureController extends BaseController
      * Delete an expenditure item
      *
      * @param integer $expenditureID The expenditure ID
-     * @return 1
+     * @return Response
      */
     public function deleteAction($expenditureID)
     {
@@ -91,6 +92,6 @@ class MonthExpenditureController extends BaseController
         $this->em->remove($expenditure);
         $this->em->flush();
 
-        return 1;
+        return new Response(1);
     }
 }
