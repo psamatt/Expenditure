@@ -4,6 +4,8 @@ namespace Psamatt\ExpenditureBundle\Tests\Twig\Extension;
 
 use Psamatt\ExpenditureBundle\Entity\Saving;
 
+use Psamatt\Expenditure\Library\SavingMoney;
+
 class SavingTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -67,7 +69,7 @@ class SavingTest extends \PHPUnit_Framework_TestCase
         $saving = new Saving;
         $saving->setSavedAmount(0);
         
-        $saving->addMoney(10);
+        $saving->addMoney(new SavingMoney(10));
         
         $this->assertEquals(10, $saving->getSavedAmount());
     }
