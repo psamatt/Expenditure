@@ -39,7 +39,7 @@ class ImportController extends BaseController
     public function saveAction($year, $month, Request $request)
     {
         $monthHeader = new MonthHeader;
-        $monthHeader->setCalendarDate($this->getCarbon()->createFromDate($year, $month, 1));
+        $monthHeader->setCalendarDate($date = $this->getCarbon()->createFromDate($year, $month, 1));
         $monthHeader->setMonthIncome($request->get('salary'));
         $monthHeader->setUser($this->getUser());
 
@@ -54,6 +54,8 @@ class ImportController extends BaseController
         
         $this->em->persist($monthHeader);
         $this->em->flush();
+        
+        $this->addNotice($date->format('F Y') . ' Created');
 
         return new RedirectResponse($this->router->generate('admin_homepage'), 302);
     }
