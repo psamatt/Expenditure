@@ -1,8 +1,8 @@
 {
     "name": "psamatt/Expenditure",
     "description": "A small expenditure app for money minded people",
-    "keywords": ["silex"],
-    "version": "1.4",
+    "keywords": ["symfony", "expenditure", "money", "savings"],
+    "version": "1.5",
     "license": "MIT",
     "authors": [
         {
