@@ -32,9 +32,7 @@ class MonthExpenditureController extends BaseController
         
         $this->isOwnedByAdmin($expenditure->getHeader());
 
-        $amount = $request->get('amount');
-
-        $expenditure->setAmountPaid($amount == 'all'? $expenditure->getPrice(): floatval($amount));
+        $expenditure->setAmountPaid(floatval($request->get('amount')));
 
         $this->em->persist($expenditure);
         $this->em->flush();

@@ -87,12 +87,12 @@
 			return false;
 		}
 
-		function registerPaid(headerID, expenditureID)
+		function registerPaid(headerID, expenditureID, amount)
 		{
 			$.ajax({
 				type: 'POST',
 				url: '/admin/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
-				data: { 'amount': 'all' },
+				data: { 'amount': amount },
 				success: function(){
 					$('tr[data-id='+expenditureID+']').addClass('expenditure-paid');
 
