@@ -34,14 +34,15 @@ class SavingController extends BaseController
     /**
      * Save a savings record
      *
+     * @param integer $savingID
      * @param Request $request
      * @return RedirectResponse
      */
-    public function saveAction(Request $request)
+    public function saveAction($savingID, Request $request)
     {
         $saving = new Saving;
-        
-        if ('' !== $savingID = $request->get('savingID', '')) {
+
+        if ($savingID > 0) {
             $saving = $this->em->getRepository('PsamattExpenditureBundle:Saving')->find($savingID);
             
             $this->isOwnedByAdmin($saving);

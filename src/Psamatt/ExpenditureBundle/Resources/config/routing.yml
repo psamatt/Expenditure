@@ -103,9 +103,11 @@ admin_savings:
     methods:  [GET]
 
 admin_savings_save:
-    path:  /admin/savings/save
+    path:  /admin/savings/{savingID}/save
     defaults: { _controller: PsamattExpenditureBundle:Saving:save }
     methods:  [POST]
+    options:
+        expose: true
 
 admin_savings_add:
     path:  /admin/savings/{savingID}/money/add
@@ -113,6 +115,8 @@ admin_savings_add:
     requirements:
         savingID: \d+
     methods:  [POST]
+    options:
+        expose: true
 
 admin_savings_delete:
     path:  /admin/savings/{savingID}/delete
@@ -120,3 +124,5 @@ admin_savings_delete:
     requirements:
         savingID: \d+
     methods:  [POST]
+    options:
+        expose: true

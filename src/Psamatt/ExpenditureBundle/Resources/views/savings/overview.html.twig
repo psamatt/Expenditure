@@ -49,7 +49,7 @@
                     <td class="center">
                         <a href="/admin/savings/{{ saving.id }}/delete" id="saving_delete_{{ saving.id }}" onclick="return deleteSaving({{ saving.id }})"><i class="icon-trash"></i> Delete</a>
                         &nbsp;&nbsp;
-                        <a href="{{ app.request.uri }}#inputPrice" onclick="return editSaving(this)" data-id="{{ saving.id }}" data-title="{{ saving.title }}" data-target_date="{{ saving.targetDate.format('d-m-Y') }}" data-target_amount="{{ saving.targetAmount }}" data-saved_amount="{{ saving.savedAmount }}">
+                        <a href="{{ app.request.uri }}#inputPrice" onclick="return loadSavingFromAnchor(this)" data-id="{{ saving.id }}" data-title="{{ saving.title }}" data-target_date="{{ saving.targetDate.format('d-m-Y') }}" data-target_amount="{{ saving.targetAmount }}" data-saved_amount="{{ saving.savedAmount }}">
                             <i class="icon-pencil"></i>Edit
                         </a>
 				    </td>
@@ -89,9 +89,7 @@
     <div class="well">
         <p class="text-info">Fill out fields below to save a saving target</p>  
     	
-        <form method="post" action="{{ path('admin_savings_save') }}" class="form-horizontal" name="expenditureForm" id="expenditureForm">
-            <input type="hidden" name="savingID" value="{{ saving is defined? saving.id: '' }}" />
-    		
+        <form method="post" action="{{ path('admin_savings_save', {savingID: saving is defined? saving.id: 0}) }}" class="form-horizontal" name="savingForm" id="savingForm">
     		<div class="control-group">
     			<label class="control-label" for="inputTitle">Title</label>
     			<div class="controls">
@@ -157,7 +155,7 @@
             if (confirmDelete()) {
                 $.ajax({
 					type: 'POST',
-					url: '/admin/savings/' + savingID + '/delete',
+					url: Routing.generate('admin_savings_delete', {'savingID': savingID}),
 					success: function(){
 						document.location.reload();
 					},
@@ -167,13 +165,14 @@
             return false;
         }
         
-        function editSaving(anchor)
+        function loadSavingFromAnchor(anchor)
         {
             $anchor = $(anchor);
     
-            var $form = $('form[name="expenditureForm"]');
+            var $form = $('form[name="savingForm"]');
             
-            $form.find('input[name="savingID"]').val($anchor.data('id'));
+            $form.attr('action', Routing.generate('admin_savings_save', {'savingID': $anchor.data('id')}))
+
             $form.find('input[name="inputTitle"]').val($anchor.data('title'));
             $form.find('input[name="targetDate"]').parent().datepicker('setValue', $anchor.data('target_date'));
             $form.find('input[name="targetDate"]').val($anchor.data('target_date'));
@@ -190,7 +189,7 @@
 			if (amountMoney != null && amountMoney != "") {
 				$.ajax({
 					type: 'POST',
-					url: '/admin/savings/' + savingID + '/money/add',
+					url: Routing.generate('admin_savings_add', {'savingID': savingID}),
 					data: { 'amount': amountMoney },
 					success: function(){
 						document.location.reload();

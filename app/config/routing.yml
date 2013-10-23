@@ -1,3 +1,6 @@
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
 psamatt_expenditure:
     resource: "@PsamattExpenditureBundle/Resources/config/routing.yml"
     prefix:   /
