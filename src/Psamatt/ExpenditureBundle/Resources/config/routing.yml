@@ -78,7 +78,7 @@ admin_payments_delete:
     methods:  [GET]
 
 admin_payments_save:
-    path:  /admin/month/default/save
+    path:  /admin/month/default/{defaultID}/save
     defaults: { _controller: PsamattExpenditureBundle:DefaultPayment:save }
     requirements:
         defaultID: \d+

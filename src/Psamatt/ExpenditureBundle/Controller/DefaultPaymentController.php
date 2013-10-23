@@ -46,18 +46,18 @@ class DefaultPaymentController extends BaseController
     /**
      * Save a default payment
      *
+     * @param integer $defaultID
      * @param Request $request
      * @return RedirectResponse
      */
-    public function saveAction(Request $request)
+    public function saveAction($defaultID, Request $request)
     {
-        if (null !== $defaultID = $request->get('defaultID')) {
+        $monthExpenditureTemplate = new MonthExpenditureTemplate;
+
+        if ($defaultID > 0) {
             $monthExpenditureTemplate = $this->em->getRepository('PsamattExpenditureBundle:MonthExpenditureTemplate')->find($defaultID);
             
             $this->isOwnedByAdmin($monthExpenditureTemplate);
-
-        } else {
-            $monthExpenditureTemplate = new MonthExpenditureTemplate;
         }
 
         $monthExpenditureTemplate->setTitle($request->get('inputTitle'));
