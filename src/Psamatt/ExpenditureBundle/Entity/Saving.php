@@ -295,7 +295,7 @@ class Saving
         $this->title = $title;
         $this->target_date = $targetDate;
         $this->target_amount = $targetAmount;
-        $this->saved_amount = $amountSaved;
+        $this->setSavedAmount($amountSaved);
         
         if (null != $user) {
             $this->user = $user;
