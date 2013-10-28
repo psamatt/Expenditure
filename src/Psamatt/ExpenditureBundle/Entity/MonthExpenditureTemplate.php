@@ -56,20 +56,6 @@ class MonthExpenditureTemplate
     {
         return $this->id;
     }
-    
-    /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return MonthExpenditureTemplate
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
 
     /**
      * Get title
@@ -79,20 +65,6 @@ class MonthExpenditureTemplate
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * Set price
-     *
-     * @param float $price
-     *
-     * @return MonthExpenditureTemplate
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
     }
 
     /**
@@ -106,20 +78,6 @@ class MonthExpenditureTemplate
     }
 
     /**
-     * Set user
-     *
-     * @param \Psamatt\ExpenditureBundle\Entity\User $user
-     *
-     * @return MonthExpenditureTemplate
-     */
-    public function setUser(\Psamatt\ExpenditureBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
      * Get user
      *
      * @return \Psamatt\ExpenditureBundle\Entity\User 
@@ -127,5 +85,22 @@ class MonthExpenditureTemplate
     public function getUser()
     {
         return $this->user;
+    }
+    
+    /**
+     * Update a template
+     * 
+     * @param string $title
+     * @param string $price
+     * @param User $user
+     */
+    public function update($title, $price, User $user = null)
+    {
+        $this->title = $title;
+        $this->price = $price;
+        
+        if ($user != null) {
+            $this->user = $user;
+        }
     }
 }

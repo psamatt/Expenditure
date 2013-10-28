@@ -5,8 +5,10 @@ parameters:
     templateToExpenditure.transformer.class: Psamatt\ExpenditureBundle\DataTransformer\TemplateToExpenditure
     
     saving.service.class: Psamatt\ExpenditureBundle\Services\SavingService
+    expenditureTemplate.service.class: Psamatt\ExpenditureBundle\Services\ExpenditureTemplateService
     
     saving.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\Saving\DoctrineORMRepository
+    expenditureTemplate.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\ExpenditureTemplate\DoctrineORMRepository
 services:
 
     templateToExpenditure.transformer:
@@ -21,7 +23,21 @@ services:
         class: "%psamatt.expenditure.twig.extension.class%"
         tags:
             - { name: twig.extension }
+
+# ########################## Expenditure Template ##########################    
+    expenditureTemplate.service:
+        class: "%expenditureTemplate.service.class%"
+        arguments: [@expenditureTemplate.repository, @event_dispatcher]
     
+    expenditureTemplate.repository:
+        alias: expenditureTemplate.doctrine.orm.repository
+    
+    expenditureTemplate.doctrine.orm.repository:
+        class: "%expenditureTemplate.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
+
+# ############################### Saving ################################  
     saving.service:
         class: "%saving.service.class%"
         arguments: [@saving.repository]

@@ -5,18 +5,23 @@ namespace Psamatt\ExpenditureBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use JMS\DiExtraBundle\Annotation\Inject;
+
 use Psamatt\ExpenditureBundle\Entity\MonthExpenditureTemplate;
 
 class DefaultPaymentController extends BaseController
 {
     /* DI Injected variables */
-    protected $em;
     protected $templating;
     protected $security;
     protected $router;
-    protected $session;
     protected $request;
     /* End of Injected variables */
+    
+    /**
+     * @Inject("expenditureTemplate.service", required=true) 
+     */
+    protected $expenditureTemplateService;
     
     /**
      * View a default payment
@@ -29,16 +34,15 @@ class DefaultPaymentController extends BaseController
        $returnArray = array();
 
         if ($defaultID > 0) {
-            $default = $this->em->getRepository('PsamattExpenditureBundle:MonthExpenditureTemplate')->find($defaultID);
-            
-            $this->isOwnedByAdmin($default);
+            $template = $this->expenditureTemplateService->findById($defaultID);
+            $this->expenditureTemplateService->isOwnedByAdmin($template, $this->getUser());
 
-            if ($default !== false) {
-                $returnArray['defaultObj'] = $default;
+            if ($template !== null) {
+                $returnArray['defaultObj'] = $template;
             }
         }
 
-        $returnArray['monthlyTemplates'] = $this->getUser()->getExpenditureTemplates();
+        $returnArray['monthlyTemplates'] = $this->expenditureTemplateService->findAllByUser($this->getUser());
 
         return $this->templating->renderResponse('PsamattExpenditureBundle:default:overview.html.twig', $returnArray);
     }
@@ -47,27 +51,24 @@ class DefaultPaymentController extends BaseController
      * Save a default payment
      *
      * @param integer $defaultID
-     * @param Request $request
      * @return RedirectResponse
      */
-    public function saveAction($defaultID, Request $request)
+    public function saveAction($defaultID)
     {
-        $monthExpenditureTemplate = new MonthExpenditureTemplate;
+        $template = new MonthExpenditureTemplate;
 
         if ($defaultID > 0) {
-            $monthExpenditureTemplate = $this->em->getRepository('PsamattExpenditureBundle:MonthExpenditureTemplate')->find($defaultID);
-            
-            $this->isOwnedByAdmin($monthExpenditureTemplate);
+            $template = $this->expenditureTemplateService->findById($defaultID);
+            $this->expenditureTemplateService->isOwnedByAdmin($template, $this->getUser());
         }
-
-        $monthExpenditureTemplate->setTitle($request->get('inputTitle'));
-        $monthExpenditureTemplate->setPrice($request->get('inputPrice'));
-        $monthExpenditureTemplate->setUser($this->getUser());
-
-        $this->em->persist($monthExpenditureTemplate);
-        $this->em->flush();
         
-        $this->addNotice('Default Payment Saved');
+        $template->update(
+                    $this->request->get('inputTitle'), 
+                    $this->request->get('inputPrice'),
+                    $this->getUser()
+                );
+        
+        $this->expenditureTemplateService->saveTemplate($template);
 
         return new RedirectResponse($this->router->generate('admin_payments'), 302);
     }
@@ -76,20 +77,19 @@ class DefaultPaymentController extends BaseController
      * Delete a default payment
      *
      * @param integer $defaultID The ID of the default payment to delete
-     * @param Request $request
      * @return RedirectResponse
      */
-    public function deleteAction($defaultID, Request $request)
+    public function deleteAction($defaultID)
     {
-        $monthExpenditureTemplate = $this->em->getRepository('PsamattExpenditureBundle:MonthExpenditureTemplate')->find($defaultID);
+        $template = $this->expenditureTemplateService->findById($defaultID);
         
-        $this->isOwnedByAdmin($monthExpenditureTemplate);
-
-        $this->em->remove($monthExpenditureTemplate);
-        $this->em->flush();
+        $this->expenditureTemplateService->isOwnedByAdmin($template, $this->getUser());
+        $this->expenditureTemplateService->deleteTemplate($template);
         
-        $this->addNotice('Default Payment Deleted');
-
+        if ($this->request->isXmlHttpRequest()) {
+            return new Response(1);
+        }
+        
         return new RedirectResponse($this->router->generate('admin_payments'), 302);
     }
 }
