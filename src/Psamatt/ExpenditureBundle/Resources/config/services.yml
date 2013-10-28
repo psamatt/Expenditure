@@ -3,6 +3,10 @@ parameters:
     webservice_user_provider.class: Psamatt\ExpenditureBundle\Provider\UserProvider
     psamatt.expenditure.twig.extension.class: Psamatt\ExpenditureBundle\Twig\Extension\CarbonTwigExtension
     templateToExpenditure.transformer.class: Psamatt\ExpenditureBundle\DataTransformer\TemplateToExpenditure
+    
+    saving.service.class: Psamatt\ExpenditureBundle\Services\SavingService
+    
+    saving.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\Saving\DoctrineORMRepository
 services:
 
     templateToExpenditure.transformer:
@@ -17,3 +21,15 @@ services:
         class: "%psamatt.expenditure.twig.extension.class%"
         tags:
             - { name: twig.extension }
+    
+    saving.service:
+        class: "%saving.service.class%"
+        arguments: [@saving.repository]
+    
+    saving.repository:
+        alias: saving.doctrine.orm.repository
+    
+    saving.doctrine.orm.repository:
+        class: "%saving.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
