@@ -40,7 +40,7 @@ services:
 # ############################### Saving ################################  
     saving.service:
         class: "%saving.service.class%"
-        arguments: [@saving.repository]
+        arguments: [@saving.repository, @event_dispatcher]
     
     saving.repository:
         alias: saving.doctrine.orm.repository

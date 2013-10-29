@@ -14,7 +14,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * A service record to handle all Saving actions
- * @DI\Service("saving.service", public=true)
  */
 class SavingService extends BasePageAction
 {
@@ -30,10 +29,6 @@ class SavingService extends BasePageAction
     
     /**
      * Constructor
-     * @DI\InjectParams({
-     *     "repository"     = @DI\Inject("saving.repository"),
-     *     "dispatcher"     = @DI\Inject("event_dispatcher")
-     * })
      */
     public function __construct(RepositoryInterface $repository, EventDispatcher $dispatcher)
     {
