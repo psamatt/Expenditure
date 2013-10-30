@@ -3,6 +3,8 @@
 namespace Psamatt\ExpenditureBundle\Services;
 
 use Psamatt\ExpenditureBundle\Repository\RepositoryInterface;
+use Psamatt\ExpenditureBundle\Repository\Exception\ItemNotFoundException;
+
 use Psamatt\ExpenditureBundle\Entity\Saving;
 use Psamatt\ExpenditureBundle\ExpenditureEvents;
 use Psamatt\ExpenditureBundle\Event\MessageEvent;
