@@ -1,0 +1,97 @@
+<?php
+
+namespace Psamatt\ExpenditureBundle\Services;
+
+use Psamatt\ExpenditureBundle\Repository\RepositoryInterface;
+use Psamatt\ExpenditureBundle\Entity\MonthExpenditure;
+use Psamatt\ExpenditureBundle\ExpenditureEvents;
+use Psamatt\ExpenditureBundle\Event\MessageEvent;
+
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
+/**
+ * A service record to handle all month expenditure actions
+ */
+class MonthExpenditureService extends BasePageAction
+{
+    /**
+     *
+     */
+    protected $repository;
+    
+    /**
+     *
+     */
+    protected $dispatcher;
+    
+    /**
+     * Constructor
+     */
+    public function __construct(RepositoryInterface $repository, EventDispatcher $dispatcher)
+    {
+        $this->repository = $repository;
+        $this->dispatcher = $dispatcher;
+    }
+    
+    /**
+     * Delete an expenditure
+     *
+     * @param MonthExpenditure $expenditure
+     * @return boolean
+     */
+    public function delete(MonthExpenditure $expenditure)
+    {
+        $this->repository->delete($expenditure, true);
+        
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Expenditure Deleted'));
+
+        return true;
+    }  
+    
+    /**
+     * Save an expenditure
+     *
+     * @param MonthExpenditure $expenditure
+     * @return boolean
+     */
+    public function save(MonthExpenditure $expenditure)
+    {
+        $this->repository->save($expenditure, true);
+        
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Expenditure Saved'));
+        
+        return true;
+    }
+    
+    /**
+     * Save an update to how much has been paid
+     *
+     * @param MonthExpenditure $expenditure
+     * @return boolean
+     */
+    public function savePayment(MonthExpenditure $expenditure)
+    {
+        $this->repository->save($expenditure, true);
+        
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Expenditure set as ' . (!$expenditure->hasBeenPaid()? 'partially ':'') . 'paid'));
+        
+        return true;
+    }
+
+    /**
+     * Find an expenditure item by its ID
+     *
+     * @param integer $id
+     * @return object
+     */
+    public function findById($id)
+    {
+        $expenditureTemplate = $this->repository->findById($id);
+        
+        if (!$expenditureTemplate) {
+            throw new ItemNotFoundException;
+        }
+        
+        return $expenditureTemplate;
+    }
+}

@@ -13,8 +13,8 @@ class MonthExpenditureTest extends \PHPUnit_Framework_TestCase
     public function testHasBeenPaidWithEqualAmount()
     {
         $expenditure = new MonthExpenditure;
-        $expenditure->setPrice(100);
-        $expenditure->setAmountPaid(100);
+        $expenditure->update('Foo', 100);
+        $expenditure->addPayment(100);
         
         $this->assertTrue($expenditure->hasBeenPaid());
     }
@@ -26,8 +26,8 @@ class MonthExpenditureTest extends \PHPUnit_Framework_TestCase
     public function testHasBeenPaidWithGreaterThanAmount()
     {
         $expenditure = new MonthExpenditure;
-        $expenditure->setPrice(100);
-        $expenditure->setAmountPaid(200);
+        $expenditure->update('Foo', 100);
+        $expenditure->addPayment(200);
 
         $this->assertTrue($expenditure->hasBeenPaid());
     }
@@ -39,10 +39,22 @@ class MonthExpenditureTest extends \PHPUnit_Framework_TestCase
     public function testHasBeenPaidWithLessThanAmount()
     {
         $expenditure = new MonthExpenditure;
-        $expenditure->setPrice(100);
-        $expenditure->setAmountPaid(50);
+        $expenditure->update('Foo', 100);
+        $expenditure->addPayment(50);
         
         $this->assertFalse($expenditure->hasBeenPaid());
+    }
+    
+    /**
+     * Test
+     */
+    public function testAddPaymentOfGreaterThanPrice()
+    {
+        $expenditure = new MonthExpenditure;
+        $expenditure->update('Foo', 100);
+        $expenditure->addPayment(500);
+        
+        $this->assertEquals(100, $expenditure->getAmountPaid());
     }
 }
 

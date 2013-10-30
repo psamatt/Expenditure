@@ -6,8 +6,12 @@ parameters:
     
     saving.service.class: Psamatt\ExpenditureBundle\Services\SavingService
     expenditureTemplate.service.class: Psamatt\ExpenditureBundle\Services\ExpenditureTemplateService
+    monthHeader.service.class: Psamatt\ExpenditureBundle\Services\MonthHeaderService
+    monthExpenditure.service.class: Psamatt\ExpenditureBundle\Services\MonthExpenditureService
     
     saving.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\Saving\DoctrineORMRepository
+    monthHeader.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\MonthHeader\DoctrineORMRepository
+    monthExpenditure.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\MonthExpenditure\DoctrineORMRepository
     expenditureTemplate.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\ExpenditureTemplate\DoctrineORMRepository
 services:
 
@@ -34,6 +38,32 @@ services:
     
     expenditureTemplate.doctrine.orm.repository:
         class: "%expenditureTemplate.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
+
+# ##############¢¢############ Month Header ###############################    
+    monthHeader.service:
+        class: "%monthHeader.service.class%"
+        arguments: [@monthHeader.repository]
+    
+    monthHeader.repository:
+        alias: monthHeader.doctrine.orm.repository
+    
+    monthHeader.doctrine.orm.repository:
+        class: "%monthHeader.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
+
+# ##############¢¢############ Month Expenditure ###############################    
+    monthExpenditure.service:
+        class: "%monthExpenditure.service.class%"
+        arguments: [@monthExpenditure.repository, @event_dispatcher]
+    
+    monthExpenditure.repository:
+        alias: monthExpenditure.doctrine.orm.repository
+    
+    monthExpenditure.doctrine.orm.repository:
+        class: "%monthExpenditure.doctrine.orm.repository.class%"
         arguments: [@doctrine.orm.entity_manager]
         public: false
 
