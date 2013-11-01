@@ -46,6 +46,14 @@ class DefaultDoctrineORMRepository implements RepositoryInterface
     /**
      * {inheritdoc}
      */
+    public function findOneBy(array $clauses = array())
+    {
+        return $this->getRepository()->findOneBy($clauses);
+    }
+    
+    /**
+     * {inheritdoc}
+     */
     public function findBy(array $clauses = array(), $order = array(), $limit = array())
     {
         return $this->getRepository()->findBy(

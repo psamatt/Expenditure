@@ -94,4 +94,15 @@ class MonthExpenditureService extends BasePageAction
         
         return $expenditureTemplate;
     }
+    
+    /**
+     * Find all by a header
+     *
+     * @param MonthHeader $header
+     * @return array[]
+     */
+    public function findAllByHeader(\Psamatt\ExpenditureBundle\Entity\MonthHeader $header)
+    {
+        return $this->repository->findBy(array('header' => $header), array('price' => 'DESC'));
+    }
 }

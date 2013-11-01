@@ -73,4 +73,35 @@ class MonthHeaderService extends BasePageAction
         
         return $monthHeader;
     }
+    
+    /**
+     * Find a month header by date and user
+     *
+     * @param \DateTime $date The date
+     * @param User $user 
+     * @return MonthHeader
+     */
+    public function findByDateAndUser(\DateTime $date, \Psamatt\ExpenditureBundle\Entity\User $user)
+    {
+        $date->setTime(0,0,0);
+    
+        $monthHeader = $this->repository->findOneBy(array('calendar_date' => $date, 'user' => $user));
+    
+        if (!$monthHeader) {
+            throw new ItemNotFoundException;
+        }
+        
+        return $monthHeader;
+    }
+    
+    /**
+     * Find all the user 
+     *
+     * @param User $user
+     * @return array[]
+     */
+    public function findAllByUser(\Psamatt\ExpenditureBundle\Entity\User $user)
+    {
+        return $this->repository->findBy(array('user' => $user), array('calendar_date' => 'DESC'));
+    }
 }

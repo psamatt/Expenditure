@@ -13,6 +13,14 @@ interface RepositoryInterface
     function findById($id);
     
     /**
+     * Find a record by a set of criteria
+     * 
+     * @param array $clauses The list of clauses to refine the result set by  
+     * @return mixed If the record found, thus is returned, otherwise null
+     */
+    function findOneBy(array $clauses = array());
+    
+    /**
      * Find a result set of objects by specific criteria
      *
      * @param array $clauses The list of clauses to refine the result set by  
