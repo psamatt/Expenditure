@@ -48,7 +48,7 @@ class MonthExpenditure
      *
      * @ORM\Column(name="amount_paid", type="float", nullable=true)
      */
-    protected $amount_paid;
+    protected $amount_paid = 0;
     
     /**
      * Header ID

@@ -3,7 +3,7 @@
 namespace Psamatt\ExpenditureBundle\Services;
 
 use Psamatt\ExpenditureBundle\Repository\RepositoryInterface;
-use Psamatt\ExpenditureBundle\Entity\MonthExpenditure;
+use Psamatt\ExpenditureBundle\Entity\MonthHeader;
 use Psamatt\ExpenditureBundle\ExpenditureEvents;
 use Psamatt\ExpenditureBundle\Event\MessageEvent;
 
@@ -20,11 +20,41 @@ class MonthHeaderService extends BasePageAction
     protected $repository;
     
     /**
+     *
+     */
+    protected $dispatcher;
+    
+    /**
      * Constructor
      */
-    public function __construct(RepositoryInterface $repository)
+    public function __construct(RepositoryInterface $repository, EventDispatcher $dispatcher)
     {
         $this->repository = $repository;
+        $this->dispatcher = $dispatcher;
+    }
+    
+    /**
+     * Save a month header
+     *
+     * @param MonthHeader $header
+     * @return boolean
+     */
+    public function save(MonthHeader $header)
+    {
+        $new = false;
+    
+        if ($header->getId() == null) {
+            $new = true;
+        }
+    
+        $this->repository->save($header, true);
+        
+        
+        $msg = $new? $header->getCalendarDate()->format('F Y') . ' Created': 'Header Saved';
+        
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent($msg));
+        
+        return true;
     }
 
     /**

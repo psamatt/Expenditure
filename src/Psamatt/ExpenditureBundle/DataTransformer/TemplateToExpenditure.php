@@ -16,9 +16,7 @@
         public function transform(MonthExpenditureTemplate $template)
         {            
             $expenditure = new MonthExpenditure;
-            $expenditure->setTitle($template->getTitle());
-            $expenditure->setPrice($template->getPrice());
-            $expenditure->setAmountPaid(0);
+            $expenditure->update($template->getTitle(), $template->getPrice());
             
             return $expenditure;
         }

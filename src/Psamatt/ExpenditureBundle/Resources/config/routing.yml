@@ -36,7 +36,7 @@ profile_change_password:
 
 admin_import:
     path:  /admin/import/{year}/{month}
-    defaults: { _controller: PsamattExpenditureBundle:Import:save }
+    defaults: { _controller: PsamattExpenditureBundle:MonthHeader:createNew }
     methods:  [POST]
 
 admin_expenditure_paid:

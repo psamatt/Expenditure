@@ -44,7 +44,7 @@ services:
 # ##############¢¢############ Month Header ###############################    
     monthHeader.service:
         class: "%monthHeader.service.class%"
-        arguments: [@monthHeader.repository]
+        arguments: [@monthHeader.repository, @event_dispatcher]
     
     monthHeader.repository:
         alias: monthHeader.doctrine.orm.repository
