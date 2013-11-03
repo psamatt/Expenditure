@@ -53,7 +53,7 @@ class MonthExpenditure
     /**
      * Header ID
      *
-     * @ORM\Column(name="header_id", type="string")
+     * @ORM\Column(name="header_id", type="integer")
      */
     protected $header_id;
     
