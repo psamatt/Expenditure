@@ -63,16 +63,16 @@ class DefaultController extends BaseController
     /**
      * Find monthly totals for a specific array set of expenditure
      *
-     * @param array[MonthExpenditure] An array of expenditure
+     * @param array[MonthExpenditure] $items An array of expenditure
      * @return array[int, int]
      */
-    protected function findMonthlyTotals($expenditure)
+    protected function findMonthlyTotals($items)
     {
         $totalPaid = $totalExpenditure = 0;
 
-        for ($i=0, $j = count($expenditure); $i < $j; $i++) {
+        for ($i=0, $j = count($items); $i < $j; $i++) {
 
-            $item = $expenditure[$i];
+            $item = $items[$i];
             $totalPaid += $item->getAmountPaid();
             $totalExpenditure += $item->getPrice();
         }
