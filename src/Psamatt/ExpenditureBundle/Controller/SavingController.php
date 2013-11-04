@@ -53,8 +53,8 @@ class SavingController extends BaseController
         
         $targetDate = null;
 
-        if (preg_match('/([0-9]{2})-([0-9]{2})-([0-9]{4})/', $this->request->get('targetDate', null), $m)) {
-            $targetDate = $this->getCarbon()->createFromDate($m[3], $m[2], $m[1]);
+        if (preg_match('/([0-9]{2})-([0-9]{2})-([0-9]{4})/', $targetDate = $this->request->get('targetDate', null))) {
+            $targetDate = \DateTime::createFromFormat('d-m-Y', $targetDate);
         }
         
         $saving->update(
