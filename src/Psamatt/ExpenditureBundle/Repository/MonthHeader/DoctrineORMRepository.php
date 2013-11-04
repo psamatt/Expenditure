@@ -16,6 +16,23 @@ class DoctrineORMRepository extends DefaultDoctrineORMRepository implements User
     protected $namespace = 'PsamattExpenditureBundle:MonthHeader';
     
     /**
+     * Find latest month headers
+     *
+     * @param array $clauses The clauses
+     * @return MonthHeader
+     */
+    public function findLatest($clauses = array())
+    {
+        $items = $this->getRepository()->findBy($clauses, array('calendar_date' => 'DESC'), 1);
+        
+        if (count($items) > 0) {
+            return $items[0];
+        }
+        
+        return null;
+    }
+    
+    /**
      * {inheritdoc}
      */
     public function isOwnedByAdmin($item, $user)

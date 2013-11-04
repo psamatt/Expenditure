@@ -3,6 +3,7 @@
 namespace Psamatt\ExpenditureBundle\Services;
 
 use Psamatt\ExpenditureBundle\Repository\RepositoryInterface;
+use Psamatt\ExpenditureBundle\Repository\Exception\ItemNotFoundException;
 use Psamatt\ExpenditureBundle\Entity\MonthHeader;
 use Psamatt\ExpenditureBundle\ExpenditureEvents;
 use Psamatt\ExpenditureBundle\Event\MessageEvent;
@@ -87,7 +88,24 @@ class MonthHeaderService extends BasePageAction
     
         $monthHeader = $this->repository->findOneBy(array('calendar_date' => $date, 'user' => $user));
     
-        if (!$monthHeader) {
+        if ($monthHeader == null) {
+            throw new ItemNotFoundException;
+        }
+        
+        return $monthHeader;
+    }
+    
+    /**
+     * Find the latest header by a user
+     *
+     * @param User $user
+     * @return MonthHeader
+     */
+    public function findLatestByUser(\Psamatt\ExpenditureBundle\Entity\User $user)
+    {
+        $monthHeader = $this->repository->findLatest(array('user' => $user));
+
+        if ($monthHeader == null) {
             throw new ItemNotFoundException;
         }
         
