@@ -6,6 +6,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 use JMS\DiExtraBundle\Annotation\Inject;
 
+use Psamatt\ExpenditureBundle\Library\MonthExpenditureTotalPaid;
+use Psamatt\ExpenditureBundle\Library\MonthExpenditureTotalPrice;
+
 class DefaultController extends BaseController
 {
     /* DI Injected variables */
@@ -75,19 +78,13 @@ class DefaultController extends BaseController
      * Find monthly totals for a specific array set of expenditure
      *
      * @param array[MonthExpenditure] $items An array of expenditure
-     * @return array[int, int]
+     * @return array[float, float]
      */
-    protected function findMonthlyTotals($items)
+    protected function findMonthlyTotals(array $items)
     {
-        $totalPaid = $totalExpenditure = 0;
+        $totalPaidItems = new MonthExpenditureTotalPaid($items);
+        $totalPriceItems = new MonthExpenditureTotalPrice($items);
 
-        for ($i=0, $j = count($items); $i < $j; $i++) {
-
-            $item = $items[$i];
-            $totalPaid += $item->getAmountPaid();
-            $totalExpenditure += $item->getPrice();
-        }
-
-        return array($totalPaid, $totalExpenditure);
+        return array($totalPaidItems->count(), $totalPriceItems->count());
     }
 }
