@@ -29,8 +29,19 @@ class UserController extends BaseController
      */
     private $validator;
     
+    /**
+     * User service
+     * @Inject("user.service", required=true)
+     */
+    private $userService;
+    
+    /**
+     * Dispatcher
+     * @Inject("event_dispatcher", required=true)
+     */
+    private $dispatcher;
+    
     /* DI Injected variables */
-    protected $em;
     protected $templating;
     protected $security;
     protected $router;
@@ -105,10 +116,7 @@ class UserController extends BaseController
                     $returnArray['errors'] = $this->validator->validate($user);
                     
                     if (count($returnArray['errors']) == 0) {
-                        $this->em->persist($user);
-                        $this->em->flush();
-                        
-                        $this->addNotice('Account created');
+                        $this->userService->save($user);
 
                         return new RedirectResponse($this->router->generate('login'), 302);
                     }                    
@@ -135,10 +143,7 @@ class UserController extends BaseController
             $returnArray['errors'] = $this->validator->validate($user);
             
             if (count($returnArray['errors']) == 0) {
-                $this->em->persist($user);
-                $this->em->flush();
-                
-                $this->addNotice('Account updated');
+                $this->userService->save($user);
             }
         }
     
@@ -170,14 +175,11 @@ class UserController extends BaseController
             if (!$hasErrors) {
             
                 $encoder = $this->encoderFactory->getEncoder($user);
-                $user->setPassword($encoder->encodePassword($this->request->get('password1'), $user->getSalt()));
+                $user->updateSecurityDetails($encoder->encodePassword($this->request->get('password1'), $user->getSalt()));
                 
-                $this->em->persist($user);
-                $this->em->flush();
-                
-                $this->addNotice('Password Updated');
+                $this->userService->save($user, 'Password Updated');
             } else {
-                $this->session->getFlashBag()->add('passwordErrors', $errors);
+                $this->dispatcher->dispatch(\Psamatt\ExpenditureBundle\ExpenditureEvents::ERROR_PAGE, new \Psamatt\ExpenditureBundle\Event\ErrorMessageEvent($errors, 'passwordErrors'));
             }
         }
         
@@ -193,16 +195,20 @@ class UserController extends BaseController
     {
         $user = $new? new User: $this->getUser();
         
-        $user->setFullname($this->request->get('fullname'));
-        $user->setEmailAddress($this->request->get('emailAddress'));
-        $user->setPaidDay($this->request->get('paidDay'));
+        $user->update(
+                $this->request->get('fullname'),
+                $this->request->get('emailAddress'),
+                $this->request->get('paidDay')
+            );
         
         if ($new) {
-            $user->setSalt(hash("sha256",time()));
-            $user->setStatus(1);
-            
+        
+            $salt = hash("sha256",time());
+
             $encoder = $this->encoderFactory->getEncoder($user);
-            $user->setPassword($encoder->encodePassword($this->request->get('password1'), $user->getSalt()));
+            $newPassword = $encoder->encodePassword($this->request->get('password1'), $salt);
+            
+            $user->updateSecurityDetails($newPassword, $salt);
         }
         
         return $user;

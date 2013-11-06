@@ -8,11 +8,13 @@ parameters:
     expenditureTemplate.service.class: Psamatt\ExpenditureBundle\Services\ExpenditureTemplateService
     monthHeader.service.class: Psamatt\ExpenditureBundle\Services\MonthHeaderService
     monthExpenditure.service.class: Psamatt\ExpenditureBundle\Services\MonthExpenditureService
+    user.service.class: Psamatt\ExpenditureBundle\Services\UserService
     
     saving.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\Saving\DoctrineORMRepository
     monthHeader.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\MonthHeader\DoctrineORMRepository
     monthExpenditure.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\MonthExpenditure\DoctrineORMRepository
     expenditureTemplate.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\ExpenditureTemplate\DoctrineORMRepository
+    user.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\User\DoctrineORMRepository
 services:
 
     templateToExpenditure.transformer:
@@ -77,5 +79,18 @@ services:
     
     saving.doctrine.orm.repository:
         class: "%saving.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
+
+# ############################### User ################################  
+    user.service:
+        class: "%user.service.class%"
+        arguments: [@user.repository, @event_dispatcher]
+    
+    user.repository:
+        alias: user.doctrine.orm.repository
+    
+    user.doctrine.orm.repository:
+        class: "%user.doctrine.orm.repository.class%"
         arguments: [@doctrine.orm.entity_manager]
         public: false

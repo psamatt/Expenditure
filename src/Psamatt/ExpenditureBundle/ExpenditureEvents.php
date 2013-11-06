@@ -9,9 +9,20 @@ final class ExpenditureEvents
      * the page
      *
      * The event listener receives an
-     * Psamatt\ExpenditureBundle\Event\NotifyPageEvent instance.
+     * Psamatt\ExpenditureBundle\Event\MessageEvent instance.
      *
      * @var string
      */
     const NOTIFY_PAGE = 'page.notify';
+    
+    /**
+     * The page.error event is thrown each time you want to error 
+     * on the page
+     *
+     * The event listener receives an
+     * Psamatt\ExpenditureBundle\Event\ErrorMessageEvent instance.
+     *
+     * @var string
+     */
+    const ERROR_PAGE = 'page.error';
 }

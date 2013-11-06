@@ -2,7 +2,7 @@
 
 namespace Psamatt\ExpenditureBundle\Listener;
 
-use Psamatt\ExpenditureBundle\Event\MessageEvent;
+use Psamatt\ExpenditureBundle\Event\MessageEventInterface;
 use Psamatt\ExpenditureBundle\ExpenditureEvents;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -35,11 +35,12 @@ class PageNotifyListener
      * Notify a page of a message
      *
      * @DI\Observe(ExpenditureEvents::NOTIFY_PAGE)
-     * @param MessageEvent $event The event containing the message
+     * @DI\Observe(ExpenditureEvents::ERROR_PAGE)
+     * @param MessageEventInterface $event The event containing the message
      */
-    public function onNotifyPage(MessageEvent $event)
+    public function onNotifyPage(MessageEventInterface $event)
     {
-        $this->session->getFlashBag()->add('notice', $event->getMessage());
+        $this->session->getFlashBag()->add($event->getMessageType(), $event->getMessage());
     }
 
 }
