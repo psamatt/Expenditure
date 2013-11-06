@@ -7,7 +7,7 @@ use Psamatt\ExpenditureBundle\Repository\Exception\ItemNotFoundException;
 
 use Psamatt\ExpenditureBundle\Entity\Saving;
 use Psamatt\ExpenditureBundle\ExpenditureEvents;
-use Psamatt\ExpenditureBundle\Event\MessageEvent;
+use Psamatt\ExpenditureBundle\Event\NoticeMessageEvent;
 use Psamatt\Expenditure\Library\SavingMoney;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -48,7 +48,7 @@ class SavingService extends BasePageAction
     {
         $this->repository->save($saving, true);
         
-        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Saving Saved'));
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new NoticeMessageEvent('Saving Saved'));
         
         return true;
     }
@@ -63,7 +63,7 @@ class SavingService extends BasePageAction
     {
         $this->repository->delete($saving, true);
         
-        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Saving Deleted'));
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new NoticeMessageEvent('Saving Deleted'));
 
         return true;
     }

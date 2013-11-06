@@ -5,7 +5,7 @@ namespace Psamatt\ExpenditureBundle\Services;
 use Psamatt\ExpenditureBundle\Repository\RepositoryInterface;
 use Psamatt\ExpenditureBundle\Entity\MonthExpenditure;
 use Psamatt\ExpenditureBundle\ExpenditureEvents;
-use Psamatt\ExpenditureBundle\Event\MessageEvent;
+use Psamatt\ExpenditureBundle\Event\NoticeMessageEvent;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -43,7 +43,7 @@ class MonthExpenditureService extends BasePageAction
     {
         $this->repository->delete($expenditure, true);
         
-        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Expenditure Deleted'));
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new NoticeMessageEvent('Expenditure Deleted'));
 
         return true;
     }  
@@ -58,7 +58,7 @@ class MonthExpenditureService extends BasePageAction
     {
         $this->repository->save($expenditure, true);
         
-        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Expenditure Saved'));
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new NoticeMessageEvent('Expenditure Saved'));
         
         return true;
     }
@@ -73,7 +73,7 @@ class MonthExpenditureService extends BasePageAction
     {
         $this->repository->save($expenditure, true);
         
-        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Expenditure set as ' . (!$expenditure->hasBeenPaid()? 'partially ':'') . 'paid'));
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new NoticeMessageEvent('Expenditure set as ' . (!$expenditure->hasBeenPaid()? 'partially ':'') . 'paid'));
         
         return true;
     }

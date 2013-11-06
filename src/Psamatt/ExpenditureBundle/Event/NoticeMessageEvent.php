@@ -4,7 +4,7 @@ namespace Psamatt\ExpenditureBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class MessageEvent extends Event implements MessageEventInterface
+class NoticeMessageEvent extends Event implements MessageEventInterface
 {
     protected $msg;
     protected $type;

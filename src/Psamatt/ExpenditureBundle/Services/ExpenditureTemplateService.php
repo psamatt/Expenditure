@@ -7,7 +7,7 @@ use Psamatt\ExpenditureBundle\Repository\Exception\ItemNotFoundException;
 
 use Psamatt\ExpenditureBundle\Entity\MonthExpenditureTemplate;
 use Psamatt\ExpenditureBundle\ExpenditureEvents;
-use Psamatt\ExpenditureBundle\Event\MessageEvent;
+use Psamatt\ExpenditureBundle\Event\NoticeMessageEvent;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -45,7 +45,7 @@ class ExpenditureTemplateService extends BasePageAction
     {
         $this->repository->save($template, true);
         
-        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Default Payment Saved'));
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new NoticeMessageEvent('Default Payment Saved'));
         
         return true;
     }
@@ -60,7 +60,7 @@ class ExpenditureTemplateService extends BasePageAction
     {
         $this->repository->delete($template, true);
         
-        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent('Default Payment Deleted'));
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new NoticeMessageEvent('Default Payment Deleted'));
 
         return true;
     }

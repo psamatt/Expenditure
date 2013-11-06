@@ -6,7 +6,7 @@ use Psamatt\ExpenditureBundle\Repository\RepositoryInterface;
 use Psamatt\ExpenditureBundle\Repository\Exception\ItemNotFoundException;
 use Psamatt\ExpenditureBundle\Entity\MonthHeader;
 use Psamatt\ExpenditureBundle\ExpenditureEvents;
-use Psamatt\ExpenditureBundle\Event\MessageEvent;
+use Psamatt\ExpenditureBundle\Event\NoticeMessageEvent;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -53,7 +53,7 @@ class MonthHeaderService extends BasePageAction
         
         $msg = $new? $header->getCalendarDate()->format('F Y') . ' Created': 'Header Saved';
         
-        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent($msg));
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new NoticeMessageEvent($msg));
         
         return true;
     }

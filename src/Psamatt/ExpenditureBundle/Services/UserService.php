@@ -7,7 +7,7 @@ use Psamatt\ExpenditureBundle\Repository\Exception\ItemNotFoundException;
 
 use Psamatt\ExpenditureBundle\Entity\User;
 use Psamatt\ExpenditureBundle\ExpenditureEvents;
-use Psamatt\ExpenditureBundle\Event\MessageEvent;
+use Psamatt\ExpenditureBundle\Event\NoticeMessageEvent;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -50,7 +50,7 @@ class UserService extends BasePageAction
     
         $this->repository->save($user, true);
         
-        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new MessageEvent($msg));
+        $this->dispatcher->dispatch(ExpenditureEvents::NOTIFY_PAGE, new NoticeMessageEvent($msg));
         
         return true;
     }

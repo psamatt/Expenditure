@@ -9,7 +9,7 @@ final class ExpenditureEvents
      * the page
      *
      * The event listener receives an
-     * Psamatt\ExpenditureBundle\Event\MessageEvent instance.
+     * Psamatt\ExpenditureBundle\Event\NoticeMessageEvent instance.
      *
      * @var string
      */
