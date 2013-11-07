@@ -1,6 +1,6 @@
 Expenditure
 ============
-A small accounting application written using [Silex](http://silex.sensiolabs.org/) that allows you to keep track of your monthly outgoings and know exactly how much money you have left in your account after bills
+A small accounting application written using [Symfony](http://symfony.com/) that allows you to keep track of your monthly outgoings and know exactly how much money you have left in your account after bills
 
 ### Installation
 
