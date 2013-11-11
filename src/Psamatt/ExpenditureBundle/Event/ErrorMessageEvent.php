@@ -15,11 +15,17 @@ class ErrorMessageEvent extends Event implements MessageEventInterface
         $this->type = $type == null? 'errors': $type;
     }
 
+    /**
+     * {inheritdoc}
+     */
     public function getMessage()
     {
         return $this->msg;
     }
     
+    /**
+     * {inheritdoc}
+     */
     public function getMessageType()
     {
         return $this->type;
