@@ -1,0 +1,61 @@
+<html>
+    <head>
+        {{ include('::header.html.twig') }}
+    </head>
+    <body class="login">
+        
+        <div class="container">
+            <h1>Expenditure</h1>
+    
+            {% set postVars =  app.request.request %}
+        	
+        	<form method="post" action="{{ app.request.uri }}" name="userForm" class="form-register">
+        	
+                <p class="text-info">Create your very own account below</p>
+        	
+        	{% if errors is defined and errors | length > 0 %}    
+                {% include 'form/errors.html.twig' %}
+            {% endif %}
+            
+                <div class="control-group">
+        			<label class="control-label" for="inputEmail">Email Address</label>
+        			<div class="controls">
+        				<input type="email" id="inputEmail" name="emailAddress" {{ postVars.has('emailAddress')? ('value="' ~ postVars.get('emailAddress') ~ '" ') | raw:'' }}placeholder="example@example.com" />
+        			</div>
+        		</div>
+        
+        		<div class="control-group">
+        			<label class="control-label" for="inputFullname">Full Name</label>
+        			<div class="controls">
+        				<input type="text" id="inputFullname" name="fullname" {{ postVars.has('fullname')? ('value="' ~ postVars.get('fullname') ~ '" ') | raw:'' }}placeholder="Firstname Surname" />
+        			</div>
+        		</div>
+        		
+        		<div class="control-group">
+        			<label class="control-label" for="inputPassword">Password</label>
+        			<div class="controls">
+        				<input type="password" id="inputPassword" name="password1" />
+        			</div>
+        		</div>
+        		
+        		<div class="control-group">
+        			<label class="control-label" for="inputFullname">Re Type Password</label>
+        			<div class="controls">
+        				<input type="password" id="inputPassword" name="password2" />
+        			</div>
+        		</div>
+        		<div class="control-group">
+        			<div class="controls">
+                        <button class="btn btn-large btn-primary" type="submit">Register</button>
+        			</div>
+        		</div>
+        		<p>Once registered, you will then be able to <a href="{{ path('login') }}">Sign in</a> and start keeping track of your expenditure</p>
+        	</form>
+        </div>
+        
+        {% javascripts '@PsamattExpenditureBundle/Resources/public/js/*' %}
+            <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    </body>
+</html>
+

@@ -9,3 +9,10 @@ branches:
     - master
 
 before_script: composer install --dev
+
+script: phpunit -c app
+
+branches:
+  only:
+    - master
+    - develop

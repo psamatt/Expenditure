@@ -90,19 +90,6 @@ class FeatureContext extends MinkContext
                 $today->format('j'); //check
                 break;
         }
-        /*
-        
-        
-        return array(
-            new Step\When('I am on "/login"'),
-            new Step\When('I fill in "_username" with "' . $username . '"'),
-            new Step\When('I fill in "_password" with "' . $password . '"'),
-            new Step\When('I press "Sign in"'),
-            new Step\Then("I should be on \"/admin\""),
-        );
-    
-        $this->assertSession()->elementContains('css', $element, $this->fixStepArgument($value));
-        */
     }
     
     /**

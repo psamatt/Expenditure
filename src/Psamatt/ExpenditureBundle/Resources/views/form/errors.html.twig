@@ -1,0 +1,9 @@
+<div class="alert form-errors">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Warning!</strong> There are errors with this form
+    <ul>
+        {% for fieldError in errors %}
+            <li>{{ fieldError.message | default(fieldError) }}</li>
+        {% endfor %}
+    </ul>
+</div>

@@ -1,6 +1,9 @@
 Expenditure
 ============
-A small accounting application written using [Silex](http://silex.sensiolabs.org/) that allows you to keep track of your monthly outgoings and know exactly how much money you have left in your account after bills
+
+[![Build Status](https://travis-ci.org/psamatt/Expenditure.png?branch=master)](https://travis-ci.org/psamatt/Expenditure)
+
+A small accounting application written using [Symfony](http://symfony.com/) that allows you to keep track of your monthly outgoings and know exactly how much money you have left in your account after bills
 
 ### Installation
 
@@ -8,7 +11,7 @@ This is only currently avaialble if you self host the application.
 
 ###### Prerequisites
 
-- PHP 5.3
+- PHP 5.3+
 - MySQL 5
 - Mod Rewrite enabled
 
@@ -41,7 +44,7 @@ This is only currently avaialble if you self host the application.
 
 5. Configure parameters
 
-    Copy `app/config/dev.json.dist` to `app/config/dev.json` and configure the appropriate parameters.
+    Copy `app/config/parameters.yml.dist` to `app/config/parameters.yml` and configure the appropriate parameters.
 
 6. Install third party bundles
 
@@ -63,3 +66,23 @@ If you would like to contribute towards Expenditure, then please follow the step
 6. Push to the branch (`git push origin my-new-feature`)
 7. Create new Pull Request
 8. Sit back and smile whilst knowing that you're making the world a better place
+
+### Running tests
+
+If you want to run the tests against this repository, then there are two types of tests:
+
+#### PHPUnit
+
+In the root of the repository, run:
+
+`phpunit -c app/phpunit.xml.dist`
+
+#### Behat
+
+Some behat tests require Javascript, we therefore require a headless browser, firstly install [phantomJS](http://phantomjs.org/), then in one tab of Terminal, start phantomJS to listen to port 8643
+
+`phantomjs --webdriver=8643`
+
+Now in another Terminal tab, run the behat testing suite
+
+`bin/behat`

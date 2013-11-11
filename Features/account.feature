@@ -46,30 +46,38 @@ Feature: Update account
     When I press "Save"
     Then I should see "Account updated"
 
-  Scenario: A new password with no confirmation
-    
-    Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
-    When I go to "/admin/profile/edit"
-    When I fill in "password1" with "abcde"
-    When I press "Update Password"
-    Then I should see "Warning"
-    Then I should see "Password must be 6 characters"
-
+  @javascript
   Scenario: A new password with confirmation but only 5 characters long
     
     Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
     When I go to "/admin/profile/edit"
-    When I fill in "password1" with "abcde"
-    When I fill in "password2" with "abcde"
-    When I press "Update Password"
+    When I follow "Change password"
+    Then I should see "New Password"
+    When I fill in "userPassword_password_first" with "abcde"
+    When I fill in "userPassword_password_second" with "abcde"
+    When I press "Update password"
     Then I should see "Warning"
-    Then I should see "Password must be 6 characters or more long"
+    Then I should see "Password must be 6 characters"
 
+  @javascript
+  Scenario: A new password with over 5 characters long but not matching
+    
+    Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
+    When I go to "/admin/profile/edit"
+    When I follow "Change password"
+    Then I should see "New Password"
+    When I fill in "userPassword_password_first" with "abCd12eWz"
+    When I fill in "userPassword_password_first" with "abCd12eXXXX"
+    When I press "Update password"
+    Then I should see "Warning"
+
+  @javascript
   Scenario: A new password with confirmation that contains an upper case number and a number and long
     
     Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
     When I go to "/admin/profile/edit"
-    When I fill in "password1" with "abCd12eWz"
-    When I fill in "password2" with "abCd12eWz"
-    When I press "Update Password"
+    When I follow "Change password"
+    When I fill in "userPassword_password_first" with "abCd12eWz"
+    When I fill in "userPassword_password_second" with "abCd12eWz"
+    When I press "Update password"
     Then I should see "Password updated"

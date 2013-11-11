@@ -1,0 +1,204 @@
+{% extends '::base.html.twig' %}
+
+{% block content %}
+
+    {% set paidDay = app.security.token.user.paidDay %}
+
+    {% if paidDay is empty %}
+        <div class="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Warning!</strong> To get correct calculations as to how much to save per month, remember to fill out the paid day on the <a href="{{ path('profile_edit') }}">account settings</a>.
+        </div>
+    {% endif %}
+
+    <h3>Saving Targets</h3>
+    
+    <p class="text-info">To receive correct monthly predictions, make sure you update your savings total every month</p>  
+
+    {% if savings is defined and savings | length > 0 %}
+    
+        <table class="table table-centered" id="savingsTbl">
+    		<thead>
+    			<tr>
+    				<th>Title</th>
+    				<th>Target Date</th>
+    				<th>Savings</th>
+    				<th>&nbsp;</th>
+    				<th>&nbsp;</th>
+    			</tr>
+    		</thead>
+    		<tbody>
+    		
+    		{% set totalAmountOfSavingsPerMonth = 0%}
+    		
+            {% for saving in savings %}
+                <tr data-id="saving_{{ saving.id }}" class="saving_manage">
+                    <td width="25%">{{ saving.title }}</td>
+                    <td>{{ saving.targetDate.format('d-m-Y') | default('N/A') }}</td>
+                    <td width="30%">
+                        <div class="progress progress-{{ saving.isGoalReached? 'success':'info'}}">
+                            <div class="bar" style="width: {{ saving.percentProgress }}%"></div>
+                            <span>{{ CURRENCY ~ saving.savedAmount | default(0) ~ ' / ' ~ CURRENCY ~ saving.targetAmount }}</span>
+                        </div>
+                    </td>
+                    <td class="center" width="10%">
+                        {% if saving.percentProgress < 100 %}
+                            <a href="{{ app.request.uri }}" onclick="return addMoney({{ saving.id }})">Add Money</a>
+                        {% endif %}
+                    </td>
+                    <td class="center">
+                        <a href="/admin/savings/{{ saving.id }}/delete" id="saving_delete_{{ saving.id }}" onclick="return deleteSaving({{ saving.id }})"><i class="icon-trash"></i> Delete</a>
+                        &nbsp;&nbsp;
+                        <a href="{{ app.request.uri }}#inputPrice" onclick="return loadSavingFromAnchor(this)" data-id="{{ saving.id }}" data-title="{{ saving.title }}" data-target_date="{{ saving.targetDate.format('d-m-Y') }}" data-target_amount="{{ saving.targetAmount }}" data-saved_amount="{{ saving.savedAmount }}">
+                            <i class="icon-pencil"></i>Edit
+                        </a>
+				    </td>
+                </tr>
+                {% if paidDay is not empty %}
+                    <tr class="saving_progress">
+                        <td colspan="5">
+                            <div class="alert alert-info">
+                                {% if saving.isGoalReached %}
+                                    Target Goal reached!!
+                                {% else %}
+                                    {% set numMonthsRemaining = saving.numberOfPayDaysRemaining(paidDay) %}
+    
+                                    <strong>{{ numMonthsRemaining }}</strong> pay day{{ numMonthsRemaining != 1? 's':''}} remaining, to reach target, save <strong>{{ CURRENCY ~ saving.amountPerMonth(paidDay)  | number_format(2) }}</strong>{{ numMonthsRemaining > 1? ' per month':''}}
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    
+                     {% set totalAmountOfSavingsPerMonth = totalAmountOfSavingsPerMonth + saving.amountPerMonth(paidDay) %}
+                     
+                {% endif %}
+               
+    		{% endfor %}
+    		</tbody>
+    		{% if savings | length > 1 and paidDay is not empty %}
+        		<tfoot>
+                    <tr>
+                        <td colspan="5">To reach all your targets, you need to save <strong>{{ CURRENCY ~ totalAmountOfSavingsPerMonth | number_format(2) }}</strong> in total per month</td>
+                    </tr>
+        		</tfoot>
+    		{% endif %}
+        </table>
+
+    {% endif %}
+    
+    <div class="well">
+        <p class="text-info">Fill out fields below to save a saving target</p>  
+    	
+        <form method="post" action="{{ path('admin_savings_save', {savingID: saving is defined? saving.id: 0}) }}" class="form-horizontal" name="savingForm" id="savingForm">
+    		<div class="control-group">
+    			<label class="control-label" for="inputTitle">Title</label>
+    			<div class="controls">
+    				<input type="text" id="inputTitle" name="inputTitle" placeholder="Title goes here.." value="" required/>
+    			</div>
+    		</div>
+    
+    		<div class="control-group">
+    			<label class="control-label" for="targetDate">Target Date</label>
+    			<div class="controls">
+        			<div class="input-append date" id="dp3" data-date="{{ "now" | date('d-m-Y') }}" data-date-format="dd-mm-yyyy">
+        				<input type="text" size="16" id="targetDate" name="targetDate" placeholder="dd-mm-yyyy" value="" readonly required/>
+        				<span class="add-on"><i class="icon-th"></i></span>
+        				
+        			</div>
+        			<span class="help-block">When do you want to save this money by?</span>
+    			</div>
+    		</div>
+    		
+    		<div class="control-group">
+    			<label class="control-label" for="targetAmount">Target Amount</label>
+    			<div class="controls">
+        			<div class="input-prepend">
+                        <span class="add-on">{{ CURRENCY }}</span>
+        				<input type="number" pattern="[0-9]+([,\.][0-9]+)?" step="0.01" min="0" id="targetAmount" name="targetAmount" placeholder="0.00" value="" required/>
+        			</div>
+        			<span class="help-block">How much do you want to save?</span>
+    			</div>
+    		</div>
+    		
+    		<div class="control-group">
+    			<label class="control-label" for="inputTitle">Amount Saved (so far)</label>
+    			<div class="controls">
+        			<div class="input-prepend">
+                        <span class="add-on">{{ CURRENCY }}</span>
+        				<input type="number" pattern="[0-9]+([,\.][0-9]+)?" step="0.01" min="0" id="amountSaved" name="amountSaved" placeholder="0.00" value="" />
+        			</div>
+        			<span class="help-block">How much have you saved so far?</span>
+    			</div>
+    		</div>		
+    		
+    		<div class="control-group">
+    			<div class="controls">
+    				<button type="submit" class="btn">Save</button>
+    				<button type="reset" class="btn">Reset</button>
+    			</div>
+    		</div>
+    	</form>
+	
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    
+    <script type="text/javascript">
+        
+        $('#dp3').datepicker();
+        
+        function deleteSaving(savingID)
+        {
+            if (confirmDelete()) {
+                $.ajax({
+					type: 'POST',
+					url: Routing.generate('admin_savings_delete', {'savingID': savingID}),
+					success: function(){
+						document.location.reload();
+					},
+				});
+            }
+            
+            return false;
+        }
+        
+        function loadSavingFromAnchor(anchor)
+        {
+            $anchor = $(anchor);
+    
+            var $form = $('form[name="savingForm"]');
+            
+            $form.attr('action', Routing.generate('admin_savings_save', {'savingID': $anchor.data('id')}))
+
+            $form.find('input[name="inputTitle"]').val($anchor.data('title'));
+            $form.find('input[name="targetDate"]').parent().datepicker('setValue', $anchor.data('target_date'));
+            $form.find('input[name="targetDate"]').val($anchor.data('target_date'));
+            $form.find('input[name="targetAmount"]').val($anchor.data('target_amount'));
+            $form.find('input[name="amountSaved"]').val($anchor.data('saved_amount'));
+        
+            return false;
+        }
+        
+        function addMoney(savingID)
+		{
+			var amountMoney = prompt("How much?","1");
+
+			if (amountMoney != null && amountMoney != "") {
+				$.ajax({
+					type: 'POST',
+					url: Routing.generate('admin_savings_add', {'savingID': savingID}),
+					data: { 'amount': amountMoney },
+					success: function(){
+						document.location.reload();
+					},
+				});
+			}
+
+			return false;
+		}        
+        
+    </script>
+{% endblock %}
