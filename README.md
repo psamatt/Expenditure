@@ -1,5 +1,8 @@
 Expenditure
 ============
+
+[![Build Status](https://travis-ci.org/psamatt/Expenditure.png?branch=master)](https://travis-ci.org/psamatt/Expenditure)
+
 A small accounting application written using [Symfony](http://symfony.com/) that allows you to keep track of your monthly outgoings and know exactly how much money you have left in your account after bills
 
 ### Installation
@@ -8,7 +11,7 @@ This is only currently avaialble if you self host the application.
 
 ###### Prerequisites
 
-- PHP 5.3
+- PHP 5.3+
 - MySQL 5
 - Mod Rewrite enabled
 
