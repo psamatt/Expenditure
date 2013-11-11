@@ -28,28 +28,10 @@ class UserController extends BaseController
     private $userService;
     
     /**
-     * Dispatcher
-     * @Inject("event_dispatcher", required=true)
-     */
-    private $dispatcher;
-    
-     /**
-     * 
-     * @Inject("managePassword.command", required=true)
-     */
-    private $managePasswordCommand;
-    
-    /**
      * Validator
      * @Inject("validator", required=true)
      */
     private $validator;
-
-    /**
-     *
-     * @Inject("form.factory", required=true)
-     */
-    private $formFactory;
     
     /* DI Injected variables */
     protected $templating;
@@ -159,9 +141,6 @@ class UserController extends BaseController
                 $this->userService->save($user);
             }
         }
-        
-        $form = $this->formFactory->create(new ChangePasswordType, array());
-        $returnArray['passwordForm'] = $form->createView();
     
         return $this->templating->renderResponse('PsamattExpenditureBundle:profile:edit.html.twig', $returnArray);
     }
