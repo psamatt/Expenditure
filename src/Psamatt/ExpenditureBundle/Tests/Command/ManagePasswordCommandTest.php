@@ -1,8 +1,8 @@
 <?php
 
-namespace Psamatt\ExpenditureBundle\Tests\Twig\Extension;
+namespace Psamatt\ExpenditureBundle\Tests\Command;
 
-use Psamatt\ExpenditureBundle\Command\ChangePasswordCommand;
+use Psamatt\ExpenditureBundle\Command\ManagePasswordCommand;
 
 class ManagePasswordCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,7 +19,7 @@ class ManagePasswordCommandTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
  
-        $this->managePasswordCommand = new ChangePasswordCommand($mockEncoderFactory, $mockRespository);
+        $this->managePasswordCommand = new ManagePasswordCommand($mockEncoderFactory, $mockRespository);
     }
   
     public function testPasswordValidWithLessThanSixChars()
