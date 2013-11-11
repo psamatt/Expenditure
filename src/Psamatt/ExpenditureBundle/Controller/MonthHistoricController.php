@@ -2,29 +2,39 @@
 
 namespace Psamatt\ExpenditureBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use JMS\DiExtraBundle\Annotation\Inject;
 
 class MonthHistoricController extends DefaultController
 {
     /* DI Injected variables */
-    protected $em;
     protected $templating;
     protected $security;
     protected $router;
-    protected $session;
     protected $request;
     /* End of Injected variables */
+    
+    /**
+     * @Inject("monthExpenditure.service", required=true) 
+     */
+    protected $monthExpenditureService;
+    
+    /**
+     * @Inject("monthHeader.service", required=true) 
+     */
+    protected $monthHeaderService;
 
     /**
      * View all historic month headers
      *
+     * @return Response
      */
     public function indexAction()
     {
-        $monthHeaders = $this->getUser()->getMonthHeaders();
-
-        return $this->templating->renderResponse('PsamattExpenditureBundle:historic:overview.html.twig', array('monthHeaders' => $monthHeaders));
+        return $this->templating->renderResponse('PsamattExpenditureBundle:historic:overview.html.twig', array(
+                'monthHeaders' => $this->monthHeaderService->findAllByUser($this->getUser())
+            ));
     }
 
     /**
@@ -38,22 +48,23 @@ class MonthHistoricController extends DefaultController
     {
         $returnArray = array();
         
-        $monthDate = $this->getCarbon()->createFromDate($year, $month, 1)->setTime(0,0,0);
+        $monthHeader = $this->monthHeaderService->findByDateAndUser(
+                \DateTime::createFromFormat('Y-m-d', $year. '-' . $month . '-01'),
+                $this->getUser()
+            );
 
-        $monthHeader = $this->em->getRepository('PsamattExpenditureBundle:MonthHeader')->findOneBy(array('calendar_date' => $monthDate, 'user' => $this->getUser()));
-        
-        if (!$monthHeader) {
+        if ($monthHeader == null) {
             return new RedirectResponse($this->urlGenerator->generate('admin_homepage'), 302);
         }
-
-        $monthlyExpenditures = $this->em->getRepository('PsamattExpenditureBundle:MonthExpenditure')->findBy(array('header' => $monthHeader));
+        
+        $monthlyExpenditures = $this->monthExpenditureService->findAllByHeader($monthHeader);
 
         list($totalPaid, $totalExpenditure) = $this->findMonthlyTotals($monthlyExpenditures);
 
-        $returnArray['totalPaid'] = $totalPaid;
-        $returnArray['monthlyExpenditures'] = $monthlyExpenditures;
-        $returnArray['monthHeader'] = $monthHeader;
-
-        return $this->templating->renderResponse('PsamattExpenditureBundle:historic:month_overview.html.twig', $returnArray);
+        return $this->templating->renderResponse('PsamattExpenditureBundle:historic:month_overview.html.twig', array(
+                'totalPaid' => $totalPaid,
+                'monthlyExpenditures' => $monthlyExpenditures,
+                'monthHeader' => $monthHeader,
+            ));
     }
 }

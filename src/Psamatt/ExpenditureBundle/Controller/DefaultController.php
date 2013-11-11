@@ -4,78 +4,87 @@ namespace Psamatt\ExpenditureBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 
+use JMS\DiExtraBundle\Annotation\Inject;
+
+use Psamatt\ExpenditureBundle\Library\MonthExpenditureTotalPaid;
+use Psamatt\ExpenditureBundle\Library\MonthExpenditureTotalPrice;
+
 class DefaultController extends BaseController
 {
     /* DI Injected variables */
-    protected $em;
     protected $templating;
     protected $security;
     protected $router;
-    protected $session;
     protected $request;
     /* End of Injected variables */
     
     /**
+     * @Inject("monthExpenditure.service", required=true) 
+     */
+    protected $monthExpenditureService;
+    
+    /**
+     * @Inject("monthHeader.service", required=true) 
+     */
+    protected $monthHeaderService;
+    
+    /**
      * Homepage showing an overview of this months expenditure
      *
+     * @return Response
      */
     public function indexAction()
     {
-        $monthHeader = $this->em->getRepository('PsamattExpenditureBundle:MonthHeader')->findOneBy(array('user' => $this->getUser()), array('calendar_date' => 'DESC'));
+        $tmp = 'PsamattExpenditureBundle::overview.html.twig';
+        
+        $currentDate = new \DateTime;
+        $currentDate->modify('first day of this month');
 
-        $currentFormat = (int)$this->getCarbon()->startOfMonth()->format('Ym');
-        $month = $this->getCarbon();
-
+        // if we've requested a new month
         if ($this->request->get('newMonth') !== null) {
-            $monthHeader = null;
-            $month = $this->getCarbon()->addMonth();
-        } elseif ($monthHeader !== null) {
 
-             $month = $this->getCarbon($monthHeader->getCalendarDate()->format('c'));
+            $currentDate = $currentDate->modify('+1 month');
+            
+            return $this->templating->renderResponse($tmp, array(
+                    'notFound' => true,
+                    'currentDate' => $currentDate
+                ));
+        }
+        
+        $returnArray = array();
+        
+        try {
+            $monthHeader = $this->monthHeaderService->findLatestByUser($this->getUser());
+            
+            $currentDate = $monthHeader->getCalendarDate();
 
-            if ($currentFormat > (int)$monthHeader->getCalendarDate()->format('Ym')) {
-                $monthHeader = null;
-                $month = $this->getCarbon();
-            }
-        }       
+            $monthlyExpenditures = $this->monthExpenditureService->findAllByHeader($monthHeader);
 
-        $returnArray = array('monthYear' => $month->startOfMonth());
+            list($returnArray['totalPaid'], $returnArray['totalExpenditure']) = $this->findMonthlyTotals($monthlyExpenditures);
 
-        if ($monthHeader !== null) {
-
-            $monthlyExpenditures = $this->em->getRepository('PsamattExpenditureBundle:MonthExpenditure')->findBy(array('header' => $monthHeader), array('price' => 'DESC'));
-
-            list($totalPaid, $totalExpenditure) = $this->findMonthlyTotals($monthlyExpenditures);
-
-            $returnArray['totalPaid'] = $totalPaid;
-            $returnArray['totalExpenditure'] = $totalExpenditure;
             $returnArray['monthlyExpenditures'] = $monthlyExpenditures;
-
             $returnArray['monthHeader'] = $monthHeader;
-        } else {
+
+        } catch (\Psamatt\ExpenditureBundle\Repository\Exception\ItemNotFoundException $e) {
             $returnArray['notFound'] = true;
         }
+        
+        $returnArray['currentDate'] = $currentDate;
 
-        return $this->templating->renderResponse('PsamattExpenditureBundle::overview.html.twig', $returnArray);
+        return $this->templating->renderResponse($tmp, $returnArray);
     }
 
     /**
      * Find monthly totals for a specific array set of expenditure
      *
-     * @param array[MonthExpenditure] An array of expenditure
-     * @return array[int, int]
+     * @param array[MonthExpenditure] $items An array of expenditure
+     * @return array[float, float]
      */
-    protected function findMonthlyTotals($expenditure)
+    protected function findMonthlyTotals(array $items)
     {
-        $totalPaid = $totalExpenditure = 0;
+        $totalPaidItems = new MonthExpenditureTotalPaid($items);
+        $totalPriceItems = new MonthExpenditureTotalPrice($items);
 
-        for ($i=0, $j = count($expenditure); $i < $j; $i++) {
-
-            $item = $expenditure[$i];
-            $totalPaid += $item->getAmountPaid();
-            $totalExpenditure += $item->getPrice();
-        }
-
-        return array($totalPaid, $totalExpenditure);
+        return array($totalPaidItems->count(), $totalPriceItems->count());
     }
 }

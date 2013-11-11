@@ -18,6 +18,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\AopBundle\JMSAopBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Psamatt\ExpenditureBundle\PsamattExpenditureBundle(),
         );
 

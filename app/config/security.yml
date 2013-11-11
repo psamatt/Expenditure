@@ -10,7 +10,7 @@ security:
                 check_path: /login_check
                 login_path: /login
             logout:
-                path:   /logout
+                path:   /admin/logout
             anonymous: true
             security: true
 

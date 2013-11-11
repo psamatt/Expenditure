@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\Inject;
 
 use Psamatt\ExpenditureBundle\Entity\User;
+use Psamatt\ExpenditureBundle\Form\Type\ChangePasswordType;
 
 class UserController extends BaseController
 {
@@ -21,16 +22,18 @@ class UserController extends BaseController
     private $encoderFactory;
     
     /**
-     * The validator service
-     *
-     * @var Validator
-     * @access private
-     * @Inject("validator", required=true) 
+     * User service
+     * @Inject("user.service", required=true)
+     */
+    private $userService;
+    
+    /**
+     * Validator
+     * @Inject("validator", required=true)
      */
     private $validator;
     
     /* DI Injected variables */
-    protected $em;
     protected $templating;
     protected $security;
     protected $router;
@@ -86,6 +89,9 @@ class UserController extends BaseController
             $returnArray['errors'] = array();
             $errors = &$returnArray['errors'];
             
+            /**
+             * @todo use Symfony2 Form component with ChangePasswordType
+             */
             if ($this->request->get('password1') != $this->request->get('password2')) {
                 $errors['password'] = 'Password must match confirmation password';
                 $hasErrors = true;
@@ -105,10 +111,8 @@ class UserController extends BaseController
                     $returnArray['errors'] = $this->validator->validate($user);
                     
                     if (count($returnArray['errors']) == 0) {
-                        $this->em->persist($user);
-                        $this->em->flush();
-    
-                        $this->session->getFlashBag()->add('notice', 'Account created');
+                        $this->userService->save($user);
+
                         return new RedirectResponse($this->router->generate('login'), 302);
                     }                    
                 }
@@ -134,53 +138,11 @@ class UserController extends BaseController
             $returnArray['errors'] = $this->validator->validate($user);
             
             if (count($returnArray['errors']) == 0) {
-                $this->em->persist($user);
-                $this->em->flush();
-                
-                $this->session->getFlashBag()->add('notice', 'Account updated');
+                $this->userService->save($user);
             }
         }
     
         return $this->templating->renderResponse('PsamattExpenditureBundle:profile:edit.html.twig', $returnArray);
-    }
-    
-    /**
-     * Change a users password
-     *
-     * @return Response
-     */
-    public function changePasswordAction()
-    {
-        if ($this->request->getMethod() == 'POST') {
-            $errors = array();
-            $hasErrors = false;
-            $user = $this->getUser();
-        
-            if ($this->request->get('password1') != $this->request->get('password2')) {
-                $errors['password'] = 'Password must match confirmation password';
-                $hasErrors = true;
-            }
-            
-            if (!$user->isPasswordValid($this->request->get('password1'))) {
-                $errors['password'] = 'Password must be 6 characters or more long, contain at least one number and an upper case and lower case letter';
-                $hasErrors = true;
-            }
-            
-            if (!$hasErrors) {
-            
-                $encoder = $this->encoderFactory->getEncoder($user);
-                $user->setPassword($encoder->encodePassword($this->request->get('password1'), $user->getSalt()));
-                
-                $this->em->persist($user);
-                $this->em->flush();
-
-                $this->session->getFlashBag()->add('notice', 'Password updated');
-            } else {
-                $this->session->getFlashBag()->add('passwordErrors', $errors);
-            }
-        }
-        
-        return new RedirectResponse($this->router->generate('profile_edit'), 302);
     }
     
     /**
@@ -192,16 +154,20 @@ class UserController extends BaseController
     {
         $user = $new? new User: $this->getUser();
         
-        $user->setFullname($this->request->get('fullname'));
-        $user->setEmailAddress($this->request->get('emailAddress'));
-        $user->setPaidDay($this->request->get('paidDay'));
+        $user->update(
+                $this->request->get('fullname'),
+                $this->request->get('emailAddress'),
+                $this->request->get('paidDay')
+            );
         
         if ($new) {
-            $user->setSalt(hash("sha256",time()));
-            $user->setStatus(1);
-            
+        
+            $salt = hash("sha256",time());
+
             $encoder = $this->encoderFactory->getEncoder($user);
-            $user->setPassword($encoder->encodePassword($this->request->get('password1'), $user->getSalt()));
+            $newPassword = $encoder->encodePassword($this->request->get('password1'), $salt);
+            
+            $user->updateSecurityDetails($newPassword, $salt);
         }
         
         return $user;

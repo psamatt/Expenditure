@@ -24,7 +24,7 @@
 					<td class="">{{ CURRENCY ~ expenditure.amountPaid | number_format(2, '.', ',') }}</td>
 					<td width="20%">
 						{% if expenditure.amountPaid < expenditure.price and showActions is defined and showActions %}
-							<a href="{{ app.request.uri }}" onclick="return registerPaid({{ expenditure.header.id }}, {{ expenditure.id }})" class="paid--record">Paid</a>
+							<a href="{{ app.request.uri }}" onclick="return registerPaid({{ expenditure.header.id }}, {{ expenditure.id }}, '{{ expenditure.price }}')" class="paid--record">Paid</a>
 							&nbsp;|&nbsp;
 							<a href="{{ app.request.uri }}" onclick="return registerPartPaid({{ expenditure.header.id }}, {{ expenditure.id }})" class="partial-paid--record">Partial Paid</a>
 						{% endif %}

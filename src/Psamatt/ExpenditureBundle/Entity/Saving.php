@@ -4,6 +4,8 @@ namespace Psamatt\ExpenditureBundle\Entity;
 
 use Carbon\Carbon as CarbonDateTime;
 
+use Psamatt\Expenditure\Library\SavingMoney;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -84,20 +86,6 @@ class Saving
     {
         return $this->id;
     }
-    
-    /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return Saving
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
 
     /**
      * Get title
@@ -107,20 +95,6 @@ class Saving
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * Set target_date
-     *
-     * @param \DateTime $targetDate
-     *
-     * @return Saving
-     */
-    public function setTargetDate($targetDate)
-    {
-        $this->target_date = $targetDate;
-
-        return $this;
     }
 
     /**
@@ -134,20 +108,6 @@ class Saving
     }
 
     /**
-     * Set target_amount
-     *
-     * @param float $targetAmount
-     *
-     * @return Saving
-     */
-    public function setTargetAmount($targetAmount)
-    {
-        $this->target_amount = $targetAmount;
-
-        return $this;
-    }
-
-    /**
      * Get target_amount
      *
      * @return float 
@@ -155,6 +115,17 @@ class Saving
     public function getTargetAmount()
     {
         return $this->target_amount;
+    }
+    
+    /**
+     * Is the amount specified over the target amount
+     *
+     * @param integer $amount
+     * @param boolean result
+     */
+    public function isOverTargetAmount($amount)
+    {
+        return (float)$amount > $this->target_amount;
     }
 
     /**
@@ -166,7 +137,7 @@ class Saving
      */
     public function setSavedAmount($savedAmount)
     {
-        $this->saved_amount = $savedAmount;
+        $this->saved_amount = $this->isOverTargetAmount($savedAmount)? $this->target_amount: $savedAmount;
 
         return $this;
     }
@@ -210,9 +181,9 @@ class Saving
      * 
      * @param integer $money
      */
-    public function addMoney($money)
+    public function addMoney(SavingMoney $money)
     {
-        $this->saved_amount += $money;
+        $this->saved_amount += $money->getAmount();
     }
     
     /**
@@ -312,5 +283,22 @@ class Saving
         }
         
         return $amountPerMonth;
+    }
+    
+    /**
+     * Update the record
+     *
+     *
+     */
+    public function update($title, \DateTime $targetDate = null, $targetAmount, $amountSaved, User $user = null)
+    {
+        $this->title = $title;
+        $this->target_date = $targetDate;
+        $this->target_amount = $targetAmount;
+        $this->setSavedAmount($amountSaved);
+        
+        if (null != $user) {
+            $this->user = $user;
+        }
     }
 }

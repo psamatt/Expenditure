@@ -31,12 +31,12 @@ profile_edit:
 
 profile_change_password:
     path:  /admin/profile/password/change
-    defaults: { _controller: PsamattExpenditureBundle:User:changePassword }
-    methods:  [POST]
+    defaults: { _controller: PsamattExpenditureBundle:ChangePassword:amend }
+    methods:  [GET|POST]
 
 admin_import:
     path:  /admin/import/{year}/{month}
-    defaults: { _controller: PsamattExpenditureBundle:Import:save }
+    defaults: { _controller: PsamattExpenditureBundle:MonthHeader:createNew }
     methods:  [POST]
 
 admin_expenditure_paid:
@@ -78,7 +78,7 @@ admin_payments_delete:
     methods:  [GET]
 
 admin_payments_save:
-    path:  /admin/month/default/save
+    path:  /admin/month/default/{defaultID}/save
     defaults: { _controller: PsamattExpenditureBundle:DefaultPayment:save }
     requirements:
         defaultID: \d+
@@ -103,9 +103,11 @@ admin_savings:
     methods:  [GET]
 
 admin_savings_save:
-    path:  /admin/savings/save
+    path:  /admin/savings/{savingID}/save
     defaults: { _controller: PsamattExpenditureBundle:Saving:save }
     methods:  [POST]
+    options:
+        expose: true
 
 admin_savings_add:
     path:  /admin/savings/{savingID}/money/add
@@ -113,6 +115,8 @@ admin_savings_add:
     requirements:
         savingID: \d+
     methods:  [POST]
+    options:
+        expose: true
 
 admin_savings_delete:
     path:  /admin/savings/{savingID}/delete
@@ -120,3 +124,5 @@ admin_savings_delete:
     requirements:
         savingID: \d+
     methods:  [POST]
+    options:
+        expose: true

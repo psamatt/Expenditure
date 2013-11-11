@@ -2,7 +2,24 @@ parameters:
 
     webservice_user_provider.class: Psamatt\ExpenditureBundle\Provider\UserProvider
     psamatt.expenditure.twig.extension.class: Psamatt\ExpenditureBundle\Twig\Extension\CarbonTwigExtension
+    templateToExpenditure.transformer.class: Psamatt\ExpenditureBundle\DataTransformer\TemplateToExpenditure
+    
+    saving.service.class: Psamatt\ExpenditureBundle\Services\SavingService
+    expenditureTemplate.service.class: Psamatt\ExpenditureBundle\Services\ExpenditureTemplateService
+    monthHeader.service.class: Psamatt\ExpenditureBundle\Services\MonthHeaderService
+    monthExpenditure.service.class: Psamatt\ExpenditureBundle\Services\MonthExpenditureService
+    user.service.class: Psamatt\ExpenditureBundle\Services\UserService
+    
+    saving.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\Saving\DoctrineORMRepository
+    monthHeader.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\MonthHeader\DoctrineORMRepository
+    monthExpenditure.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\MonthExpenditure\DoctrineORMRepository
+    expenditureTemplate.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\ExpenditureTemplate\DoctrineORMRepository
+    user.doctrine.orm.repository.class: Psamatt\ExpenditureBundle\Repository\User\DoctrineORMRepository
 services:
+
+    templateToExpenditure.transformer:
+        class: "%templateToExpenditure.transformer.class%"
+        arguments: ~
 
     psamatt.expenditure.webservice_user_provider:
         class: "%webservice_user_provider.class%"
@@ -12,3 +29,68 @@ services:
         class: "%psamatt.expenditure.twig.extension.class%"
         tags:
             - { name: twig.extension }
+
+# ########################## Expenditure Template ##########################    
+    expenditureTemplate.service:
+        class: "%expenditureTemplate.service.class%"
+        arguments: [@expenditureTemplate.repository, @event_dispatcher]
+    
+    expenditureTemplate.repository:
+        alias: expenditureTemplate.doctrine.orm.repository
+    
+    expenditureTemplate.doctrine.orm.repository:
+        class: "%expenditureTemplate.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
+
+# ##############¢¢############ Month Header ###############################    
+    monthHeader.service:
+        class: "%monthHeader.service.class%"
+        arguments: [@monthHeader.repository, @event_dispatcher]
+    
+    monthHeader.repository:
+        alias: monthHeader.doctrine.orm.repository
+    
+    monthHeader.doctrine.orm.repository:
+        class: "%monthHeader.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
+
+# ##############¢¢############ Month Expenditure ###############################    
+    monthExpenditure.service:
+        class: "%monthExpenditure.service.class%"
+        arguments: [@monthExpenditure.repository, @event_dispatcher]
+    
+    monthExpenditure.repository:
+        alias: monthExpenditure.doctrine.orm.repository
+    
+    monthExpenditure.doctrine.orm.repository:
+        class: "%monthExpenditure.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
+
+# ############################### Saving ################################  
+    saving.service:
+        class: "%saving.service.class%"
+        arguments: [@saving.repository, @event_dispatcher]
+    
+    saving.repository:
+        alias: saving.doctrine.orm.repository
+    
+    saving.doctrine.orm.repository:
+        class: "%saving.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
+
+# ############################### User ################################  
+    user.service:
+        class: "%user.service.class%"
+        arguments: [@user.repository, @event_dispatcher]
+    
+    user.repository:
+        alias: user.doctrine.orm.repository
+    
+    user.doctrine.orm.repository:
+        class: "%user.doctrine.orm.repository.class%"
+        arguments: [@doctrine.orm.entity_manager]
+        public: false

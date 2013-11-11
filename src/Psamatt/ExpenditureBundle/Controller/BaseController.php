@@ -56,4 +56,14 @@ class BaseController
         // error as user to trying to modify someone elses record
         throw new NotFoundHttpException("Page not found");
     }
+    
+    /**
+     * Add a notice to the page
+     *
+     * @param string $msg
+     */
+    public function addNotice($msg)
+    {
+        $this->session->getFlashBag()->add('notice', $msg);
+    }
 }

@@ -113,20 +113,6 @@ class User implements AdvancedUserInterface
     {
         return $this->id;
     }
-    
-    /**
-     * Set email_address
-     *
-     * @param string $emailAddress
-     *
-     * @return User
-     */
-    public function setEmailAddress($emailAddress)
-    {
-        $this->email_address = $emailAddress;
-
-        return $this;
-    }
 
     /**
      * Get email_address
@@ -136,20 +122,6 @@ class User implements AdvancedUserInterface
     public function getEmailAddress()
     {
         return $this->email_address;
-    }
-
-    /**
-     * Set fullname
-     *
-     * @param string $fullname
-     *
-     * @return User
-     */
-    public function setFullname($fullname)
-    {
-        $this->fullname = $fullname;
-
-        return $this;
     }
 
     /**
@@ -174,39 +146,6 @@ class User implements AdvancedUserInterface
         }
         
         return $this->fullname;
-    }
-    
-    /**
-     * Is the password valid
-     *
-     * @param string $password
-     * @return boolean
-     */
-    public function isPasswordValid($password)
-    {
-        if (strlen($password) < 6) {
-            return false;
-        }
-        
-        if (!preg_match('/^(?=.*\d)(?=.*[a-zA-Z]).{6,}$/', $password)) {
-            return false;
-        }
-        
-        return true;
-    }
-
-    /**
-     * Set paid_day
-     *
-     * @param integer $paidDay
-     *
-     * @return User
-     */
-    public function setPaidDay($paidDay)
-    {
-        $this->paid_day = $paidDay;
-
-        return $this;
     }
 
     /**
@@ -399,6 +338,33 @@ class User implements AdvancedUserInterface
     public function getExpenditureTemplates()
     {
         return $this->expenditureTemplates;
+    }
+    
+    /**
+     * Update details
+     *
+     * @param string $fullName
+     * @param string $emailAddress
+     * @param integer $paidDay
+     */
+    public function update($fullName, $emailAddress, $paidDay, $status = 1)
+    {
+        $this->fullname = $fullName;
+        $this->email_address = $emailAddress;
+        $this->paid_day = $paidDay;
+        $this->status = 1;
+    }
+    
+    /**
+     * Update security details
+     *
+     * @param string $password
+     * @param string $salt
+     */
+    public function updateSecurityDetails($password, $salt = null)
+    {
+        $this->password = $password;
+        $this->salt = $salt == null? $this->salt: $salt;
     }
     
     /**

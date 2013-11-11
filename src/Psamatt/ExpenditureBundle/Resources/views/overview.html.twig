@@ -4,10 +4,10 @@
 
 	<div class="hero-unit">
 
-		<h1>{{ monthYear.format('F Y') }}</h1>
+		<h1>{{ currentDate.format('F Y') }}</h1>
 		{% if notFound is defined %}
-			<p class="text-error">{{ monthYear.format('F') }} has not yet been created, therefore an overview is not able to be calculated</p>
-			<form method="post" action="{{ path('admin_import', {'year': monthYear.format('Y'), 'month': monthYear.format('n') }) }}" class="form-inline">
+			<p class="text-error">{{ currentDate.format('F') }} has not yet been created, therefore an overview is not able to be calculated</p>
+			<form method="post" action="{{ path('admin_import', {'year': currentDate.format('Y'), 'month': currentDate.format('n') }) }}" class="form-inline">
 				<div class="input-prepend">
 					<span class="add-on">{{ CURRENCY }}</span>
 					<input type="number" pattern="[0-9]+([,\.][0-9]+)?" step="0.01" min="0" name="salary" placeholder="Monthly Salary" required />
@@ -16,7 +16,7 @@
 			</form>
 		{% else %}
 
-            {% if monthYear.format('FY') == "now" | date('FY') %}
+            {% if currentDate.format('FY') == "now" | date('FY') %}
     			<ul class="pager pull-right">
     				<li class="next">
     					<a href="{{ path('admin_homepage', {'newMonth': 1})}}">Create next month &rarr;</a>
@@ -87,12 +87,12 @@
 			return false;
 		}
 
-		function registerPaid(headerID, expenditureID)
+		function registerPaid(headerID, expenditureID, amount)
 		{
 			$.ajax({
 				type: 'POST',
 				url: '/admin/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
-				data: { 'amount': 'all' },
+				data: { 'amount': amount },
 				success: function(){
 					$('tr[data-id='+expenditureID+']').addClass('expenditure-paid');
 

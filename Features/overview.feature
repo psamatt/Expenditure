@@ -11,6 +11,7 @@ Feature: Overview
     When I fill in "salary" with "2000"
     When I press "Create now"
     Then I should see 0 "table tbody tr" elements
+    Then I should see "created"
 
   Scenario: Create new month with 3 default payments
     
@@ -24,6 +25,7 @@ Feature: Overview
     When I go to "/admin"
     When I fill in "salary" with "2000"
     When I press "Create now"
+    Then I should see "created"
     Then I should see 3 "table tbody tr" elements
     Then the "span#totalExpenditure" element should contain "475"
     Then the "span#amountToPay" element should contain "475"
@@ -53,10 +55,11 @@ Feature: Overview
     Then the "inputPrice" field should contain "200"
     When I fill in "inputPrice" with "300"
     When I press "Save"
+    Then I should see "Expenditure Saved"
     Then the "span#totalExpenditure" element should contain "575"
     Then the "amountLeft" element should contain "425.00"
     When I follow css "table tr[data-id=\"2\"] a.paid--record"
-    When I reload the page
+    Then I should see "Expenditure set as paid"
     Then the "span#amountToPay" element should contain "225"
     Then I should see 1 "table tbody tr.expenditure-paid" elements
     When I fill in "inputTitle" with "Fruit"

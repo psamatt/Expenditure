@@ -68,20 +68,6 @@ class MonthHeader
     {
         return $this->id;
     }
-    
-    /**
-     * Set calendar_date
-     *
-     * @param \DateTime $calendarDate
-     *
-     * @return MonthHeader
-     */
-    public function setCalendarDate($calendarDate)
-    {
-        $this->calendar_date = $calendarDate;
-
-        return $this;
-    }
 
     /**
      * Get calendar_date
@@ -91,20 +77,6 @@ class MonthHeader
     public function getCalendarDate()
     {
         return $this->calendar_date;
-    }
-
-    /**
-     * Set month_income
-     *
-     * @param float $monthIncome
-     *
-     * @return MonthHeader
-     */
-    public function setMonthIncome($monthIncome)
-    {
-        $this->month_income = $monthIncome;
-
-        return $this;
     }
 
     /**
@@ -175,5 +147,22 @@ class MonthHeader
     public function getExpenditures()
     {
         return $this->expenditures;
+    }
+    
+    /**
+     * Update
+     *
+     * @param DateTime $calendarDate
+     * @param float $monthIncome
+     * @param User|null $user
+     */
+    public function update(\DateTime $calendarDate, $monthIncome, \Psamatt\ExpenditureBundle\Entity\User $user = null)
+    {
+        $this->calendar_date = $calendarDate;
+        $this->month_income = $monthIncome;
+        
+        if ($user != null) {
+            $this->user = $user;
+        }
     }
 }
