@@ -8,7 +8,7 @@ Feature: User Savings
     Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
     When I go to "/admin/savings"
     Then I should not see a "table#savingsTbl" element
-    Then I should see a "form#expenditureForm" element
+    Then I should see a "form#savingForm" element
 
   Scenario: Add Saving
     

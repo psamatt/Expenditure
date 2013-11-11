@@ -33,36 +33,32 @@
 		<div class="control-group">
 			<div class="controls">
 				<button type="submit" class="btn">Save</button>
+				<a data-toggle="modal" data-target="#changePasswordModal" href="{{ path('profile_change_password') }}" class="btn btn-info">Change password</a>
 			</div>
 		</div>
 	</form>
 	
-	<p class="text-info">Fill in the fields below to change your password</p>
-	
-	{% if app.session.flashbag.has('passwordErrors') %}
-        {{ include(
-            'PsamattExpenditureBundle:form:errors.html.twig',
-            { 'errors': app.session.flashbag.get('passwordErrors')[0] }
-        ) }}
-    {% endif %}
-	
-	<form method="post" action="{{ path('profile_change_password') }}" name="passwordForm" class="form-horizontal">
-		<div class="control-group">
-			<label class="control-label" for="inputPassword1">New Password</label>
-			<div class="controls">
-				<input type="password" id="inputPassword1" name="password1" />
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="inputPassword2">Confirm Password</label>
-			<div class="controls">
-				<input type="password" id="inputPassword2" name="password2" />
-			</div>
-		</div>
-		<div class="control-group">
-			<div class="controls">
-				<button type="submit" class="btn">Update Password</button>
-			</div>
-		</div>
-	</form>
+	<div id="changePasswordModal" class="modal hide fade in">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Change Password</h3>
+        </div>
+        <div class="modal-body"></div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $("a[data-target=#changePasswordModal]").click(function(ev) {
+            ev.preventDefault();
+            var target = $(this).attr("href");
+        
+            // load the url and show modal on success
+            $("#changePasswordModal .modal-body").load(target, function() { 
+                $("#changePasswordModal").modal("show"); 
+            });
+        });
+    </script>
 {% endblock %}

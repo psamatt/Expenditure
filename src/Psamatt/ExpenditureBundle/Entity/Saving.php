@@ -86,20 +86,6 @@ class Saving
     {
         return $this->id;
     }
-    
-    /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return Saving
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
 
     /**
      * Get title
@@ -112,20 +98,6 @@ class Saving
     }
 
     /**
-     * Set target_date
-     *
-     * @param \DateTime $targetDate
-     *
-     * @return Saving
-     */
-    public function setTargetDate($targetDate)
-    {
-        $this->target_date = $targetDate;
-
-        return $this;
-    }
-
-    /**
      * Get target_date
      *
      * @return \DateTime 
@@ -133,20 +105,6 @@ class Saving
     public function getTargetDate()
     {
         return $this->target_date;
-    }
-
-    /**
-     * Set target_amount
-     *
-     * @param float $targetAmount
-     *
-     * @return Saving
-     */
-    public function setTargetAmount($targetAmount)
-    {
-        $this->target_amount = $targetAmount;
-
-        return $this;
     }
 
     /**
@@ -325,5 +283,22 @@ class Saving
         }
         
         return $amountPerMonth;
+    }
+    
+    /**
+     * Update the record
+     *
+     *
+     */
+    public function update($title, \DateTime $targetDate = null, $targetAmount, $amountSaved, User $user = null)
+    {
+        $this->title = $title;
+        $this->target_date = $targetDate;
+        $this->target_amount = $targetAmount;
+        $this->setSavedAmount($amountSaved);
+        
+        if (null != $user) {
+            $this->user = $user;
+        }
     }
 }

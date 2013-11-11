@@ -31,12 +31,12 @@ profile_edit:
 
 profile_change_password:
     path:  /admin/profile/password/change
-    defaults: { _controller: PsamattExpenditureBundle:User:changePassword }
-    methods:  [POST]
+    defaults: { _controller: PsamattExpenditureBundle:ChangePassword:amend }
+    methods:  [GET|POST]
 
 admin_import:
     path:  /admin/import/{year}/{month}
-    defaults: { _controller: PsamattExpenditureBundle:Import:save }
+    defaults: { _controller: PsamattExpenditureBundle:MonthHeader:createNew }
     methods:  [POST]
 
 admin_expenditure_paid:

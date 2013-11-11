@@ -48,7 +48,14 @@ class MonthExpenditure
      *
      * @ORM\Column(name="amount_paid", type="float", nullable=true)
      */
-    protected $amount_paid;
+    protected $amount_paid = 0;
+    
+    /**
+     * Header ID
+     *
+     * @ORM\Column(name="header_id", type="integer")
+     */
+    protected $header_id;
     
     /**
      * @ORM\ManyToOne(targetEntity="MonthHeader", inversedBy="expenditures")
@@ -65,20 +72,6 @@ class MonthExpenditure
     {
         return $this->id;
     }
-    
-    /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return MonthExpenditure
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
 
     /**
      * Get title
@@ -88,20 +81,6 @@ class MonthExpenditure
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * Set price
-     *
-     * @param float $price
-     *
-     * @return MonthExpenditure
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
     }
 
     /**
@@ -115,20 +94,6 @@ class MonthExpenditure
     }
 
     /**
-     * Set amount_paid
-     *
-     * @param float $amountPaid
-     *
-     * @return MonthExpenditure
-     */
-    public function setAmountPaid($amountPaid)
-    {
-        $this->amount_paid = $amountPaid;
-
-        return $this;
-    }
-
-    /**
      * Get amount_paid
      *
      * @return float 
@@ -139,6 +104,20 @@ class MonthExpenditure
     }
     
     /**
+     * Add money payment
+     *
+     * @param float $payment
+     */
+    public function addPayment($payment)
+    {
+        $this->amount_paid += $payment;
+        
+        if ($this->amount_paid > $this->price) {
+            $this->amount_paid = $this->price;
+        }
+    }
+    
+    /**
      * Has this item been paid
      *
      * @return boolean
@@ -146,6 +125,16 @@ class MonthExpenditure
     public function hasBeenPaid()
     {
         return $this->amount_paid >= $this->price;
+    }
+    
+    /**
+     * Get the header id
+     *
+     * @return integer
+     */
+    public function getHeaderId()
+    {
+        return $this->header_id;
     }
 
     /**
@@ -158,8 +147,6 @@ class MonthExpenditure
     public function setHeader(\Psamatt\ExpenditureBundle\Entity\MonthHeader $header = null)
     {
         $this->header = $header;
-
-        return $this;
     }
 
     /**
@@ -170,5 +157,22 @@ class MonthExpenditure
     public function getHeader()
     {
         return $this->header;
+    }
+    
+    /**
+     * Update
+     *
+     * @param string $title
+     * @param string $price
+     * @param \Psamatt\ExpenditureBundle\Entity\MonthHeader $header
+     */
+    public function update($title, $price, MonthHeader $header = null)
+    {
+        $this->title = $title;
+        $this->price = $price;
+        
+        if ($header != null) {
+            $this->header = $header;
+        }
     }
 }
