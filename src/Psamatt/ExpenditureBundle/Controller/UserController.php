@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\Inject;
 
 use Psamatt\ExpenditureBundle\Entity\User;
+use Psamatt\ExpenditureBundle\Form\Type\ChangePasswordType;
 
 class UserController extends BaseController
 {
@@ -21,15 +22,6 @@ class UserController extends BaseController
     private $encoderFactory;
     
     /**
-     * The validator service
-     *
-     * @var Validator
-     * @access private
-     * @Inject("validator", required=true) 
-     */
-    private $validator;
-    
-    /**
      * User service
      * @Inject("user.service", required=true)
      */
@@ -40,6 +32,24 @@ class UserController extends BaseController
      * @Inject("event_dispatcher", required=true)
      */
     private $dispatcher;
+    
+     /**
+     * 
+     * @Inject("managePassword.command", required=true)
+     */
+    private $managePasswordCommand;
+    
+    /**
+     * Validator
+     * @Inject("validator", required=true)
+     */
+    private $validator;
+
+    /**
+     *
+     * @Inject("form.factory", required=true)
+     */
+    private $formFactory;
     
     /* DI Injected variables */
     protected $templating;
@@ -146,6 +156,9 @@ class UserController extends BaseController
                 $this->userService->save($user);
             }
         }
+        
+        $form = $this->formFactory->create(new ChangePasswordType, array());
+        $returnArray['passwordForm'] = $form->createView();
     
         return $this->templating->renderResponse('PsamattExpenditureBundle:profile:edit.html.twig', $returnArray);
     }
@@ -155,7 +168,7 @@ class UserController extends BaseController
      *
      * @return Response
      */
-    public function changePasswordAction()
+    public function managePasswordAction()
     {
         if ($this->request->getMethod() == 'POST') {
             $errors = array();

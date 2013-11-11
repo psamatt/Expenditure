@@ -147,25 +147,6 @@ class User implements AdvancedUserInterface
         
         return $this->fullname;
     }
-    
-    /**
-     * Is the password valid
-     *
-     * @param string $password
-     * @return boolean
-     */
-    public function isPasswordValid($password)
-    {
-        if (strlen($password) < 6) {
-            return false;
-        }
-        
-        if (!preg_match('/^(?=.*\d)(?=.*[a-zA-Z]).{6,}$/', $password)) {
-            return false;
-        }
-        
-        return true;
-    }
 
     /**
      * Get paid_day
