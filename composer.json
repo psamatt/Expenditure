@@ -2,7 +2,7 @@
     "name": "psamatt/Expenditure",
     "description": "A small expenditure app for money minded people",
     "keywords": ["symfony", "expenditure", "money", "savings"],
-    "version": "1.5",
+    "version": "1.6",
     "license": "MIT",
     "authors": [
         {
