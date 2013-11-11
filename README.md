@@ -66,3 +66,23 @@ If you would like to contribute towards Expenditure, then please follow the step
 6. Push to the branch (`git push origin my-new-feature`)
 7. Create new Pull Request
 8. Sit back and smile whilst knowing that you're making the world a better place
+
+### Running tests
+
+If you want to run the tests against this repository, then there are two types of tests:
+
+#### PHPUnit
+
+In the root of the repository, run:
+
+`phpunit -c app/phpunit.xml.dist`
+
+#### Behat
+
+Some behat tests require Javascript, we therefore require a headless browser, firstly install [phantomJS](http://phantomjs.org/), then in one tab of Terminal, start phantomJS to listen to port 8643
+
+`phantomjs --webdriver=8643`
+
+Now in another Terminal tab, run the behat testing suite
+
+`bin/behat`
