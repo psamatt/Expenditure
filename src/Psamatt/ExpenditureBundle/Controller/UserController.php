@@ -164,42 +164,6 @@ class UserController extends BaseController
     }
     
     /**
-     * Change a users password
-     *
-     * @return Response
-     */
-    public function managePasswordAction()
-    {
-        if ($this->request->getMethod() == 'POST') {
-            $errors = array();
-            $hasErrors = false;
-            $user = $this->getUser();
-        
-            if ($this->request->get('password1') != $this->request->get('password2')) {
-                $errors['password'] = 'Password must match confirmation password';
-                $hasErrors = true;
-            }
-            
-            if (!$user->isPasswordValid($this->request->get('password1'))) {
-                $errors['password'] = 'Password must be 6 characters or more long, contain at least one number and an upper case and lower case letter';
-                $hasErrors = true;
-            }
-            
-            if (!$hasErrors) {
-            
-                $encoder = $this->encoderFactory->getEncoder($user);
-                $user->updateSecurityDetails($encoder->encodePassword($this->request->get('password1'), $user->getSalt()));
-                
-                $this->userService->save($user, 'Password Updated');
-            } else {
-                $this->dispatcher->dispatch(\Psamatt\ExpenditureBundle\ExpenditureEvents::ERROR_PAGE, new \Psamatt\ExpenditureBundle\Event\ErrorMessageEvent($errors, 'passwordErrors'));
-            }
-        }
-        
-        return new RedirectResponse($this->router->generate('profile_edit'), 302);
-    }
-    
-    /**
      * Bind a user from the request
      *
      * @param boolean $new Whether or not this is a new user . Default false
