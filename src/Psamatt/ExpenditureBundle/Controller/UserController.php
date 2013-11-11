@@ -107,6 +107,9 @@ class UserController extends BaseController
             $returnArray['errors'] = array();
             $errors = &$returnArray['errors'];
             
+            /**
+             * @todo use Symfony2 Form component with ChangePasswordType
+             */
             if ($this->request->get('password1') != $this->request->get('password2')) {
                 $errors['password'] = 'Password must match confirmation password';
                 $hasErrors = true;
