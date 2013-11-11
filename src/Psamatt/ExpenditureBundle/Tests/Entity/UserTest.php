@@ -9,8 +9,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
     public function testDisplayNameWithValidEmailAndFullname()
     {
         $user = new User;
-        $user->setFullname($username = 'John Doe');
-        $user->setEmailAddress('johndoe@gmail.com');
+        $user->update($username = 'John Doe', 'johndoe@gmail.com', 1);
         
         $this->assertEquals($username, $user->getDisplayName());
     }
@@ -18,16 +17,15 @@ class UserTest extends \PHPUnit_Framework_TestCase
     public function testDisplayNameWithValidEmailAndNoFullname()
     {
         $user = new User;
-        $user->setEmailAddress($emailAddress = 'johndoe@gmail.com');
-        
+        $user->update(null, $emailAddress = 'johndoe@gmail.com', 1);
+
         $this->assertEquals($emailAddress, $user->getDisplayName());
     }
     
     public function testDisplayNameWithValidEmailAndEmptyFullname()
     {
         $user = new User;
-        $user->setFullname('');
-        $user->setEmailAddress($emailAddress = 'johndoe@gmail.com');
+        $user->update('', $emailAddress = 'johndoe@gmail.com', 1);
         
         $this->assertEquals($emailAddress, $user->getDisplayName());
     }
