@@ -5,3 +5,15 @@
     </div>
     <div class="modal-body"></div>
 </div>
+
+<script type="text/javascript">
+    $("a[data-target=#{{ lightboxID }}]").click(function(ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+    
+        // load the url and show modal on success
+        $("#{{ lightboxID }} .modal-body").load(target, function() { 
+            $("#{{ lightboxID }}").modal("show"); 
+        });
+    });
+</script>
