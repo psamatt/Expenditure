@@ -37,7 +37,6 @@ class ChangePasswordController extends BaseController
     protected $templating;
     protected $security;
     protected $router;
-    protected $session;
     protected $request;
     /* End of Injected variables */
     
