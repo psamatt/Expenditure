@@ -26,18 +26,13 @@ class ChangePasswordController extends BaseController
      * @Inject("managePassword.command", required=true)
      */
     private $managePasswordCommand;
-
-    /**
-     *
-     * @Inject("form.factory", required=true)
-     */
-    private $formFactory;
     
     /* DI Injected variables */
     protected $templating;
     protected $security;
     protected $router;
     protected $request;
+    protected $formFactory;
     /* End of Injected variables */
     
     /**

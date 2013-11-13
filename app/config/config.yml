@@ -77,3 +77,4 @@ jms_di_extra:
             router: "@router"
             templating: "@templating"
             session: "@session"
+            formFactory: "@form.factory"
