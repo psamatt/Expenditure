@@ -74,7 +74,7 @@ jms_di_extra:
         properties:
             request: "@request"
             security: "@security.context"
-            em: "@doctrine.orm.entity_manager"
             router: "@router"
             templating: "@templating"
             session: "@session"
+            formFactory: "@form.factory"
