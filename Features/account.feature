@@ -52,7 +52,7 @@ Feature: Update account
     Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
     When I go to "/admin/profile/edit"
     When I follow "Change password"
-    Then I should see "New Password"
+    Then I should see the "changePasswordModal" modal "Change Password"
     When I fill in "userPassword_password_first" with "abcde"
     When I fill in "userPassword_password_second" with "abcde"
     When I press "Update password"
@@ -65,13 +65,13 @@ Feature: Update account
     Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
     When I go to "/admin/profile/edit"
     When I follow "Change password"
-    Then I should see "New Password"
+    Then I should see the "changePasswordModal" modal "Change Password"
     When I fill in "userPassword_password_first" with "abCd12eWz"
     When I fill in "userPassword_password_first" with "abCd12eXXXX"
     When I press "Update password"
     Then I should see "Warning"
 
-  @javascript
+  @javascript @abc
   Scenario: A new password with confirmation that contains an upper case number and a number and long
     
     Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
