@@ -45,7 +45,7 @@ admin_expenditure_paid:
     requirements:
         headerID: \d+
         expenditureID: \d+
-    methods:  [POST]
+    methods:  [GET|POST]
 
 admin_expenditure_delete:
     path:  /admin/month/{headerID}/expenditure/{expenditureID}/delete
@@ -114,9 +114,7 @@ admin_savings_add:
     defaults: { _controller: PsamattExpenditureBundle:Saving:addMoney }
     requirements:
         savingID: \d+
-    methods:  [POST]
-    options:
-        expose: true
+    methods:  [GET|POST]
 
 admin_savings_delete:
     path:  /admin/savings/{savingID}/delete

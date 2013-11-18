@@ -9,6 +9,7 @@ use JMS\DiExtraBundle\Annotation\Inject;
 
 use Psamatt\ExpenditureBundle\Repository\Exception\ItemNotFoundException;
 use Psamatt\ExpenditureBundle\Entity\MonthExpenditure;
+use Psamatt\ExpenditureBundle\Form\Type\ExpenditurePartialPaidMoneyType;
 
 class MonthExpenditureController extends BaseController
 {
@@ -17,6 +18,7 @@ class MonthExpenditureController extends BaseController
     protected $security;
     protected $router;
     protected $request;
+    protected $formFactory;
     /* End of Injected variables */
     
     /**
@@ -42,15 +44,27 @@ class MonthExpenditureController extends BaseController
         // check to make sure the monthHeader is owned by the user
         $this->monthHeaderService->isOwnedByAdmin($monthHeader, $this->getUser());
         
-        $expenditure->addPayment(floatval($this->request->get('amount')));
+        $form = $this->formFactory->create(new ExpenditurePartialPaidMoneyType);
+        
+        if ($this->request->getMethod() == 'POST') {
+        
+            $form->bind($this->request);
 
-        $this->monthExpenditureService->savePayment($expenditure);
-
-        if ($this->request->isXmlHttpRequest()) {
-            return new Response(1);
+            $expenditure->addPayment($this->request->request->has('full')? $expenditure->getPrice(): $form['amount']->getData());
+    
+            $this->monthExpenditureService->savePayment($expenditure);
+    
+            if ($this->request->isXmlHttpRequest()) {
+                return new Response(1);
+            }
+    
+            return new RedirectResponse($this->router->generate('admin_homepage'), 302);
         }
-
-        return new RedirectResponse($this->router->generate('admin_homepage'), 302);
+        
+        return $this->templating->renderResponse('PsamattExpenditureBundle:snippets:expenditurePartialPaid.html.twig', array(
+                'form' => $form->createView(),
+                'expenditure' => $expenditure,
+            ));
     }
 
     /**
@@ -91,18 +105,25 @@ class MonthExpenditureController extends BaseController
     /**
      * Delete an expenditure item
      *
+     * @param integer $headerID The header ID
      * @param integer $expenditureID The expenditure ID
      * @return Response
      */
-    public function deleteAction($expenditureID)
+    public function deleteAction($headerID, $expenditureID)
     {
         $expenditure = $this->monthExpenditureService->findById($expenditureID);
-        $monthHeader = $this->monthHeaderService->findById($expenditure->getHeaderId());
+
+        if ($headerID != $expenditure->getHeaderId()) {
+            throw new ItemNotFoundException;
+        }
+        
+        $monthHeader = $this->monthHeaderService->findById($headerID);
         // check to make sure the monthHeader is owned by the user
         $this->monthHeaderService->isOwnedByAdmin($monthHeader, $this->getUser());
         
-        $this->monthExpenditureService->delete($expenditure);
-        
+        if (null !== $this->request->get('confirmDelete')) {
+            $this->monthExpenditureService->delete($expenditure);
+        }
         if ($this->request->isXmlHttpRequest()) {
             return new Response(1);
         }
