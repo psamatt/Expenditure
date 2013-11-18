@@ -71,7 +71,7 @@ Feature: Update account
     When I press "Update password"
     Then I should see "Warning"
 
-  @javascript @abc
+  @javascript
   Scenario: A new password with confirmation that contains an upper case number and a number and long
     
     Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
