@@ -73,51 +73,18 @@
 
 	<script type="text/javascript">
 
-		function deleteExpenditure(headerID, expenditureID)
-		{
-			if (confirm('Are you sure you want to delete this record?')) {
-				$('tr[data-id='+expenditureID+']').remove();
-
-				$.ajax({
-					type: 'POST',
-					url: '/admin/month/'+ headerID +'/expenditure/' + expenditureID + '/delete',
-				});
-			}
-
-			return false;
-		}
-
 		function registerPaid(headerID, expenditureID, amount)
 		{
 			$.ajax({
 				type: 'POST',
 				url: '/admin/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
-				data: { 'amount': amount },
+				data: { 'amount': amount, 'full': 1 },
 				success: function(){
 					$('tr[data-id='+expenditureID+']').addClass('expenditure-paid');
 
 					document.location.reload();
 				},
 			});
-
-			return false;
-		}
-
-		function registerPartPaid(headerID, expenditureID)
-		{
-			var totalPaid = prompt("How much?","1");
-
-			if (totalPaid != null && totalPaid != "") {
-				$.ajax({
-					type: 'POST',
-					url: '/admin/month/' + headerID + '/expenditure/' + expenditureID + '/paid',
-					data: { 'amount': totalPaid },
-					success: function(){
-						$('tr[data-id='+expenditureID+']').addClass('expenditure-partial-paid');
-						document.location.reload();
-					},
-				});
-			}
 
 			return false;
 		}

@@ -43,11 +43,13 @@
                     </td>
                     <td class="center" width="10%">
                         {% if saving.percentProgress < 100 %}
-                            <a href="{{ app.request.uri }}" onclick="return addMoney({{ saving.id }})">Add Money</a>
+                            <a data-toggle="modal" data-target="#savingAddMoneyModal" href="{{ path('admin_savings_add', {'savingID': saving.id}) }}" >Add Money</a>
                         {% endif %}
                     </td>
                     <td class="center">
-                        <a href="/admin/savings/{{ saving.id }}/delete" id="saving_delete_{{ saving.id }}" onclick="return deleteSaving({{ saving.id }})"><i class="icon-trash"></i> Delete</a>
+                        <a data-toggle="modal" data-target="#deleteSavingModal" data-href="{{ path('admin_savings_delete', {'savingID': saving.id}) }}">
+                            <i class="icon-trash"></i>Delete
+                        </a>
                         &nbsp;&nbsp;
                         <a href="{{ app.request.uri }}#inputPrice" onclick="return loadSavingFromAnchor(this)" data-id="{{ saving.id }}" data-title="{{ saving.title }}" data-target_date="{{ saving.targetDate.format('d-m-Y') }}" data-target_amount="{{ saving.targetAmount }}" data-saved_amount="{{ saving.savedAmount }}">
                             <i class="icon-pencil"></i>Edit
@@ -140,6 +142,10 @@
     	</form>
 	
 	</div>
+	
+	{{ include('PsamattExpenditureBundle:snippets/lightbox:container.html.twig', {'lightboxID': 'savingAddMoneyModal', 'lightboxTitle': 'Add Money'}) }}
+	
+	{{ include('PsamattExpenditureBundle:snippets/lightbox:deleteForm.html.twig', {'lightboxID': 'deleteSavingModal'}) }}
 
 {% endblock %}
 
@@ -149,21 +155,6 @@
     <script type="text/javascript">
         
         $('#dp3').datepicker();
-        
-        function deleteSaving(savingID)
-        {
-            if (confirmDelete()) {
-                $.ajax({
-					type: 'POST',
-					url: Routing.generate('admin_savings_delete', {'savingID': savingID}),
-					success: function(){
-						document.location.reload();
-					},
-				});
-            }
-            
-            return false;
-        }
         
         function loadSavingFromAnchor(anchor)
         {
@@ -180,25 +171,7 @@
             $form.find('input[name="amountSaved"]').val($anchor.data('saved_amount'));
         
             return false;
-        }
-        
-        function addMoney(savingID)
-		{
-			var amountMoney = prompt("How much?","1");
-
-			if (amountMoney != null && amountMoney != "") {
-				$.ajax({
-					type: 'POST',
-					url: Routing.generate('admin_savings_add', {'savingID': savingID}),
-					data: { 'amount': amountMoney },
-					success: function(){
-						document.location.reload();
-					},
-				});
-			}
-
-			return false;
-		}        
+        }        
         
     </script>
 {% endblock %}

@@ -31,8 +31,8 @@ Feature: Overview
     Then the "span#amountToPay" element should contain "475"
     Then the "span#amountLeft" element should contain "1,525.00"
 
-  @javascript
-  Scenario: Month with using edit, delete and paid actions
+  @javascript @abc
+  Scenario: Month with using edit and paid actions
 
     Given the following month headers are expenditure month headers
       | ID | User | Calendar Date | Month Income |
@@ -66,6 +66,64 @@ Feature: Overview
     When I fill in "inputPrice" with "50"
     When I press "Save"
     Then I should see 4 "table tbody tr" elements
+
+  @javascript
+  Scenario: Month with using partial paid action
+
+    Given the following month headers are expenditure month headers
+      | ID | User | Calendar Date | Month Income |
+      | 1  | 1    | NOW           | 1000         |
     
+    Given the following expenditures are expenditure
+      | ID | Header       | Title | Price | Amount Paid |
+      | 1  | NOW          | Foo   | 100   | 50          |
+      | 2  | NOW          | Bar   | 200   | 100         |
+
+    Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
+    When I go to "/admin"
+    Then I should see 2 "table tbody tr" elements 
+    When I follow css "tr[data-id=\"2\"] a[data-target=\"#expendturePaidModal\"]"
+    Then I should see the "expendturePaidModal" modal "Add Payment"
+    When I fill in "expenditurePartialPaidMoney_amount" with "100"
+    When I press "Add payment"
+    Then I should see "Expenditure set as paid"
+
+  @javascript
+  Scenario: Month with using partial paid action
+
+    Given the following month headers are expenditure month headers
+      | ID | User | Calendar Date | Month Income |
+      | 1  | 1    | NOW           | 1000         |
     
+    Given the following expenditures are expenditure
+      | ID | Header       | Title | Price | Amount Paid |
+      | 1  | NOW          | Foo   | 100   | 50          |
+      | 2  | NOW          | Bar   | 200   | 100         |
+
+    Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
+    When I go to "/admin"
+    Then I should see 2 "table tbody tr" elements 
+    When I follow css "tr[data-id=\"2\"] a[data-target=\"#expendturePaidModal\"]"
+    Then I should see the "expendturePaidModal" modal "Add Payment"
+    When I fill in "expenditurePartialPaidMoney_amount" with "100"
+    When I press "Add payment"
+    Then I should see "Expenditure set as paid"
+
+  @javascript
+  Scenario: Month with using delete action
+
+    Given the following month headers are expenditure month headers
+      | ID | User | Calendar Date | Month Income |
+      | 1  | 1    | NOW           | 1000         |
     
+    Given the following expenditures are expenditure
+      | ID | Header       | Title | Price | Amount Paid |
+      | 1  | NOW          | Bar   | 200   | 100         |
+
+    Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
+    When I go to "/admin"
+    Then I should see 1 "table tbody tr" elements 
+    When I follow css "tr[data-id=\"1\"] a[data-target=\"#deleteExpenditureModal\"]"
+    Then I should see the "deleteExpenditureModal" modal "Delete"
+    When I press "Delete"
+    Then I should see "Expenditure Deleted"

@@ -38,27 +38,6 @@
 		</div>
 	</form>
 	
-	<div id="changePasswordModal" class="modal hide fade in">
-        <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
-            <h3>Change Password</h3>
-        </div>
-        <div class="modal-body"></div>
-    </div>
+	{{ include('PsamattExpenditureBundle:snippets/lightbox:container.html.twig', {'lightboxID': 'changePasswordModal', 'lightboxTitle': 'Change Password'}) }}
 
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        $("a[data-target=#changePasswordModal]").click(function(ev) {
-            ev.preventDefault();
-            var target = $(this).attr("href");
-        
-            // load the url and show modal on success
-            $("#changePasswordModal .modal-body").load(target, function() { 
-                $("#changePasswordModal").modal("show"); 
-            });
-        });
-    </script>
 {% endblock %}

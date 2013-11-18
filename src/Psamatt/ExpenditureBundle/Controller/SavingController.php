@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use JMS\DiExtraBundle\Annotation\Inject;
 
 use Psamatt\ExpenditureBundle\Entity\Saving;
+use Psamatt\ExpenditureBundle\Form\Type\SavingAddMoneyType;
 use Psamatt\Expenditure\Library\SavingMoney;
 
 class SavingController extends BaseController
@@ -17,6 +18,7 @@ class SavingController extends BaseController
     protected $security;
     protected $router;
     protected $request;
+    protected $formFactory;
     /* End of Injected variables */
     
     /**
@@ -82,7 +84,10 @@ class SavingController extends BaseController
         $saving = $this->savingService->findById($savingID);
         
         $this->savingService->isOwnedByAdmin($saving, $this->getUser());
-        $this->savingService->deleteSaving($saving);
+        
+        if (null !== $this->request->get('confirmDelete')) {
+            $this->savingService->deleteSaving($saving);
+        }
         
         if ($this->request->isXmlHttpRequest()) {
             return new Response(1);
@@ -102,13 +107,27 @@ class SavingController extends BaseController
         $saving = $this->savingService->findById($savingID);
         
         $this->savingService->isOwnedByAdmin($saving, $this->getUser());
-        $saving->addMoney(new SavingMoney($this->request->get('amount', 0)));
-        $this->savingService->saveSaving($saving);
         
-        if ($this->request->isXmlHttpRequest()) {
-            return new Response(1);
+        $form = $this->formFactory->create(new SavingAddMoneyType);
+        
+        if ($this->request->getMethod() == 'POST') {
+        
+            $form->bind($this->request);
+            $data = $form->getData();
+
+            $saving->addMoney(new SavingMoney(floatval($data['amount'])));
+            $this->savingService->saveSaving($saving);
+            
+            if ($this->request->isXmlHttpRequest()) {
+                return new Response(1);
+            }
+            
+            return new RedirectResponse($this->router->generate('admin_savings'), 302);
         }
         
-        return new RedirectResponse($this->router->generate('admin_savings'), 302);
+        return $this->templating->renderResponse('PsamattExpenditureBundle:snippets:savingAddMoney.html.twig', array(
+                'form' => $form->createView(),
+                'saving' => $saving,
+            ));
     }
 }

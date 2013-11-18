@@ -14,6 +14,8 @@ use Behat\MinkExtension\Context\MinkContext;
 use Behat\CommonContexts\SymfonyDoctrineContext;
 use Behat\Mink\Exception\ElementNotFoundException;
 
+require_once 'PHPUnit/Framework/Assert/Functions.php';
+
 /**
  * Features context.
  */
@@ -60,7 +62,7 @@ class FeatureContext extends MinkContext
 
         if (null === $link) {
             throw new ElementNotFoundException(
-                $this->getSession(), 'link', 'id|title|alt|text', $locator
+                $this->getSession(), 'link', 'id|title|alt|text', $link
             );
         }
 
@@ -93,11 +95,21 @@ class FeatureContext extends MinkContext
     }
     
     /**
-    * @When /^(?:|I )post to "([^"]*)"$/
+    * @Then /^I should see the "([^"]*)" modal "([^"]*)"$/
     */
-    public function confirmPopup($uri)
+    public function iShouldSeeTheModal($modalID, $title)
     {
-        $this->getSession()->getDriver()->getWebDriverSession()->open($this->locatePath($uri));
+        $this->jqueryWait(2000);
+        $this->assertElementContainsText('#' . $modalID . ' .modal-header h3', $title);
+        assertTrue($this->getSession()->getPage()->find('css', '#' . $modalID)->isVisible());
+    }
+    
+    /**
+     * Wait for jQuery
+     */
+    public function jqueryWait($duration = 1000)
+    {
+        $this->getSession()->wait($duration, '');
     }
     
     /**

@@ -2,6 +2,16 @@
 <html lang="en">
   <head>
     {{ include('::header.html.twig') }}
+    
+    {% javascripts 
+            '@PsamattExpenditureBundle/Resources/public/js/jquery.min.js' 
+            '@PsamattExpenditureBundle/Resources/public/js/bootstrap.min.js' 
+            '@PsamattExpenditureBundle/Resources/public/js/bootstrap-dropdown.min.js'
+            '@PsamattExpenditureBundle/Resources/public/js/*'
+         %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    
   </head>
 
   <body class="in-app">
@@ -60,15 +70,6 @@
 	</div>
 
     {% block javascript %}
-    
-        {% javascripts 
-            '@PsamattExpenditureBundle/Resources/public/js/jquery.min.js' 
-            '@PsamattExpenditureBundle/Resources/public/js/bootstrap.min.js' 
-            '@PsamattExpenditureBundle/Resources/public/js/bootstrap-dropdown.min.js'
-            '@PsamattExpenditureBundle/Resources/public/js/*'
-         %}
-            <script src="{{ asset_url }}"></script>
-        {% endjavascripts %}
 
         <script type="text/javascript">
             $('.dropdown-toggle').dropdown();
