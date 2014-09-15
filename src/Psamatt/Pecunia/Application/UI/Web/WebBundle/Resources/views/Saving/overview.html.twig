@@ -1,0 +1,123 @@
+{% extends 'PsamattPecuniaApplicationUIWebSharedBundle::base.html.twig' %}
+
+{% block content %}
+
+    {% if paidDay is empty %}
+        <div class="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Warning!</strong> To get correct calculations as to how much to save per month, remember to fill out the paid day on the <a href="{{ path('profile_edit') }}">account settings</a>.
+        </div>
+    {% endif %}
+
+    <h3>Saving Targets</h3>
+
+    <p class="text-info">To receive correct monthly predictions, make sure you update your savings total every month</p>
+
+    {% if savings is defined and savings | length > 0 %}
+
+        <table class="table table-centered" id="savingsTbl">
+    		<thead>
+    			<tr>
+    				<th>Title</th>
+    				<th>Target Date</th>
+    				<th>Savings</th>
+    				<th>&nbsp;</th>
+    				<th>&nbsp;</th>
+    			</tr>
+    		</thead>
+    		<tbody>
+
+            {% for saving in savings %}
+                <tr data-id="saving_{{ saving.id }}" class="saving_manage">
+                    <td width="25%">{{ saving.description }}</td>
+                    <td>{{ saving.targetDate.format('d-m-Y') | default('N/A') }}</td>
+                    <td width="30%">
+                        <div class="progress progress-{{ saving.isGoalReached? 'success':'info'}}">
+                            <div class="bar" style="width: {{ saving.percentProgress }}%"></div>
+                            <span>{{ currency | currencyToSymbol ~ saving.savedAmount | default(0) ~ ' / ' ~ currency | currencyToSymbol ~ saving.targetAmount }}</span>
+                        </div>
+                    </td>
+                    <td class="center" width="10%">
+                        {% if saving.percentProgress < 100 %}
+                            <a data-toggle="modal" data-target="#savingAddMoneyModal" href="{{ path('accountHolder_savings_deposit_money', {'savingId': saving.id}) }}" >Add Money</a>
+                        {% endif %}
+                    </td>
+                    <td class="center">
+                        <a data-toggle="modal" data-target="#deleteSavingModal" data-href="{{ path('accountHolder_savings_delete', {'savingId': saving.id}) }}">
+                            <i class="icon-trash"></i>Delete
+                        </a>
+				    </td>
+                </tr>
+                {% if paidDay is not empty and saving.isGoalReached %}
+                    <tr class="saving_progress">
+                        <td colspan="5">
+                            <div class="alert alert-info">
+                                Target Goal reached!!
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+
+    		{% endfor %}
+    		</tbody>
+        </table>
+
+    {% endif %}
+
+    <div class="well">
+        <p class="text-info">Fill out fields below to save a saving target</p>
+
+        <form method="post" action="{{ path('accountHolder_savings_save') }}" class="form-horizontal" name="savingForm" id="savingForm">
+    		<div class="control-group">
+    			<label class="control-label" for="inputTitle">Description</label>
+    			<div class="controls">
+    				<input type="text" id="inputTitle" name="description" placeholder="What are you saving for.." value="" required/>
+    			</div>
+    		</div>
+
+    		<div class="control-group">
+    			<label class="control-label" for="targetDate">Target Date</label>
+    			<div class="controls">
+        			<div class="input-append date" id="dp3" data-date="{{ "now" | date('d-m-Y') }}" data-date-format="dd-mm-yyyy">
+        				<input type="text" size="16" id="targetDate" name="targetDate" placeholder="dd-mm-yyyy" value="" readonly required/>
+        				<span class="add-on"><i class="icon-th"></i></span>
+
+        			</div>
+        			<span class="help-block">When do you want to save this money by?</span>
+    			</div>
+    		</div>
+
+    		<div class="control-group">
+    			<label class="control-label" for="targetAmount">Target Amount</label>
+    			<div class="controls">
+        			<div class="input-prepend">
+                        <span class="add-on">{{ currency | currencyToSymbol }}</span>
+                        <input type="hidden" name="currency" value="{{ currency }}" />
+        				<input type="number" pattern="[0-9]+([,\.][0-9]+)?" step="0.01" min="0" id="targetAmount" name="targetAmount" placeholder="0.00" value="" required/>
+        			</div>
+        			<span class="help-block">How much do you want to save?</span>
+    			</div>
+    		</div>
+
+    		<div class="control-group">
+    			<div class="controls">
+    				<button type="submit" class="btn">Save</button>
+    			</div>
+    		</div>
+    	</form>
+
+	</div>
+
+	{{ include('PsamattPecuniaApplicationUIWebSharedBundle:snippets/lightbox:container.html.twig', {'lightboxID': 'savingAddMoneyModal', 'lightboxTitle': 'Deposit Money'}) }}
+
+	{{ include('PsamattPecuniaApplicationUIWebSharedBundle:snippets/lightbox:deleteForm.html.twig', {'lightboxID': 'deleteSavingModal', 'lightboxTitle': 'Delete'}) }}
+
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $('#dp3').datepicker();
+    </script>
+{% endblock %}

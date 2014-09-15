@@ -1,7 +1,22 @@
+psamatt_pecunia_application_ui_web_web:
+    resource: "@PsamattPecuniaApplicationUIWebWebBundle/Resources/config/routing.yml"
+    prefix:   /accountHolder/
+
+index:
+    path:  /
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:Authorization/User:login }
+    methods:  [GET]
+
+login:
+    path:  /login
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:Authorization/User:login }
+    methods:  [GET]
+
+login_check:
+    pattern:   /login_check
+
+logout:
+    pattern:   /accountHolder/logout
+
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
-
-psamatt_expenditure:
-    resource: "@PsamattExpenditureBundle/Resources/config/routing.yml"
-    prefix:   /
-

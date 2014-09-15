@@ -1,0 +1,107 @@
+# inside Admin
+accountHolder_homepage:
+    path:   /
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:Dashboard\Default:index }
+    methods:  [GET]
+
+# create a new month
+accountHolder_import:
+    path:  /import/{year}/{month}
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:ExpenditureMonth\Month:create }
+    methods:  [GET|POST]
+
+## historic
+# view all historical month headers
+accountHolder_historic:
+    path:  /month/historic
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:ExpenditureMonth\MonthHistoric:index }
+    methods:  [GET]
+
+# view a specific historic month
+accountHolder_historic_view:
+    path:  /month/historic/{year}/{month}
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:ExpenditureMonth\MonthHistoric:view }
+    requirements:
+        year: \d+
+        month: \d+
+    methods:  [GET]
+
+# month - items
+expenditure_month_item_new:
+    path:  /month/{year}/{month}/item/new
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:ExpenditureMonth\Month:itemNew }
+    requirements:
+        year: \d+
+        month: \d+
+    methods:  [POST]
+
+expenditure_month_item_paid:
+    path:  /month/{year}/{month}/item/{itemId}/paid
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:ExpenditureMonth\Month:itemPaid }
+    requirements:
+        year: \d+
+        month: \d+
+    methods:  [GET|POST]
+    options:
+        expose: true
+
+expenditure_month_item_partial_payment:
+    path:  /month/{year}/{month}/item/{itemId}/payment/partial
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:ExpenditureMonth\Month:itemPartialPayment }
+    requirements:
+        year: \d+
+        month: \d+
+    methods:  [GET|POST]
+    options:
+        expose: true
+
+expenditure_month_item_delete:
+    path:  /month/{year}/{month}/item/{itemId}/delete
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:ExpenditureMonth\Month:itemDelete }
+    requirements:
+        year: \d+
+        month: \d+
+    methods:  [POST]
+
+# savings
+accountHolder_savings:
+    path:  /savings
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:Saving\Default:index }
+    methods:  [GET]
+
+accountHolder_savings_save:
+    path:  /savings/save
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:Saving\Default:save }
+    methods:  [POST]
+
+accountHolder_savings_deposit_money:
+    path:  /savings/{savingId}/money/deposit
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:Saving\Default:depositMoney }
+    methods:  [GET|POST]
+
+accountHolder_savings_delete:
+    path:  /savings/{savingId}/delete
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:Saving\Default:delete }
+    methods:  [POST]
+
+## default payments
+default_payments:
+    path:  /default/payments
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:DefaultPayment\Default:index }
+    requirements:
+        defaultID: \d+
+    methods:  [GET]
+
+default_payments_delete:
+    path:  /default/payments/{defaultId}/delete
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:DefaultPayment\Default:delete }
+    requirements:
+        defaultId: \d+
+    methods:  [GET]
+
+default_payments_save:
+    path:  /default/payments/save
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:DefaultPayment\Default:save }
+    requirements:
+        defaultID: \d+
+    methods:  [POST]

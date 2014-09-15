@@ -1,0 +1,7 @@
+parameters:
+#    psamatt_pecunia_application_ui_web_web.example.class: Psamatt\Pecunia\Application\UI\Web\WebBundle\Example
+
+services:
+#    psamatt_pecunia_application_ui_web_web.example:
+#        class: %psamatt_pecunia_application_ui_web_web.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -1,0 +1,3 @@
+psamatt_pecunia_application_infrastructure_infrastructure_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: PsamattPecuniaApplicationInfrastructureInfrastructureBundle:Default:index }

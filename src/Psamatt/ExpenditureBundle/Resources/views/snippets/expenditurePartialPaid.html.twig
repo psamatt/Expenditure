@@ -1,4 +1,0 @@
-<form method="post" action="{{ path('admin_expenditure_paid', {'headerID': expenditure.headerId, 'expenditureID': expenditure.id }) }}" name="expenditurePartialPaidForm" class="form-horizontal">
-    {% form_theme form 'PsamattExpenditureBundle:form:fields.html.twig' %}
-    {{ form_widget(form) }}
-</form>

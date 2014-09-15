@@ -1,0 +1,9 @@
+{% set calendarDate = monthHeader.calendarDate %}
+<tr data-id="{{ calendarDate | date('Y_n') }}">
+    <td>
+        <a href="{{ path('accountHolder_historic_view', {'year': calendarDate | date('Y'), 'month': calendarDate | date('n') }) }}">
+            {{ calendarDate | date('F Y') }}
+        </a>
+    </td>
+    <td class="price">{{ monthHeader.currency | currencyToSymbol ~ monthHeader.income.amount | number_format(2, '.', ',') }}</td>
+</tr>
