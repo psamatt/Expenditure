@@ -86,6 +86,6 @@ class CalendarMonthExpenditureTest extends \PHPUnit_Framework_TestCase
 
 	public static function getInstance($incomeAmount)
 	{
-		return new CalendarMonthExpenditure(new AccountHolderId(1), CalendarPeriod::forMonth(4, 2000), new Money($incomeAmount, CurrencyFactory::getCurrency()));
+		return new CalendarMonthExpenditure(CalendarPeriod::forMonth(4, 2000), new AccountHolderId(1), new Money($incomeAmount, CurrencyFactory::getCurrency()));
 	}
 }
