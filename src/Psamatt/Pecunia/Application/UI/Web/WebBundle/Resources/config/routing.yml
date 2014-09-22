@@ -92,16 +92,22 @@ default_payments:
         defaultID: \d+
     methods:  [GET]
 
-default_payments_delete:
-    path:  /default/payments/{defaultId}/delete
-    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:DefaultPayment\Default:delete }
-    requirements:
-        defaultId: \d+
+default_recurring_payments_delete:
+    path:  /default/recurring/payments/{defaultId}/delete
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:DefaultPayment\Default:deleteRecurring }
     methods:  [GET]
 
-default_payments_save:
-    path:  /default/payments/save
-    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:DefaultPayment\Default:save }
-    requirements:
-        defaultID: \d+
+default_oneoff_payments_delete:
+    path:  /default/oneoff/payments/{defaultId}/delete
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:DefaultPayment\Default:deleteOneOff }
+    methods:  [GET]
+
+default_recurring_payments_save:
+    path:  /default/recurring/payments/save
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:DefaultPayment\Default:saveRecurring }
+    methods:  [POST]
+
+default_oneoff_payments_save:
+    path:  /default/oneoff/payments/save
+    defaults: { _controller: PsamattPecuniaApplicationUIWebWebBundle:DefaultPayment\Default:saveOneOff }
     methods:  [POST]

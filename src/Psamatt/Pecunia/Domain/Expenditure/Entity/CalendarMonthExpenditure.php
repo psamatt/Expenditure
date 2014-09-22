@@ -121,6 +121,12 @@ class CalendarMonthExpenditure
         $this->calculateTotalPaid();
     }
 
+    /** @return DateTime get the qualifying month */
+    public function getMonth()
+    {
+        return $this->calendarDate;
+    }
+
     /** @exposure Query only */
     public function getId() { return $this->id; }
     public function getCalendarDate() { return $this->calendarDate; }

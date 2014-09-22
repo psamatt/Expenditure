@@ -3,7 +3,6 @@
 namespace Psamatt\Pecunia\Domain\Expenditure\CommandHandler;
 
 use Psamatt\Pecunia\Domain\Expenditure\Repository\IDefaultRecurringMonthExpenditureRepository;
-use Psamatt\Pecunia\Domain\Expenditure\Entity\DefaultRecurringMonthExpenditure;
 
 use Psamatt\Pecunia\Domain\Expenditure\ValueObject\RecurringExpenditureId;
 

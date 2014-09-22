@@ -7,9 +7,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Psamatt\Pecunia\Application\UI\Web\SharedBundle\Util\ControllerUtils;
 use Psamatt\Pecunia\Query\AllDefaultPaymentQuery;
 
+use Psamatt\Pecunia\Query\Repository\IDefaultRecurringMonthExpenditureRepository;
+use Psamatt\Pecunia\Query\Repository\IDefaultOneOffMonthExpenditureRepository;
+
 use Psamatt\Pecunia\Domain\Expenditure\ValueObject\RecurringExpenditureId;
+use Psamatt\Pecunia\Domain\Expenditure\ValueObject\OneOffPaymentDueDate;
 use Psamatt\Pecunia\Domain\Expenditure\PublicAPI\Command\NewDefaultRecurringMonthExpenditureCommand;
+use Psamatt\Pecunia\Domain\Expenditure\PublicAPI\Command\NewDefaultOneOffMonthExpenditureCommand;
 use Psamatt\Pecunia\Domain\Expenditure\PublicAPI\Command\RemoveDefaultRecurringMonthExpenditureCommand;
+use Psamatt\Pecunia\Domain\Expenditure\PublicAPI\Command\RemoveDefaultOneOffMonthExpenditureCommand;
 
 use Money\Money;
 
@@ -18,14 +24,25 @@ use JMS\DiExtraBundle\Annotation as DI;
 class DefaultController
 {
     private $utils;
+    private $defaultRecurringMonthExpenditureRepository;
+    private $defaultOneOffMonthExpenditureRepository;
+
     /**
      * @DI\InjectParams({
-     *     "utils" = @DI\Inject("Pecunia.ControllerUtils")
+     *     "utils" = @DI\Inject("Pecunia.ControllerUtils"),
+     *     "defaultRecurringMonthExpenditureRepository" = @DI\Inject("Pecunia.Query.DefaultRecurringMonthExpenditure.repository"),
+     *     "defaultOneOffMonthExpenditureRepository" = @DI\Inject("Pecunia.Query.DefaultOneOffMonthExpenditure.repository")
      * })
      */
-    public function __construct(ControllerUtils $utils)
+    public function __construct(
+            ControllerUtils $utils,
+            IDefaultRecurringMonthExpenditureRepository $defaultRecurringMonthExpenditureRepository,
+            IDefaultOneOffMonthExpenditureRepository $defaultOneOffMonthExpenditureRepository)
     {
         $this->utils = $utils;
+        $this->defaultRecurringMonthExpenditureRepository = $defaultRecurringMonthExpenditureRepository;
+        $this->defaultOneOffMonthExpenditureRepository = $defaultOneOffMonthExpenditureRepository;
+
     }
 
     /**
@@ -38,9 +55,17 @@ class DefaultController
     {
         $mediator = $this->utils->getMediator();
 
+        $allDefaultRecurringExpenditures = $this->defaultRecurringMonthExpenditureRepository->findAll($this->utils->getUser()->getId());
+        $allDefaultOneOffExpenditures = $this->defaultOneOffMonthExpenditureRepository->findAll($this->utils->getUser()->getId());
+
         $viewModel = $mediator->request(new AllDefaultPaymentQuery($this->utils->getUser()->getId()));
 
-        return $this->utils->render('PsamattPecuniaApplicationUIWebWebBundle:Default:overview.html.twig', ['viewModel' => $viewModel]);
+
+
+        return $this->utils->render('PsamattPecuniaApplicationUIWebWebBundle:Default:overview.html.twig', [
+                    'allDefaultRecurringExpenditures' => $allDefaultRecurringExpenditures,
+                    'allDefaultOneOffExpenditures' => $allDefaultOneOffExpenditures,
+                ]);
     }
 
     /**
@@ -49,7 +74,7 @@ class DefaultController
      * @param Request $request
      * @return Response
      */
-    public function saveAction(Request $request)
+    public function saveRecurringAction(Request $request)
     {
         $mediator = $this->utils->getMediator();
 
@@ -60,7 +85,30 @@ class DefaultController
                     ));
 
         $this->utils->getUnitOfWork()->flush();
-        $this->utils->addConfirmationMessage('Default reoccuring monthly payment saved');
+        $this->utils->addConfirmationMessage('Default reccuring monthly payment saved');
+
+        return $this->utils->redirectRoute('default_payments');
+    }
+
+    /**
+     * register a new default recurring payment
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function saveOneOffAction(Request $request)
+    {
+        $mediator = $this->utils->getMediator();
+
+        $mediator->send(new NewDefaultOneOffMonthExpenditureCommand(
+                        $this->utils->getAccountHolderId(),
+                        $request->get('description'),
+                        Money::{$request->get('currency')}(floatval($request->get('price'))),
+                        new OneOffPaymentDueDate($request->get('year') . '-' . $request->get('month') . '-01')
+                    ));
+
+        $this->utils->getUnitOfWork()->flush();
+        $this->utils->addConfirmationMessage('Default one off monthly payment saved');
 
         return $this->utils->redirectRoute('default_payments');
     }
@@ -72,7 +120,7 @@ class DefaultController
      * @param Request $request
      * @return Response
      */
-    public function deleteAction($defaultId, Request $request)
+    public function deleteRecurringAction($defaultId, Request $request)
     {
         $mediator = $this->utils->getMediator();
 
@@ -82,7 +130,29 @@ class DefaultController
                     ));
 
         $this->utils->getUnitOfWork()->flush();
-        $this->utils->addConfirmationMessage('Default reoccuring monthly payment removed');
+        $this->utils->addConfirmationMessage('Default reccuring monthly payment removed');
+
+        return $this->utils->redirectRoute('default_payments');
+    }
+
+    /**
+     * Delete a default recurring payment
+     *
+     * @param string $defaultId
+     * @param Request $request
+     * @return Response
+     */
+    public function deleteOneOffAction($defaultId, Request $request)
+    {
+        $mediator = $this->utils->getMediator();
+
+        $mediator->send(new RemoveDefaultOneOffMonthExpenditureCommand(
+                        $this->utils->getAccountHolderId(),
+                        RecurringExpenditureId::bind($defaultId)
+                    ));
+
+        $this->utils->getUnitOfWork()->flush();
+        $this->utils->addConfirmationMessage('Default oneoff monthly payment removed');
 
         return $this->utils->redirectRoute('default_payments');
     }
