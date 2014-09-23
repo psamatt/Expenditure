@@ -58,6 +58,16 @@
             </div>
         {% endif %}
 
+        {% if app.session.flashbag.has('error') %}
+            <div class="alert alert-danger">
+                <ul class="nav nav-list">
+                    {% for notice in app.session.flashbag.get('error') %}
+                        <li>{{ notice }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
     	{% block content %}
     	{% endblock %}
 

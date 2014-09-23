@@ -98,17 +98,21 @@ class DefaultController
      */
     public function saveOneOffAction(Request $request)
     {
-        $mediator = $this->utils->getMediator();
+        try {
+            $mediator = $this->utils->getMediator();
 
-        $mediator->send(new NewDefaultOneOffMonthExpenditureCommand(
-                        $this->utils->getAccountHolderId(),
-                        $request->get('description'),
-                        Money::{$request->get('currency')}(floatval($request->get('price'))),
-                        new OneOffPaymentDueDate($request->get('year') . '-' . $request->get('month') . '-01')
-                    ));
+            $mediator->send(new NewDefaultOneOffMonthExpenditureCommand(
+                            $this->utils->getAccountHolderId(),
+                            $request->get('description'),
+                            Money::{$request->get('currency')}(floatval($request->get('price'))),
+                            new OneOffPaymentDueDate($request->get('year') . '-' . $request->get('month') . '-01')
+                        ));
 
-        $this->utils->getUnitOfWork()->flush();
-        $this->utils->addConfirmationMessage('Default one off monthly payment saved');
+            $this->utils->getUnitOfWork()->flush();
+            $this->utils->addConfirmationMessage('Default one off monthly payment saved');
+        } catch (\Exception $e) {
+            $this->utils->addErrorMessage($e->getMessage());
+        }
 
         return $this->utils->redirectRoute('default_payments', ['tab' => 'oneOff']);
     }

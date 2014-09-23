@@ -128,6 +128,19 @@ class ControllerUtils
     }
 
     /**
+     * Add a confirmation message
+     *
+     * @param string $message
+     */
+    public function addErrorMessage($message)
+    {
+        $this->container->get('session')->getFlashBag()->add(
+            'error',
+            $message
+        );
+    }
+
+    /**
      * Get unit of work
      *
      * @return EntityManager
