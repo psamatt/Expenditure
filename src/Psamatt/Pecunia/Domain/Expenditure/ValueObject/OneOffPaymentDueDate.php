@@ -27,7 +27,7 @@ class OneOffPaymentDueDate extends \DateTime
         $futureDate = new \DateTime($time);
 
         if ($futureDate < new \DateTime('first day of next month 00:00:00')) {
-            throw new \InvalidArgumentException(sprintf('Time[%s] specified needs to be at least in the next month', $time));
+            throw new \InvalidArgumentException(sprintf('Date [%s] specified needs to be at least in the next month', $time));
         }
     }
 }
