@@ -1,0 +1,25 @@
+{% extends 'PsamattPecuniaApplicationUIWebSharedBundle::base.html.twig' %}
+
+{% block content %}
+
+    <div class="hero-unit">
+        <h1>{{ viewModel.calendarDate.format('F Y') }}</h1>
+        <p>
+            <span class="text-success" id="amountSalary">{{ (viewModel.currency | currencyToSymbol) ~ viewModel.income.amount | number_format(2, '.', ',') }} -
+            <span class="text-error" id="totalExpenditure">{{ (viewModel.currency | currencyToSymbol) ~ viewModel.totalOutgoing.amount | number_format(2, '.', ',') }}</span>
+            <span class="text-info" id="amountToPay">({{ (viewModel.currency | currencyToSymbol) ~ (viewModel.amountStillToPay.amount) | number_format(2, '.', ',') }} still to pay)</span>
+            =
+            <span class="text-info" id="amountLeft">{{ (viewModel.currency | currencyToSymbol) ~ (viewModel.moneyRemaining.amount) | number_format(2, '.', ',') }}</span>
+        </p>
+    </div>
+
+    {% if viewModel.id is defined %}
+
+        {{ include(
+            'PsamattPecuniaApplicationUIWebWebBundle:Month:items.html.twig',
+            { 'showActions': false }
+        ) }}
+
+    {% endif %}
+
+{% endblock %}

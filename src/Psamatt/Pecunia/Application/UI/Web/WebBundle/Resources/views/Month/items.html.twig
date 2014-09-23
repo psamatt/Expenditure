@@ -1,0 +1,55 @@
+
+<table class="table table-centered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Amount Paid</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in viewModel.expenditureItems %}
+
+            <tr data-id="{{ item.id }}" class="{{ item.isPaid? 'expenditure-paid':(item.isPartialPaid? 'expenditure-partial-paid':'') }}">
+
+                <td width="35%">{{ item.description }}</td>
+                <td class="price">{{ (viewModel.currency | currencyToSymbol) ~ item.price.amount | number_format(2, '.', ',') }}</td>
+                <td class="amountPaid">{{ (viewModel.currency | currencyToSymbol) ~ item.amountPaid.amount | number_format(2, '.', ',') }}</td>
+                <td width="20%">
+                    {% if not item.isPaid and showActions is defined and showActions %}
+                        <a href="{{ app.request.uri }}" onclick="return registerPaid({{ viewModel.calendarDate | date('Y') }}, {{ viewModel.calendarDate | date('m') }}, '{{ item.id }}')" class="paid--record">Paid</a>
+                        &nbsp;|&nbsp;
+                        <a data-toggle="modal" data-target="#expendturePaidModal" href="{{ path('expenditure_month_item_partial_payment', {'year': viewModel.calendarDate | date('Y'), 'month': viewModel.calendarDate | date('m'), 'itemId': item.id }) }}" >Partial Payment</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if showActions is defined and showActions %}
+                        <a data-toggle="modal" data-target="#deleteExpenditureModal" data-href="{{ path('expenditure_month_item_delete', {'year': viewModel.calendarDate | date('Y'),  'month': viewModel.calendarDate | date('m'), 'itemId': item.id }) }}">
+                            <i class="icon-trash"></i>Delete
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td><span class="pull-right"><strong>Total</strong></span></td>
+            <td class="price">
+                <span id="total-price">{{ (viewModel.currency | currencyToSymbol) ~ viewModel.totalOutgoing.amount | number_format(2, '.', ',') }}</span>
+                <span class="pull-right"><strong>Total</strong></span></td>
+            <td>
+                <span id="total-paid">{{ (viewModel.currency | currencyToSymbol) ~ viewModel.totalPaid.amount | number_format(2, '.', ',') }}</span>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+
+{{ include('PsamattPecuniaApplicationUIWebSharedBundle:snippets/lightbox:container.html.twig', {'lightboxID': 'expendturePaidModal', 'lightboxTitle': 'Add Payment'}) }}
+
+{{ include('PsamattPecuniaApplicationUIWebSharedBundle:snippets/lightbox:deleteForm.html.twig', {'lightboxID': 'deleteExpenditureModal'}) }}
+

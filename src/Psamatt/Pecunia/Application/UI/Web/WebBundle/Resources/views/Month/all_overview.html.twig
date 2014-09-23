@@ -1,0 +1,35 @@
+{% extends 'PsamattPecuniaApplicationUIWebSharedBundle::base.html.twig' %}
+
+{% block content %}
+
+    {% if viewModel | length > 0 %}
+        {% set totalIncome = 0 %}
+        {% set currency = null %}
+        <p class="text-info">Displaying {{ viewModel | length }} expenditure month{{ viewModel | length == 1? '':'s'}}</p>
+
+        <table class="table table-centered">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for monthHeader in viewModel %}
+
+                    {% set currency =  monthHeader.currency %}
+                    {% set totalIncome = totalIncome + monthHeader.income.amount %}
+                    {% include 'PsamattPecuniaApplicationUIWebWebBundle:Month:all_overview_item.html.twig' %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><span class="pull-right"><strong>Total</strong></span></td>
+                    <td class="">{{ currency | currencyToSymbol ~ (totalIncome | number_format(2, '.', ',')) }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    {% else %}
+        <p class="text-error">No month headers have been found</p>
+    {% endif%}
+{% endblock %}

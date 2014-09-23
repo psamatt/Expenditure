@@ -1,0 +1,107 @@
+{% extends 'PsamattPecuniaApplicationUIWebSharedBundle::base.html.twig' %}
+
+{% block content %}
+
+	<div class="hero-unit">
+		{% if viewModel.id is defined %}
+			<h1>{{ viewModel.calendarDate.format('F Y') }}</h1>
+			{% if viewModel.calendarDate | date('ym') < "now" | date('ym') %}
+    			<ul class="pager pull-right">
+    				<li class="next">
+    					<a data-toggle="modal" data-target="#expenditureCreateMonthModal" href="{{ path('accountHolder_import', {'year': date() | date('Y'), 'month': date() | date('m')})}}">Create {{ "now" | date('M Y') }} &rarr;</a>
+    				</li>
+    			</ul>
+			{% endif %}
+			<p>
+				<span class="text-success" id="amountSalary">{{ (viewModel.currency | currencyToSymbol) ~ viewModel.income.amount | number_format(2, '.', ',') }} -
+				<span class="text-error" id="totalExpenditure">{{ (viewModel.currency | currencyToSymbol) ~ viewModel.totalOutgoing.amount | number_format(2, '.', ',') }}</span>
+				<span class="text-info" id="amountToPay">({{ (viewModel.currency | currencyToSymbol) ~ (viewModel.amountStillToPay.amount) | number_format(2, '.', ',') }} still to pay)</span>
+				=
+				<span class="text-info" id="amountLeft">{{ (viewModel.currency | currencyToSymbol) ~ (viewModel.moneyRemaining.amount) | number_format(2, '.', ',') }}</span>
+			</p>
+		{% else %}
+			<h1>Start now...</h1>
+			<p class="text-error">No expenditure months have yet been created, therefore an overview is not able to be calculated</p>
+			<form method="post" action="{{ path('accountHolder_import', {'year': date() | date('Y'), 'month': date() | date('m') }) }}" class="form-inline">
+				<div class="input-prepend">
+					<span class="add-on">{{ currency | currencyToSymbol }}</span>
+					<input type="hidden" name="currency" value="{{ currency }}" />
+					<input type="number" pattern="[0-9]+([,\.][0-9]+)?" step="0.01" min="0" name="amount" placeholder="Monthly Salary" required />
+				</div>
+				<button type="submit" class="btn">Create now</button>
+			</form>
+		{% endif %}
+	</div>
+
+	{% if viewModel.id is defined %}
+
+		{{ include(
+            'PsamattPecuniaApplicationUIWebWebBundle:Month:items.html.twig',
+            { 'showActions': true }
+        ) }}
+
+		<p class="text-info">Fill out fields below to save an expenditure</h2>
+		<form method="post" action="{{ path('expenditure_month_item_new', {'year': viewModel.calendarDate | date('Y'), 'month': viewModel.calendarDate | date('m')}) }}" name="expenditureForm" class="form-horizontal">
+
+            <input type="hidden" name="expenditureID" value="0" />
+
+			<div class="control-group">
+				<label class="control-label" for="inputTitle">Description</label>
+				<div class="controls">
+					<input type="text" id="inputTitle" name="description" placeholder="What is the expenditure..." />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputPrice">Price</label>
+				<div class="controls">
+					<div class="input-prepend">
+						<span class="add-on">{{ viewModel.currency | currencyToSymbol }}</span>
+						<input type="hidden" name="currency" value="{{ viewModel.currency }}" />
+						<input type="number" pattern="[0-9]+([,\.][0-9]+)?" step="0.01" min="0" id="inputPrice" name="price" placeholder="Price.." />
+					</div>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<button type="submit" class="btn">Save</button>
+				</div>
+			</div>
+		</form>
+
+	{% endif %}
+
+	<script type="text/javascript">
+
+		function registerPaid(year, month, itemId)
+		{
+			$.ajax({
+				type: 'POST',
+				url: Routing.generate('expenditure_month_item_paid', {'year': year,'month': month,'itemId': itemId}),
+				success: function(){
+					$('tr[data-id='+itemId+']').addClass('expenditure-paid');
+					document.location.reload();
+				},
+			});
+
+			return false;
+		}
+
+		function registerPartialPayment(year, month, itemId, currency, amount)
+		{
+			$.ajax({
+				type: 'POST',
+				url: Routing.generate('expenditure_month_item_partial_payment', {'year': year,'month': month,'itemId': itemId}),
+				data: { 'amount': amount, 'currency': currency},
+				success: function(){
+					document.location.reload();
+				},
+			});
+
+			return false;
+		}
+
+	</script>
+
+	{{ include('PsamattPecuniaApplicationUIWebSharedBundle:snippets/lightbox:container.html.twig', {'lightboxID': 'expenditureCreateMonthModal', 'lightboxTitle': 'Create Month'}) }}
+
+{% endblock %}

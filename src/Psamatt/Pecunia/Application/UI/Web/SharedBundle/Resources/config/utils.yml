@@ -1,0 +1,10 @@
+parameters:
+
+services:
+    Pecunia.ControllerUtils:
+        class: Psamatt\Pecunia\Application\UI\Web\SharedBundle\Util\ControllerUtils
+        arguments: [@service_container]
+
+    psamatt.expenditure.webservice_user_provider:
+        class: Psamatt\Pecunia\Application\ACL\Provider\UserProvider
+        arguments: [@doctrine.orm.entity_manager]

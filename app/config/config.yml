@@ -25,14 +25,12 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-    globals:
-        CURRENCY: %currency%
 
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [ ]
+    bundles:        ['PsamattPecuniaApplicationUIWebSharedBundle']
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -44,17 +42,51 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   %database_driver%
-        host:     %database_host%
-        port:     %database_port%
-        dbname:   %database_name%
-        user:     %database_user%
-        password: %database_password%
-        charset:  UTF8
+        connections:
+            write:
+                driver:   %db_write_driver%
+                host:     %db_write_host%
+                port:     %db_write_port%
+                user:     %db_write_user%
+                password: %db_write_password%
+                dbname:   %db_write_name%
+                charset:  UTF8
+            read:
+                driver:   %db_read_driver%
+                host:     %db_read_host%
+                port:     %db_read_port%
+                user:     %db_read_user%
+                password: %db_read_password%
+                dbname:   %db_read_name%
+                charset:  UTF8
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
-        auto_mapping: true
+        entity_managers:
+            write:
+                connection: write
+                mappings:
+                    AccountHolder:
+                        type: php
+                        dir: %kernel.root_dir%/../src/Psamatt/Pecunia/Application/Infrastructure/Persistence/Doctrine/Mapping/AccountHolder
+                        prefix: Psamatt\Pecunia\Domain\AccountHolder
+                        is_bundle: false
+                    Expenditure:
+                        type: php
+                        dir: %kernel.root_dir%/../src/Psamatt/Pecunia/Application/Infrastructure/Persistence/Doctrine/Mapping/Expenditure
+                        prefix: Psamatt\Pecunia\Domain\Expenditure
+                        is_bundle: false
+                    Saving:
+                        type: php
+                        dir: %kernel.root_dir%/../src/Psamatt/Pecunia/Application/Infrastructure/Persistence/Doctrine/Mapping/Saving
+                        prefix: Psamatt\Pecunia\Domain\Saving
+                        is_bundle: false
+                    acl:
+                        type: annotation
+                        dir: %kernel.root_dir%/../src/Psamatt/Pecunia/Application/ACL
+                        prefix: Psamatt\Pecunia\Application\ACL
+                        alias: PecuniaACL
+                        is_bundle: false
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -70,11 +102,3 @@ jms_di_extra:
         all_bundles: false
         bundles: [PsamattExpenditureBundle]
         directories: ["%kernel.root_dir%/../src"]
-    automatic_controller_injections:
-        properties:
-            request: "@request"
-            security: "@security.context"
-            em: "@doctrine.orm.entity_manager"
-            router: "@router"
-            templating: "@templating"
-            session: "@session"

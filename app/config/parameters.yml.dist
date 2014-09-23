@@ -1,10 +1,17 @@
 parameters:
-    database_driver:   pdo_mysql
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     expenditure
-    database_user:     root
-    database_password: ~
+    db_write_driver:   pdo_mysql
+    db_write_host:     127.0.0.1
+    db_write_port:     3306
+    db_write_user:     root
+    db_write_password: ~
+    db_write_name:     ~
+
+    db_read_driver:    pdo_mysql
+    db_read_host:      127.0.0.1
+    db_read_port:      3306
+    db_read_user:      root
+    db_read_password:  ~
+    db_read_name:      ~
 
     mailer_transport:  smtp
     mailer_host:       127.0.0.1
@@ -13,5 +20,3 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
-    
-    currency:          £

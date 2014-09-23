@@ -2,7 +2,7 @@
     "name": "psamatt/Expenditure",
     "description": "A small expenditure app for money minded people",
     "keywords": ["symfony", "expenditure", "money", "savings"],
-    "version": "1.6",
+    "version": "2.0",
     "license": "MIT",
     "authors": [
         {
@@ -18,6 +18,23 @@
 			"": "src/"
 		}
 	},
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "psamatt/money",
+                "version": "dev-float-no-allocation",
+                "autoload": {
+                    "psr-0": { "Money": "lib" }
+                },
+                "source": {
+                    "url": "git@github.com:psamatt/money.git",
+                    "type": "git",
+                    "reference": "dev-float-no-allocation"
+                }
+            }
+        }
+    ],
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.3.*",
@@ -33,7 +50,10 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "nesbot/Carbon": "1.*",
         "jms/di-extra-bundle": "1.4.*@dev",
-        "friendsofsymfony/jsrouting-bundle": "~1.1"
+        "friendsofsymfony/jsrouting-bundle": "~1.1",
+        "rhumsaa/uuid": "2.*",
+        "psamatt/service-bus-lite-bundle": "~1",
+        "psamatt/money": "dev-float-no-allocation"
     },
     "require-dev": {
         "phpunit/phpunit":             "~3",

@@ -19,7 +19,11 @@ class AppKernel extends Kernel
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\AopBundle\JMSAopBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
-            new Psamatt\ExpenditureBundle\PsamattExpenditureBundle(),
+            new Psamatt\ServiceBusLiteBundle\PsamattServiceBusLiteBundle(),
+//            new Psamatt\ExpenditureBundle\PsamattExpenditureBundle(),
+            new Psamatt\Pecunia\Application\UI\Web\SharedBundle\PsamattPecuniaApplicationUIWebSharedBundle(),
+            new Psamatt\Pecunia\Application\UI\Web\WebBundle\PsamattPecuniaApplicationUIWebWebBundle(),
+            new Psamatt\Pecunia\Application\Infrastructure\InfrastructureBundle\PsamattPecuniaApplicationInfrastructureInfrastructureBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

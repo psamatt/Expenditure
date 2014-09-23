@@ -40,7 +40,7 @@ Feature: User Savings
     Then I should see "Saving saved"
     Then I should see "Saving Foo Changed"
 
-  @javascript @incomplete
+  @javascript
   Scenario: Delete an existing saving
   
     Given the following savings are expenditure savings
@@ -51,13 +51,25 @@ Feature: User Savings
     When I go to "/admin/savings"
     Then I should see 1 "table#savingsTbl" element
     Then I should see "Saving Foo"
+    When I follow css "a[data-target=\"#deleteSavingModal\"]"
+    Then I should see the "deleteSavingModal" modal "Delete"
+    When I press "confirmDelete"
+    Then I should see "Saving Deleted"
+    Then I should not see "Saving Foo"
 
-  @javascript @incomplete
+  @javascript
   Scenario: Add money to an existing saving
     
     Given the following savings are expenditure savings
       | ID | Title      | User | Target Date   | Target Amount | Saved Amount |
       | 1  | Saving Foo | 1    | 7th May 2020  | 10000         | 100          |
     
-    Given I am logged in as "mgoodwin@gmail.com" with "Admin123"
+    Given I am logged in as "matt.goodwin491@gmail.com" with "Admin123"
     When I go to "/admin/savings"
+    Then I should see 1 "table#savingsTbl" element
+    Then I should see "Saving Foo"
+    When I follow css "a[data-target=\"#savingAddMoneyModal\"]"
+    Then I should see the "savingAddMoneyModal" modal "Add Money"
+    When I fill in "savingAddMoney_amount" with "200"
+    When I press "Update password"
+    Then I should see "300"
