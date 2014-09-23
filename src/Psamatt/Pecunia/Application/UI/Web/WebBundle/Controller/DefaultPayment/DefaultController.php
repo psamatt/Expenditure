@@ -110,7 +110,7 @@ class DefaultController
         $this->utils->getUnitOfWork()->flush();
         $this->utils->addConfirmationMessage('Default one off monthly payment saved');
 
-        return $this->utils->redirectRoute('default_payments');
+        return $this->utils->redirectRoute('default_payments', ['tab' => 'oneOff']);
     }
 
     /**
@@ -154,6 +154,6 @@ class DefaultController
         $this->utils->getUnitOfWork()->flush();
         $this->utils->addConfirmationMessage('Default oneoff monthly payment removed');
 
-        return $this->utils->redirectRoute('default_payments');
+        return $this->utils->redirectRoute('default_payments', ['tab' => 'oneOff']);
     }
 }
